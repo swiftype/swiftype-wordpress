@@ -1,0 +1,70 @@
+h2.swiftype-header {
+  background: transparent url(swiftype_logo.jpg) no-repeat 0 7px;
+  padding-left: 35px;
+}
+
+.swiftype .progress .bar {
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 10px;
+  background-color: blue;
+  background: -moz-linear-gradient(top, #00BBF8 0%, #0089F4);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00BBF8), to(#0089F4));
+  border: 1px solid #3F6F99;
+  -moz-box-shadow: inset 0px 1px 0px #00dbfc;
+  -webkit-box-shadow: inset 0px 1px 0px #00dbfc;
+}
+
+.swiftype .progress {
+  margin-top: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 12px;
+  background-color: #e1e1e1;
+  -moz-box-shadow: inset 0px 1px 1px #666;
+  -webkit-box-shadow: inset 0px 1px 1px #666;
+}
+
+a.gray-button {
+  font-weight: normal;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  vertical-align: top;
+  color: #fff;
+  padding: 9px 22px 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: block;
+  width: 200px;
+  height: 20px;
+  text-align: center;
+  background-color: blue;
+  margin-top: 3px;
+  background: -moz-linear-gradient(top, #99a9b1 0%, #647084);
+  background: -webkit-gradient(linear, left top, left bottom, from(#99a9b1), to(#647084));
+  border: 1px solid #5b6474;
+  -moz-box-shadow: inset 0px 1px 0px #c2d3dc;
+  -webkit-box-shadow: inset 0px 1px 0px #c2d3dc;
+  text-shadow: 0px -1px 0px rgba(0,0,0,0.4);
+}
+
+a.gray-button:hover {
+    color: #fff;
+    -moz-box-shadow: inset 0px 1px 0px #96a4ac;
+    -webkit-box-shadow: inset 0px 1px 0px #96a4ac;
+    background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
+    background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
+}
