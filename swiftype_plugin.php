@@ -15,8 +15,6 @@
     }
   }
 
-  if (is_admin()) require_once(ABSPATH . 'wp-includes/pluggable.php');
-
   class SwiftypeHttpResponse {
     public $status = NULL;
     public $body = NULL;
