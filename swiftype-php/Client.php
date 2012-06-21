@@ -135,3 +135,5 @@ public function delete_documents($engine, $document_type, $document_ids) {
   }
 
 }
+
+?>

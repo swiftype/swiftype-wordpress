@@ -11,3 +11,5 @@ Author URI: http://swiftype.com
 
 require_once 'swiftype-php/Client.php';
 require_once 'swiftype_plugin.php';
+
+?>
