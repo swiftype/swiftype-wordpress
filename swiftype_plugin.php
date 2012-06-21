@@ -63,10 +63,9 @@
     public function include_swiftype_assets() {
       if(is_admin())
         return;
-      wp_enqueue_style("ac", plugins_url("assets/autocomplete.css", __FILE__));
-      wp_enqueue_script("ac", plugins_url("assets/jquery.swiftype.autocomplete.js", __FILE__), array("jquery"));
-      wp_enqueue_script("swiftype_install", plugins_url("assets/install_swiftype.js", __FILE__), array("ac"));
-      wp_localize_script('swiftype_install', 'swiftypeParams', array('engineKey' => $this->engine_key));
+      wp_enqueue_style("swiftype", plugins_url("assets/autocomplete.css", __FILE__));
+      wp_enqueue_script("swiftype", plugins_url("assets/install_swiftype.js", __FILE__), array("jquery"));
+      wp_localize_script('swiftype', 'swiftypeParams', array('engineKey' => $this->engine_key));
     }
 
     public function check_client_authorized() {
