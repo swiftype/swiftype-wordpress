@@ -68,7 +68,7 @@
 
   var total_indexed = 0;
   var total_posts = <?php echo(wp_count_posts()->publish) ?>;
-  var batch_size = 1;
+  var batch_size = 30;
 
   function index_batch(start) {
     set_progress();
