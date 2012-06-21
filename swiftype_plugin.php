@@ -157,7 +157,7 @@
     }
 
     public function include_admin_styles() {
-      wp_enqueue_style("styles", plugins_url("assets/styles.css", __FILE__));
+      wp_enqueue_style("styles", plugins_url("assets/admin_styles.css", __FILE__));
     }
 
     public function async_index_posts() {

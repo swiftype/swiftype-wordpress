@@ -11,7 +11,7 @@
 
   <h2 class="swiftype-header">Swiftype Search Plugin</h2>
 
-  <p><b>To administer your Swiftype Search Engine, visit the <a href="http://localhost:3000/users/sign_in" target="_new">Swiftype Dashboard</a></b>.</p>
+  <p><b>To administer your Swiftype Search Engine, visit the <a href="http://swiftype.com/users/sign_in" target="_new">Swiftype Dashboard</a></b>.</p>
 
   <table class="widefat" style="width: 650px;">
     <thead>

@@ -2,7 +2,7 @@
   var ident = 0;
 
   window.Swiftype = window.Swiftype || {};
-  Swiftype.root_url = 'http://localhost:3000';
+  Swiftype.root_url = 'http://api.swiftype.com';
   Swiftype.pingUrl = function(endpoint, callback) {
     var img  = new Image();
     img.onload = img.onerror = callback;

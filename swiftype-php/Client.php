@@ -2,7 +2,7 @@
 
 class SwiftypeClient {
 
-  private $endpoint = "http://localhost:3000/api/v1/";
+  private $endpoint = "http://api.swiftype.com/api/v1/";
   private $api_key = NULL;
 
   public function __construct() { }
