@@ -239,5 +239,3 @@
   new SwiftypePlugin;
 
 ?>
-
-
