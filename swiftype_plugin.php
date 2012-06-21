@@ -121,6 +121,9 @@
       if(!is_search() || !$this->engine_slug || strlen($this->engine_slug) == 0) {
         return $posts;
       }
+      if(function_exists('is_main_query') && !is_main_query()) {
+        return $posts;
+      }
 
       global $wp_query;
       $query_string = $wp_query->query_vars["s"];
