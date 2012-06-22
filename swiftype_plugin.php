@@ -48,7 +48,9 @@
       add_action("publish_post", array($this, 'index_post'));
       add_action("trashed_post", array($this, 'delete_post'));
       add_action('wp_ajax_index_posts', array($this, 'async_index_posts'));
+      add_action('wp_ajax_index_pages', array($this, 'async_index_pages'));
       add_action('wp_ajax_delete_trashed_posts', array($this, 'async_delete_trashed_posts'));
+      add_action('wp_ajax_delete_trashed_pages', array($this, 'async_delete_trashed_pages'));
       add_action("admin_init", array($this, 'include_admin_styles'));
       $this->api_key = get_option('swiftype_api_key');
       $this->engine_slug = get_option('swiftype_engine_slug');
@@ -130,20 +132,33 @@
       $response = $this->client->search($this->engine_slug, $this->document_type_slug, $query_string);
       $results = json_decode($response->body);
 
+      $record_ids = array();
+      $page_ids = array();
       $post_ids = array();
-      $this->swiftype_posts_array = array();
+      $this->swiftype_records_array = array();
       $posts = array();
 
       // ummm, $results->records->posts is hardcoded to "posts" where it should really be $this->document_type_slug
-      foreach($results->records->posts as $post) {
-        $post_ids[] = $post->external_id;
+      foreach($results->records->posts as $record) {
+        $record_ids[] = $record->external_id;
+        if($record->object_type == "page") {
+          $page_ids[] = $record->external_id;
+        } else {
+          $post_ids[] = $record->external_id;
+        }
       }
       $unordered_posts = get_posts(array('include' => $post_ids));
+      $unordered_pages = get_pages(array('include' => $page_ids));
+
       foreach($unordered_posts as $post) {
-        $this->swiftype_posts_array[$post->ID] = array('post' => $post);
+        $this->swiftype_records_array[$post->ID] = array('post' => $post);
       }
-      foreach($post_ids as $post_id) {
-        $posts[] = $this->swiftype_posts_array[$post_id]['post'];
+      foreach($unordered_pages as $page) {
+        $this->swiftype_records_array[$page->ID] = array('post' => $page);
+      }
+
+      foreach($record_ids as $record_id) {
+        $posts[] = $this->swiftype_records_array[$record_id]['post'];
       }
       return $posts;
     }
@@ -158,6 +173,20 @@
 
     public function include_admin_styles() {
       wp_enqueue_style("styles", plugins_url("assets/admin_styles.css", __FILE__));
+    }
+
+    public function async_index_pages() {
+      $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
+      $batch_size = isset($_POST['batch_size']) ? intval($_POST['batch_size']) : 10;
+      $pages = get_pages(array('number' => $batch_size, 'offset' => $offset, 'orderby' => 'id', 'order' => 'ASC', 'post_status' => 'publish'));
+      if(count($pages) > 0) {
+        $documents = array();
+        foreach($pages as $page) { $documents[] = $this->convert_page_to_document($page); }
+        $num_created = $this->client->create_or_update_documents($this->engine_slug, $this->document_type_slug, $documents);
+      }
+      header("Content-Type: application/json");
+      print("{}");
+      die();
     }
 
     public function async_index_posts() {
@@ -179,6 +208,18 @@
       if(count($posts) > 0) {
         $document_ids = array();
         foreach($posts as $post) { $document_ids[] = $post->ID; }
+        $this->client->delete_documents($this->engine_slug, $this->document_type_slug, $document_ids);
+      }
+      header("Content-Type: application/json");
+      print("{}");
+      die();
+    }
+
+    public function async_delete_trashed_pages() {
+      $pages = get_pages(array('post_status' => 'trash'));
+      if(count($pages) > 0) {
+        $document_ids = array();
+        foreach($pages as $page) { $document_ids[] = $page->ID; }
         $this->client->delete_documents($this->engine_slug, $this->document_type_slug, $document_ids);
       }
       header("Content-Type: application/json");
@@ -228,7 +269,7 @@
 
       $document['external_id'] = $post->ID;
       $document['fields'] = array();
-      $document['fields'][0] = array('name' => 'type', 'type' => 'enum', 'value' => 'page');
+      $document['fields'][0] = array('name' => 'object_type', 'type' => 'enum', 'value' => 'post');
       $document['fields'][1] = array('name' => 'url', 'type' => 'enum', 'value' => get_permalink($post->ID));
       $document['fields'][2] = array('name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt);
       $document['fields'][3] = array('name' => 'title', 'type' => 'string', 'value' => $post->post_title);
@@ -236,18 +277,34 @@
       $document['fields'][5] = array('name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode(strip_tags($post->post_excerpt), ENT_COMPAT, "UTF-8"));
       $document['fields'][6] = array('name' => 'author', 'type' => 'string', 'value' => array($nickname, $name));
       $document['fields'][7] = array('name' => 'tags', 'type' => 'string', 'value' => $tag_strings);
-      if (function_exists("get_post_thumbnail_id")) {
-        $thumbnails =  wp_get_attachment_image_src(get_post_thumbnail_id($post->ID));
-        if ($thumbnails != NULL) {
-          $document['fields'][8] = array('name' => 'thumbnail', 'type' => 'enum', 'value' => $thumbnails[0]);
-        }
+
+      return $document;
+    }
+
+    private function convert_page_to_document($page) {
+
+      $document = array();
+
+      // handle text indexing, applying filters if necessary
+      if ( get_option("it_apply_filters") ) {
+        $the_content = apply_filters("the_content", $page->post_content);
+      } else {
+        $the_content = $page->post_content;
       }
+
+      $document['external_id'] = $page->ID;
+      $document['fields'] = array();
+      $document['fields'][0] = array('name' => 'object_type', 'type' => 'enum', 'value' => 'page');
+      $document['fields'][1] = array('name' => 'url', 'type' => 'enum', 'value' => get_permalink($page->ID));
+      $document['fields'][2] = array('name' => 'title', 'type' => 'string', 'value' => $page->post_title);
+      $document['fields'][3] = array('name' => 'body', 'type' => 'text', 'value' => html_entity_decode(strip_tags($the_content), ENT_COMPAT, "UTF-8"));
+      $document['fields'][4] = array('name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode(strip_tags($page->post_excerpt), ENT_COMPAT, "UTF-8"));
 
       return $document;
     }
 
     function swiftype_admin_page() { include('swiftype_admin_page.php'); }
-    function swiftype_menu() { add_management_page( 'Swiftype Search', 'Swiftype Search', 'manage_options', __FILE__, array($this, 'swiftype_admin_page')); }
+    function swiftype_menu() { add_menu_page( 'Swiftype Search', 'Swiftype Search', 'manage_options', __FILE__, array($this, 'swiftype_admin_page'), plugins_url('assets/swiftype_logo_menu.png', __FILE__)); }
 
   }
 

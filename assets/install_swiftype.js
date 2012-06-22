@@ -9759,13 +9759,13 @@ window['$stjq'] = jQuery.noConflict(true);
       window.location = item['url'];
     };
 
-  	// simple client-side LRU Cache, based on https://github.com/rsms/js-lru
+    // simple client-side LRU Cache, based on https://github.com/rsms/js-lru
 
-  	function LRUCache(limit) {
-  	  this.size = 0;
-  	  this.limit = limit;
-  	  this._keymap = {};
-  	}
+    function LRUCache(limit) {
+      this.size = 0;
+      this.limit = limit;
+      this._keymap = {};
+    }
 
     LRUCache.prototype.put = function (key, value) {
       var entry = {
