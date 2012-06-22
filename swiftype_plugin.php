@@ -228,17 +228,18 @@
 
       $document['external_id'] = $post->ID;
       $document['fields'] = array();
-      $document['fields'][0] = array('name' => 'url', 'type' => 'enum', 'value' => get_permalink($post->ID));
-      $document['fields'][1] = array('name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt);
-      $document['fields'][2] = array('name' => 'title', 'type' => 'string', 'value' => $post->post_title);
-      $document['fields'][3] = array('name' => 'body', 'type' => 'text', 'value' => html_entity_decode(strip_tags($the_content), ENT_COMPAT, "UTF-8"));
-      $document['fields'][4] = array('name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode(strip_tags($post->post_excerpt), ENT_COMPAT, "UTF-8"));
-      $document['fields'][5] = array('name' => 'author', 'type' => 'string', 'value' => array($nickname, $name));
-      $document['fields'][6] = array('name' => 'tags', 'type' => 'string', 'value' => $tag_strings);
+      $document['fields'][0] = array('name' => 'type', 'type' => 'enum', 'value' => 'page');
+      $document['fields'][1] = array('name' => 'url', 'type' => 'enum', 'value' => get_permalink($post->ID));
+      $document['fields'][2] = array('name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt);
+      $document['fields'][3] = array('name' => 'title', 'type' => 'string', 'value' => $post->post_title);
+      $document['fields'][4] = array('name' => 'body', 'type' => 'text', 'value' => html_entity_decode(strip_tags($the_content), ENT_COMPAT, "UTF-8"));
+      $document['fields'][5] = array('name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode(strip_tags($post->post_excerpt), ENT_COMPAT, "UTF-8"));
+      $document['fields'][6] = array('name' => 'author', 'type' => 'string', 'value' => array($nickname, $name));
+      $document['fields'][7] = array('name' => 'tags', 'type' => 'string', 'value' => $tag_strings);
       if (function_exists("get_post_thumbnail_id")) {
         $thumbnails =  wp_get_attachment_image_src(get_post_thumbnail_id($post->ID));
         if ($thumbnails != NULL) {
-          $document['fields'][7] = array('name' => 'thumbnail', 'type' => 'enum', 'value' => $thumbnails[0]);
+          $document['fields'][8] = array('name' => 'thumbnail', 'type' => 'enum', 'value' => $thumbnails[0]);
         }
       }
 
