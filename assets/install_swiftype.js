@@ -9884,8 +9884,7 @@ window['$stjq'] = jQuery.noConflict(true);
     Swiftype.engineKey = swiftypeParams.engineKey;
 
     var onComplete = function(dataItem,prefix) {
-      Swiftype.pingAutoSelection(Swiftype.engineKey, dataItem['id'], prefix);
-      window.location = dataItem['url'];
+      Swiftype.pingAutoSelection(Swiftype.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
     };
 
     $(function() {
