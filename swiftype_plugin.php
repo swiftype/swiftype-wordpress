@@ -238,7 +238,7 @@
       if (function_exists("get_post_thumbnail_id")) {
         $thumbnails =  wp_get_attachment_image_src(get_post_thumbnail_id($post->ID));
         if ($thumbnails != NULL) {
-          $document['fields'][4] = array('name' => 'thumbnail', 'type' => 'enum', 'value' => $thumbnails[0]);
+          $document['fields'][7] = array('name' => 'thumbnail', 'type' => 'enum', 'value' => $thumbnails[0]);
         }
       }
 
