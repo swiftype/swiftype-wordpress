@@ -71,6 +71,8 @@
     }
 
     public function check_client_authorized() {
+      if(!is_admin())
+        return;
       update_option('swiftype_api_authorized',$this->api_authorized);
       if(!$this->api_key || strlen($this->api_key) == 0) {
         return;
@@ -80,6 +82,8 @@
     }
 
     public function initialize_engine() {
+      if(!is_admin())
+        return;
       update_option('swiftype_engine_initialized',$this->engine_initialized);
       update_option('swiftype_num_indexed_documents',$this->num_indexed_documents);
 
