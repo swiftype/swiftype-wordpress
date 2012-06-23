@@ -41,6 +41,10 @@
     public function SwiftypePlugin() { $this->__construct(); }
 
     public function __construct() {
+      add_action('admin_notices', array($this, 'notify_curl_needed'));
+      if(!function_exists('curl_init')) {
+        return;
+      }
       add_action("init", array($this, "include_swiftype_assets"));
       add_action('admin_menu', array($this, 'swiftype_menu'));
       add_filter('the_posts', array($this, 'get_search_result_posts'));
@@ -60,6 +64,12 @@
       $this->client->set_api_key($this->api_key);
       $this->check_client_authorized();
       $this->initialize_engine();
+    }
+
+    public function notify_curl_needed() {
+      if (!function_exists('curl_init')) {
+        echo '<div id="message" class="error">You must update your <strong>PHP</strong> installation to include CURL in order to use the Swiftype Search plugin.</div>';
+      }
     }
 
     public function include_swiftype_assets() {
