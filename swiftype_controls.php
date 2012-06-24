@@ -62,12 +62,12 @@
 <script>
 
   jQuery('#index_posts_button').click(function() {
-    // index_batch_posts(0);
+    index_batch_posts(0);
     index_batch_pages(0);
     delete_trash('delete_trashed_posts');
     delete_trash('delete_trashed_pages');
   });
-  
+
   var batch_size = 30;
 
   var total_indexed_posts = 0;
@@ -96,7 +96,7 @@
       }
     );
   }
-  
+
   var total_indexed_pages = 0;
   var total_pages = <?php echo(wp_count_posts('page')->publish) ?>;
   function index_batch_pages(start) {
@@ -123,7 +123,7 @@
       }
     );
   }
-  
+
   function delete_trash(action) {
     var data = { action: action };
     jQuery.ajax({
@@ -144,11 +144,11 @@
       }
     );
   }
-  
+
   function set_progress() {
     var total_indexed = total_indexed_pages + total_indexed_posts;
     var total_objects = total_posts + total_pages;
-    
+
     if(total_indexed > total_objects) { total_indexed = total_objects; }
     var progress_width = Math.round(total_indexed / total_objects * 245);
     if(progress_width < 10) { progress_width = 10; }
