@@ -47,8 +47,7 @@ a.gray-button {
   -moz-border-radius: 3px;
   border-radius: 3px;
   cursor: pointer;
-  display: block;
-  width: 200px;
+  display: inline-block;
   height: 20px;
   text-align: center;
   background-color: blue;
