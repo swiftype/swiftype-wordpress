@@ -14,6 +14,8 @@ The Swiftype Search plugin replaces the standard WordPress search with a better 
 
 The Swiftype Search plugin replaces the standard WordPress search with a much better, more relevant search engine. It also gives you detailed insight into what your users are searching for, so you know which keywords to target when customizing your search engine results. The base ranking algorithm is based on industry best-practices and provides more relevant results by default, but we also allow for any result set to be fully customized via our drag-and-drop interface for result reordering. To make customizations you simply create a Swiftype account and install our the Swiftype Search plugin. You can then login to our dashboard to customize results and read through detailed search analytics.
 
+[youtube="http://www.youtube.com/watch?v=pITuOcGgpBs"]
+
 == Installation ==
 
 1. Go to [http://swiftype.com](http://swiftype.com) and sign up for a free Swiftype account. (Be sure to validate your account via the confirmation email we send.)
