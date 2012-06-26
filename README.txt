@@ -16,11 +16,13 @@ The Swiftype Search plugin replaces the standard WordPress search with a much be
 
 == Installation ==
 
-1. Extract all files from the ZIP file, and then upload the plugin's folder to /wp-content/plugins/.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to the Swiftype Search plugin page and enter your Swiftype API key on the first screen.
-4. Name your search engine, following the instructions on the screen.
-5. Build your search index by clicking the "Synchronize with Swiftype" button.
+1. Go to [http://swiftype.com](http://swiftype.com) and sign up for a free Swiftype account. (Be sure to validate your account via the confirmation email we send.)
+2. After logging in to Swiftype, go to the Account Settings screen and get your API key.
+3. Extract all files from the ZIP file, and then upload the plugin's folder to /wp-content/plugins/.
+4. Activate the plugin through the 'Plugins' menu in WordPress.
+5. Go to the Swiftype Search plugin page and enter your Swiftype API key on the first screen.
+6. Name your search engine, following the instructions on the screen.
+7. Build your search index by clicking the "Synchronize with Swiftype" button.
 
 == Frequently asked questions ==
 
@@ -29,7 +31,6 @@ The Swiftype Search plugin replaces the standard WordPress search with a much be
 Sign up for a free account at [http://swiftype.com](http://swiftype.com)
 
 == Screenshots ==
-
 
 
 == Changelog ==
