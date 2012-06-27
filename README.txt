@@ -40,7 +40,3 @@ Sign up for a free account at [http://swiftype.com](http://swiftype.com)
 
 
 == Upgrade notice ==
-
-
-
-== Arbitrary section 1 ==
