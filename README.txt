@@ -1,5 +1,5 @@
 === Swiftype Search ===
-Contributors: matthewtyriley
+Contributors: matthewtyriley, qhoxie
 Donate link:
 Tags: search, better search, custom search, relevant search
 Requires at least: 3.3
@@ -8,7 +8,7 @@ Stable tag: 1.01
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The Swiftype Search plugin replaces the standard WordPress search with a better search engine that is fully customizable via the Swiftype dashboard. The Swiftype dashboard lets you customize the results for any search keyword via a drag-and-drop interface.
+The Swiftype Search plugin replaces the standard WordPress search with a better search engine that is fully customizable via the Swiftype dashboard.
 
 == Description ==
 
