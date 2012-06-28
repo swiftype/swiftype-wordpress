@@ -41,7 +41,7 @@
       print("<p><b>Important:</b> Before your site is searchable, you need to index all of your posts. Click the 'synchronize' button below to begin indexing.</p>")
   ?>
 
-  <a href="#" id="index_posts_button" class="gray-button">synchronize posts with swiftype</a>
+  <a href="#" id="index_posts_button" class="gray-button">synchronize with swiftype</a>
 
   <div class="swiftype" id="progress_bar" style="display: none;">
     <div class="progress">
