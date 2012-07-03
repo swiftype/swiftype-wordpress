@@ -277,8 +277,10 @@
 
       $tags = get_the_tags($post->ID);
       $tag_strings = array();
-      foreach($tags as $tag) {
-        $tag_strings[] = $tag->name;
+      if(is_array($tags)) {
+        foreach($tags as $tag) {
+          $tag_strings[] = $tag->name;
+        }
       }
 
       $document['external_id'] = $post->ID;
