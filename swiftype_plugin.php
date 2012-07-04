@@ -218,10 +218,20 @@
     }
 
     public function async_delete_trashed_posts() {
-      $posts = get_posts(array('orderby' => 'id', 'order' => 'ASC', 'post_status' => 'trash'));
-      if(count($posts) > 0) {
-        $document_ids = array();
-        foreach($posts as $post) { $document_ids[] = $post->ID; }
+      $document_ids = array();
+
+      $posts = get_posts(array('post_status' => 'trash'));
+      if(count($posts) > 0) { foreach($posts as $post) { $document_ids[] = $post->ID; } }
+      $posts = get_posts(array('post_status' => 'draft'));
+      if(count($posts) > 0) { foreach($posts as $post) { $document_ids[] = $post->ID; } }
+      $posts = get_posts(array('post_status' => 'pending'));
+      if(count($posts) > 0) { foreach($posts as $post) { $document_ids[] = $post->ID; } }
+      $posts = get_posts(array('post_status' => 'future'));
+      if(count($posts) > 0) { foreach($posts as $post) { $document_ids[] = $post->ID; } }
+      $posts = get_posts(array('post_status' => 'private'));
+      if(count($posts) > 0) { foreach($posts as $post) { $document_ids[] = $post->ID; } }
+
+      if(count($document_ids) > 0) {
         $this->client->delete_documents($this->engine_slug, $this->document_type_slug, $document_ids);
       }
       header("Content-Type: application/json");
@@ -230,10 +240,20 @@
     }
 
     public function async_delete_trashed_pages() {
+      $document_ids = array();
+
       $pages = get_pages(array('post_status' => 'trash'));
-      if(count($pages) > 0) {
-        $document_ids = array();
-        foreach($pages as $page) { $document_ids[] = $page->ID; }
+      if(count($pages) > 0) { foreach($pages as $page) { $document_ids[] = $page->ID; } }
+      $pages = get_pages(array('post_status' => 'draft'));
+      if(count($pages) > 0) { foreach($pages as $page) { $document_ids[] = $page->ID; } }
+      $pages = get_pages(array('post_status' => 'pending'));
+      if(count($pages) > 0) { foreach($pages as $page) { $document_ids[] = $page->ID; } }
+      $pages = get_pages(array('post_status' => 'future'));
+      if(count($pages) > 0) { foreach($pages as $page) { $document_ids[] = $page->ID; } }
+      $pages = get_pages(array('post_status' => 'private'));
+      if(count($pages) > 0) { foreach($pages as $page) { $document_ids[] = $page->ID; } }
+
+      if(count($document_ids) > 0) {
         $this->client->delete_documents($this->engine_slug, $this->document_type_slug, $document_ids);
       }
       header("Content-Type: application/json");
