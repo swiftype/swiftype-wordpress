@@ -3,8 +3,17 @@
   $engine_slug = get_option('swiftype_engine_slug');
   $engine_name = get_option('swiftype_engine_name');
   $num_indexed_documents = get_option('swiftype_num_indexed_documents');
-  $client = new SwiftypeClient();
-  $client->set_api_key($api_key);
+  if (function_exists('get_post_types')) {
+    $pt_1 = get_post_types(array('exclude_from_search' => '0'));
+    $pt_2 = get_post_types(array('exclude_from_search' => false));
+    $custom_types = array_merge($pt_1,$pt_2);
+    $custom_types_string = implode(', ', $custom_types);
+  }
+  $total_post_count = 0;
+  foreach($custom_types as $type) {
+    if($type == "attachment") { continue; }
+    $total_post_count += wp_count_posts($type)->publish;
+  }
 ?>
 
 <div class="wrap">
@@ -63,20 +72,18 @@
 
   jQuery('#index_posts_button').click(function() {
     index_batch_posts(0);
-    index_batch_pages(0);
     delete_trash('delete_trashed_posts');
-    delete_trash('delete_trashed_pages');
   });
 
   var batch_size = 30;
 
   var total_indexed_posts = 0;
-  var total_posts = <?php echo(wp_count_posts()->publish) ?>;
+  var total_posts = <?php print($total_post_count) ?>;
   function index_batch_posts(start) {
     set_progress();
     var offset = start || 0;
     if(offset >= total_posts) { return; }
-    var data = { action: 'index_posts', offset: offset, batch_size: batch_size };
+    var data = { action: 'index_all', offset: offset, batch_size: batch_size };
     jQuery.ajax({
         url: ajaxurl,
         data: data,
@@ -85,33 +92,6 @@
         success: function(response, textStatus) {
           total_indexed_posts += batch_size;
           index_batch_posts(offset + batch_size);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          try {
-            errorMsg = JSON.parse(jqXHR.responseText).message;
-          } catch (e) {
-            errorMsg = jqXHR.responseText;
-          }
-        }
-      }
-    );
-  }
-
-  var total_indexed_pages = 0;
-  var total_pages = <?php echo(wp_count_posts('page')->publish) ?>;
-  function index_batch_pages(start) {
-    set_progress();
-    var offset = start || 0;
-    if(offset >= total_pages) { return; }
-    var data = { action: 'index_pages', offset: offset, batch_size: batch_size };
-    jQuery.ajax({
-        url: ajaxurl,
-        data: data,
-        dataType: 'json',
-        type: 'POST',
-        success: function(response, textStatus) {
-          total_indexed_pages += batch_size;
-          index_batch_pages(offset + batch_size);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           try {
@@ -146,23 +126,21 @@
   }
 
   function set_progress() {
-    var total_indexed = total_indexed_pages + total_indexed_posts;
-    var total_objects = total_posts + total_pages;
 
-    if(total_indexed > total_objects) { total_indexed = total_objects; }
-    var progress_width = Math.round(total_indexed / total_objects * 245);
+    if(total_indexed_posts > total_posts) { total_indexed_posts = total_posts; }
+    var progress_width = Math.round(total_indexed_posts / total_posts * 245);
     if(progress_width < 10) { progress_width = 10; }
-    if(total_indexed == 0) {
+    if(total_indexed_posts == 0) {
       jQuery('#progress_bar').fadeIn();
     }
-    jQuery('#num_indexed_documents').html(total_indexed);
+    jQuery('#num_indexed_documents').html(total_indexed_posts);
     jQuery('#progress_bar').find('div.bar').show().width(progress_width);
-    if(total_indexed >= total_objects) {
+    if(total_indexed_posts >= total_posts) {
       jQuery('#index_posts_button').html('Indexing Complete!');
       jQuery('#progress_bar').fadeOut();
       jQuery('#index_posts_button').unbind();
     } else {
-      jQuery('#index_posts_button').html('Indexing progress... ' + Math.round(total_indexed / total_objects * 100) + '%');
+      jQuery('#index_posts_button').html('Indexing progress... ' + Math.round(total_indexed_posts / total_posts * 100) + '%');
     }
   }
 
