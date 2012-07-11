@@ -1,7 +1,7 @@
 <div class="wrap">
   <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
   <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-    <input type="hidden" name="action" value="set_api_key">
+    <input type="hidden" name="action" value="swiftype_set_api_key">
     <table class="widefat" style="width: 650px;">
       <thead>
         <tr>
@@ -25,4 +25,16 @@
       </tbody>
     </table>
   </form>
+
+  <hr/>
+  <p>
+    If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine,<br/>
+    you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter<br/>
+    a new API key and create a new search engine.
+  </p>
+  <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <input type="hidden" name="action" value="swiftype_clear_config">
+    <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
+  </form>
+
 </div>

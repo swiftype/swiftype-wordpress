@@ -9,7 +9,8 @@ Version: 1.0.7
 Author URI: http://swiftype.com
 */
 
-require_once 'swiftype-php/Client.php';
-require_once 'swiftype_plugin.php';
+require_once 'class-swiftype-client.php';
+require_once 'class-swiftype-error.php';
+require_once 'swiftype-plugin.php';
 
 ?>

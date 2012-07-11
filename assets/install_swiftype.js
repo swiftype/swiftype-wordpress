@@ -9410,7 +9410,7 @@ window['$stjq'] = jQuery.noConflict(true);
 
     window.Swiftype = window.Swiftype || {};
 
-    Swiftype.root_url = 'http://api.swiftype.com';
+    Swiftype.root_url = 'http://localhost:3000';
     Swiftype.pingUrl = function(endpoint, callback) {
       var img  = new Image();
       img.onload = img.onerror = callback;
@@ -9892,7 +9892,7 @@ window['$stjq'] = jQuery.noConflict(true);
       $.each(Swiftype.inputElements, function(idx, el) {
         $(el).swiftype({
           onComplete: onComplete,
-          dataUrl: "http://api.swiftype.com/api/v1/public/engines/suggest.json",
+          dataUrl: "http://localhost:3000/api/v1/public/engines/suggest.json",
           documentTypes: ['posts'],
           engineKey: Swiftype.engineKey,
           nameField: 'title',
