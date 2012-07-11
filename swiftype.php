@@ -11,6 +11,6 @@ Author URI: http://swiftype.com
 
 require_once 'class-swiftype-client.php';
 require_once 'class-swiftype-error.php';
-require_once 'swiftype-plugin.php';
+require_once 'class-swiftype-plugin.php';
 
 ?>
