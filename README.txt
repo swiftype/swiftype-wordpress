@@ -1,7 +1,7 @@
 === Swiftype Search ===
 Contributors: matthewtyriley, qhoxie
 Donate link:
-Tags: search, better search, custom search, relevant search
+Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 3.4
 Stable tag: 1.0.7
