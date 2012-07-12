@@ -98,8 +98,8 @@
 
         $query_string = $wp_query->query_vars['s'];
         $category = $_GET['st-cat'];
-        if (! empty($category)) {
-          $filter = array('filters[posts][category]' => $category);
+        if ( ! empty( $category ) ) {
+          $filter = array( 'filters[posts][category]' => $category );
           $transient_key = 'stq-' . $query_string . '-' . $category;
         } else {
           $filter = array();

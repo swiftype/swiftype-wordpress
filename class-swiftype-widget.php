@@ -2,8 +2,8 @@
 class Swiftype_Search_Widget extends WP_Widget {
 
   function __construct() {
-    $widget_ops = array('classname' => 'swiftype_search_widget', 'description' => __( "A Swiftype search form for your site") );
-    parent::__construct('swiftype_search_widget', __('Swiftype Search'), $widget_ops);
+    $widget_ops = array( 'classname' => 'swiftype_search_widget', 'description' => __( 'A Swiftype search form for your site' ) );
+    parent::__construct( 'swiftype_search_widget', __( 'Swiftype Search' ), $widget_ops );
   }
 
   function widget( $args, $instance ) {
@@ -16,10 +16,10 @@ class Swiftype_Search_Widget extends WP_Widget {
       echo $before_title . $title . $after_title;
 
     $form = '<form role="search" method="get" id="searchform" action="' . esc_url( home_url( '/' ) ) . '" >
-      <div><label class="screen-reader-text" for="s">' . __('Search for:') . '</label>
+      <div><label class="screen-reader-text" for="s">' . __( 'Search for:' ) . '</label>
       <input type="text" value="' . get_search_query() . '" name="s" id="s" />
       <input type="hidden" value="' . $category . '" name="st-cat" id="st-cat" />
-      <input type="submit" id="searchsubmit" value="'. esc_attr__('Search') .'" />
+      <input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search' ) .'" />
       </div>
       </form>';
 
@@ -29,18 +29,18 @@ class Swiftype_Search_Widget extends WP_Widget {
   }
 
   function form( $instance ) {
-    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'category' => 0) );
+    $instance = wp_parse_args( (array) $instance, array( 'title' => '', 'category' => 0 ) );
     $title = $instance['title'];
     $category = $instance['category'];
 ?>
     <p>
-      <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?>
-        <input class="regular-text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+      <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:' ); ?>
+        <input class="regular-text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
       </label>
     </p>
     <p>
-      <label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Category ID:'); ?>
-        <input class="small-text" id="<?php echo $this->get_field_id('category'); ?>" name="<?php echo $this->get_field_name('category'); ?>" type="text" value="<?php echo esc_attr($category); ?>" />
+      <label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php _e( 'Category ID:' ); ?>
+        <input class="small-text" id="<?php echo $this->get_field_id( 'category' ); ?>" name="<?php echo $this->get_field_name( 'category' ); ?>" type="text" value="<?php echo esc_attr( $category ); ?>" />
       </label>
     </p>
 <?php
@@ -48,9 +48,9 @@ class Swiftype_Search_Widget extends WP_Widget {
 
   function update( $new_instance, $old_instance ) {
     $instance = $old_instance;
-    $new_instance = wp_parse_args((array) $new_instance, array( 'title' => '', 'category' => 0));
-    $instance['title'] = strip_tags($new_instance['title']);
-    $instance['category'] = intval($new_instance['category']);
+    $new_instance = wp_parse_args( (array) $new_instance, array( 'title' => '', 'category' => 0 ) );
+    $instance['title'] = strip_tags( $new_instance['title'] );
+    $instance['category'] = intval( $new_instance['category'] );
     return $instance;
   }
 
