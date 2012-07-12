@@ -34,13 +34,20 @@ class Swiftype_Search_Widget extends WP_Widget {
     $category = $instance['category'];
 ?>
     <p>
-      <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:' ); ?>
-        <input class="regular-text" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+      <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?>
+        <input class="regular-text" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
       </label>
     </p>
     <p>
       <label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php _e( 'Category ID:' ); ?>
-        <input class="small-text" id="<?php echo $this->get_field_id( 'category' ); ?>" name="<?php echo $this->get_field_name( 'category' ); ?>" type="text" value="<?php echo esc_attr( $category ); ?>" />
+<?php
+    $settings = array(
+      'name' => $this->get_field_name( 'category' ),
+      'id' => $this->get_field_id( 'category' ),
+      'selected' => $category
+    );
+    wp_dropdown_categories( $settings );
+?>
       </label>
     </p>
 <?php

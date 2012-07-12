@@ -9897,7 +9897,7 @@ window['$stjq'] = jQuery.noConflict(true);
         var $el = $(el);
         $el.swiftype({
           onComplete: onComplete,
-          dataUrl: "http://localhost:3000/api/v1/public/engines/suggest.json",
+          dataUrl: "http://api.swiftype.com/api/v1/public/engines/suggest.json",
           documentTypes: ['posts'],
           engineKey: Swiftype.engineKey,
           nameField: 'title',
