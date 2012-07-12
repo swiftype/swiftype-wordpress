@@ -3,20 +3,27 @@ class Swiftype_Search_Widget extends WP_Widget {
 
   function __construct() {
     $widget_ops = array('classname' => 'swiftype_search_widget', 'description' => __( "A Swiftype search form for your site") );
-    parent::__construct('search', __('Swiftype Search'), $widget_ops);
+    parent::__construct('swiftype_search_widget', __('Swiftype Search'), $widget_ops);
   }
 
   function widget( $args, $instance ) {
-    extract($args);
-    $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
+    extract( $args );
+    $title = apply_filters( 'widget_title', $instance['title'] );
+    $category = $instance['category'];
 
     echo $before_widget;
-    if ( $title ) {
+    if ( ! empty( $title ) )
       echo $before_title . $title . $after_title;
-    }
 
-    // Use current theme search form if it exists
-    get_search_form();
+    $form = '<form role="search" method="get" id="searchform" action="' . esc_url( home_url( '/' ) ) . '" >
+      <div><label class="screen-reader-text" for="s">' . __('Search for:') . '</label>
+      <input type="text" value="' . get_search_query() . '" name="s" id="s" />
+      <input type="hidden" value="' . $category . '" name="st-cat" id="st-cat" />
+      <input type="submit" id="searchsubmit" value="'. esc_attr__('Search') .'" />
+      </div>
+      </form>';
+
+    echo $form;
 
     echo $after_widget;
   }
@@ -43,7 +50,7 @@ class Swiftype_Search_Widget extends WP_Widget {
     $instance = $old_instance;
     $new_instance = wp_parse_args((array) $new_instance, array( 'title' => '', 'category' => 0));
     $instance['title'] = strip_tags($new_instance['title']);
-    $instance['category'] = strip_tags($new_instance['category']);
+    $instance['category'] = intval($new_instance['category']);
     return $instance;
   }
 

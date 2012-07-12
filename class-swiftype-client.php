@@ -34,8 +34,8 @@ class SwiftypeClient {
     return json_decode( $response['body'], true );
   }
 
-  public function search( $engine, $document_type, $query ) {
-    $params = array( 'q' => $query, 'per_page' => 100, 'page' => 1 );
+  public function search( $engine, $document_type, $query, $params = array() ) {
+    $params = array_merge( $params, array( 'q' => $query, 'per_page' => 100, 'page' => 1 ) );
     $url = $this->endpoint . 'engines/' . $engine . '/document_types/' . $document_type . '/search';
     $response = $this->call_api( 'GET', $url, $params );
     return json_decode( $response['body'], true );

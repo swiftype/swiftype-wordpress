@@ -97,12 +97,19 @@
       if( is_search() ) {
 
         $query_string = $wp_query->query_vars['s'];
-        $transient_key = 'stq-' . $query_string;
+        $category = $_GET['st-cat'];
+        if (! empty($category)) {
+          $filter = array('filters[posts][category]' => $category);
+          $transient_key = 'stq-' . $query_string . '-' . $category;
+        } else {
+          $filter = array();
+          $transient_key = 'stq-' . $query_string;
+        }
 
         delete_transient( $transient_key );
 
         if( false == ( $swiftype_post_ids = get_transient( $transient_key ) ) ) {
-          $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string );
+          $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $filter );
 
           // if $results is empty here then our API call failed and we want to fall back on default WP search.
           if( ! isset( $results ) ) {
@@ -350,14 +357,15 @@
       $document = array();
       $document['external_id'] = $post->ID;
       $document['fields'] = array();
-      $document['fields'][0] = array( 'name' => 'object_type', 'type' => 'enum', 'value' => $post->post_type );
-      $document['fields'][1] = array( 'name' => 'url', 'type' => 'enum', 'value' => get_permalink( $post->ID ) );
-      $document['fields'][2] = array( 'name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt );
-      $document['fields'][3] = array( 'name' => 'title', 'type' => 'string', 'value' => $post->post_title );
-      $document['fields'][4] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_content ), ENT_COMPAT, "UTF-8" ) );
-      $document['fields'][5] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_COMPAT, "UTF-8" ) );
-      $document['fields'][6] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
-      $document['fields'][7] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
+      $document['fields'][] = array( 'name' => 'object_type', 'type' => 'enum', 'value' => $post->post_type );
+      $document['fields'][] = array( 'name' => 'url', 'type' => 'enum', 'value' => get_permalink( $post->ID ) );
+      $document['fields'][] = array( 'name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt );
+      $document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => $post->post_title );
+      $document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_content ), ENT_COMPAT, "UTF-8" ) );
+      $document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_COMPAT, "UTF-8" ) );
+      $document['fields'][] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
+      $document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
+      $document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories($post->ID) );
 
       return $document;
     }
