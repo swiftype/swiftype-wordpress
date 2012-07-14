@@ -101,6 +101,7 @@
     * @param WP_Query $wp_query The query for this request.
     */
     public function get_posts_from_swiftype( $wp_query ) {
+      $this->search_successful = false;
       if( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
         return;
       }
@@ -124,7 +125,6 @@
             $this->search_successful = false;
           }
 
-          // if $results is empty here then our API call failed and we want to fall back on default WP search.
           if( ! isset( $results ) ) {
             $this->search_successful = false;
             return;
@@ -263,7 +263,6 @@
       if( ! $this->search_successful ) {
         return $posts;
       }
-
       global $wp_query;
       $wp_query->max_num_pages = $this->total_num_results / $this->per_page;
 
