@@ -5,14 +5,12 @@
     update_option( 'swiftype_api_key', $api_key );
     delete_option( 'swiftype_engine_slug' );
     delete_option( 'swiftype_num_indexed_documents' );
-  } elseif( $_POST['action'] == 'swiftype_set_engine' ) {
-    $engine_key = sanitize_text_field( $_POST['engine_key'] );
+  } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
     $engine_name = sanitize_text_field( $_POST['engine_name'] );
-    if( strlen( $engine_name ) > 0 ) {
-      update_option( 'swiftype_create_engine', $engine_name );
-    } else {
-      update_option( 'swiftype_engine_key', $engine_key );
-    }
+    update_option( 'swiftype_create_engine', $engine_name );
+  } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
+    $engine_key = sanitize_text_field( $_POST['engine_key'] );
+    update_option( 'swiftype_engine_key', $engine_key );
   } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
     delete_option( 'swiftype_api_key' );
     delete_option( 'swiftype_api_authorized' );
@@ -23,6 +21,17 @@
     delete_option( 'swiftype_create_engine' );
     delete_option( 'swiftype_num_indexed_documents' );
   }
+
+/**
+  * The Swiftype Search Wordpress Plugin
+  *
+  * This class encapsulates all of the Swiftype Search plugin's functionality.
+  *
+  * @author  Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>
+  *
+  * @since 1.0
+  *
+  */
 
   class SwiftypePlugin {
 
@@ -80,21 +89,22 @@
         return;
     }
 
-    public function set_sql_limit( $limit ) {
-      if( is_search() && $this->search_successful )
-        $limit = 'LIMIT 0, ' . count( $this->post_ids );
-      return $limit;
-    }
-
-    public function clear_sql_search_clause( $search ) {
-      if( is_search() && ! is_admin() && $this->search_successful ) {
-        $search = '';
-      }
-      return $search;
-    }
-
+  /**
+    * Get search results from the Swiftype API
+    *
+    * Retrieves search results from the Swiftype API based on the user-input text query.
+    * Search results for individual keywords are cached for 5 minutes using the Transients API, so subsequent
+    * identical queries do not call the Swiftype API. Additionally, we retrieve 100 results during the initial
+    * request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
+    * do not hit the Swiftype API either). Call from the pre_get_posts action.
+    *
+    * @param WP_Query $wp_query The query for this request.
+    */
     public function get_posts_from_swiftype( $wp_query ) {
-      if( is_search() ) {
+      if( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
+        return;
+      }
+      if( is_search() && ! is_admin() ) {
 
         $query_string = $wp_query->query_vars['s'];
         $category = $_GET['st-cat'];
@@ -106,10 +116,13 @@
           $transient_key = 'stq-' . $query_string;
         }
 
-        delete_transient( $transient_key );
-
         if( false == ( $swiftype_post_ids = get_transient( $transient_key ) ) ) {
-          $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $filter );
+
+          try {
+            $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $filter );
+          } catch( SwiftypeError $e ) {
+            $this->search_successful = false;
+          }
 
           // if $results is empty here then our API call failed and we want to fall back on default WP search.
           if( ! isset( $results ) ) {
@@ -123,7 +136,7 @@
           foreach( $records as $record ) {
             $swiftype_post_ids[] = $record['external_id'];
           }
-          set_transient( $transient_key, $swiftype_post_ids, 60 * 5 );
+          set_transient( $transient_key, $swiftype_post_ids, 60 * 1 );
         }
 
         $page = get_query_var( 'paged' );
@@ -139,20 +152,44 @@
 
     }
 
-    public function check_api_authorized() {
+  /**
+    * Check whether or not the Swiftype API client is authorized
+    *
+    * Retrieves search results from the Swiftype API based on the user-input text query.
+    * Search results for individual keywords are cached for 5 minutes using the Transients API, so subsequent
+    * identical queries do not call the Swiftype API. Additionally, we retrieve 100 results during the initial
+    * request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
+    * do not hit the Swiftype API either). Called from the pre_get_posts action.
+    *
+    * @return null
+    */
+    private function check_api_authorized() {
       if( ! is_admin() )
         return;
       if( $this->api_authorized )
         return;
 
-      if( ! $this->api_key || strlen( $this->api_key ) == 0 )
+      if( $this->api_key && strlen( $this->api_key ) > 0 ) {
+        try {
+          $this->api_authorized = $this->client->authorized();
+        } catch( SwiftypeError $e ) {
+          $this->api_authorized = false;
+        }
+      } else {
         $this->api_authorized = false;
-      else
-        $this->api_authorized = $this->client->authorized();
+      }
 
       update_option( 'swiftype_api_authorized', $this->api_authorized );
     }
 
+  /**
+    * Check whether or not the search engine for this Wordpress install is initialized
+    *
+    * Performs a series of calls to the Swiftype API to ensure that the API Key and engine names the user has provided
+    * during plugin setup have been properly initialized on the server. This call will be made every time the user
+    * loads the admin page until the engine is correctly initialized. Once the engine is properly initialized
+    * an instance variable is set and future calls are short-circuited.
+    */
     public function check_engine_initialized() {
       if( ! is_admin() )
         return;
@@ -171,11 +208,11 @@
         $this->engine_slug = $engine['slug'];
       }
 
-      if( ! $this->engine_slug || strlen( $this->engine_slug ) == 0 ) {
+      try {
+        $engines = $this->client->get_engines();
+      } catch( SwiftypeError $e ) {
         return;
       }
-
-      $engines = $this->client->get_engines();
       foreach( $engines as $remote_engine ) {
         if( $remote_engine['key'] == $this->engine_key ) {
           $engine = $remote_engine;
@@ -189,7 +226,7 @@
         $this->engine_key = $engine['key'];
         try {
           $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
-        } catch( SwiftypeError $e ) { }
+        } catch( SwiftypeError $e ) {}
         if( ! $document_type ) {
           try {
             $document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
@@ -210,11 +247,17 @@
       update_option( 'swiftype_engine_initialized', $this->engine_initialized );
     }
 
+
+  /**
+    * Get posts from the database in the order dicated by the Swiftype API
+    *
+    * Apply the correct ordering to the posts retrieved in the main query, based on results from the Swiftype API.
+    * Called by the the_posts filter.
+    *
+    * @param array $posts the posts ordered as they are when they are originally retrieved from the database
+    */
     public function get_search_result_posts( $posts ) {
       if( ! is_search() || ! $this->engine_slug || strlen( $this->engine_slug ) == 0 ) {
-        return $posts;
-      }
-      if( function_exists( 'is_main_query' ) && ! is_main_query() ) {
         return $posts;
       }
       if( ! $this->search_successful ) {
@@ -237,11 +280,54 @@
       return $ordered_posts;
     }
 
+  /**
+    * Set the LIMIT clause
+    *
+    * Sets the proper limit for the query to get posts, based on the number of search results retrieved by calls to the Swiftype API.
+    * Called from the post_limits filter.
+    *
+    * @param string $limit The existing LIMIT clause as it is formed before making it to this filter.
+    * @return string The modified LIMIT clause
+    */
+    public function set_sql_limit( $limit ) {
+      if( is_search() && $this->search_successful )
+        $limit = 'LIMIT 0, ' . count( $this->post_ids );
+      return $limit;
+    }
+
+  /**
+    * Clear the LIKE clause
+    *
+    * Clears the existing LIKE (search) clause that Wordpress sets when performing a search, since the searching aspects of the query
+    * are handled by the Swiftype client. Called from the posts_search filter.
+    *
+    * @param string $search The existing LIKE clause as it is formed before making it to this filter.
+    * @return string The modified LIKE clause
+    */
+    public function clear_sql_search_clause( $search ) {
+      if( is_search() && ! is_admin() && $this->search_successful ) {
+        $search = '';
+      }
+      return $search;
+    }
+
+  /**
+    * Refresh the num_indexed_documents instance variable
+    *
+    * Resets the num_indexed_documents instance variable (and option) by calling the Swiftype API and getting the official
+    * number of documents indexed in the search engine. This method is called asynchronously via client-side Ajax any time
+    * an admin clicks the "synchronize with swiftype" button on the plugin Admin page.
+    */
     public function async_refresh_num_indexed_documents() {
       $this->engine_slug = get_option( 'swiftype_engine_slug' );
       $this->engine_name = get_option( 'swiftype_engine_name' );
       $this->engine_key = get_option( 'swiftype_engine_key' );
-      $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
+      try {
+        $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
+      } catch( SwiftypeError $e ) {
+        http_response_code( 500 );
+        die();
+      }
       $this->num_indexed_documents = $document_type['document_count'];
       update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
       header( 'Content-Type: application/json' );
@@ -249,6 +335,13 @@
       die();
     }
 
+  /**
+    * Index a batch of posts
+    *
+    * Sends a batch of posts to the Swiftype API via the client in order to index them in the server-side search engine.
+    * This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
+    * on the plugin Admin page.
+    */
     public function async_index_batch_of_posts() {
       $offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
       $batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
@@ -286,6 +379,13 @@
       die();
     }
 
+  /**
+    * Delete all posts from the index that shouldn't be indexed in the search engine
+    *
+    * Sends a request to the Swiftype API to remove from the server-side search engine any posts that are not 'published'.
+    * This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
+    * on the plugin Admin page.
+    */
     public function async_delete_all_trashed_posts() {
       $document_ids = array();
 
@@ -312,13 +412,23 @@
         }
       }
       if( count( $document_ids ) > 0 ) {
-        $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
+        try {
+          $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
+        } catch( SwiftypeError $e ) {
+          http_response_code( 500 );
+          die();
+        }
       }
       header( "Content-Type: application/json" );
       print( "{}" );
       die();
     }
 
+  /**
+    * Sends a request to the Swiftype API index a specific post in the server-side search engine.
+    *
+    * @param int $post_id The ID of the post to be indexed.
+    */
     public function index_post( $post_id ) {
       $post = get_post( $post_id );
       $document = $this->convert_post_to_document( $post );
@@ -326,17 +436,32 @@
         $this->client->create_or_update_document( $this->engine_slug, $this->document_type_slug, $document );
         $this->num_indexed_documents += 1;
         update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
-      } catch( SwiftypeError $e ) {}
+      } catch( SwiftypeError $e ) {
+        return;
+      }
     }
 
+  /**
+    * Sends a request to the Swiftype API remove a specific post from the server-side search engine.
+    *
+    * @param int $post_id The ID of the post to be deleted.
+    */
     public function delete_post( $post_id ){
       try {
-        $status = $this->client->delete_document( $this->engine_slug, $this->document_type_slug, $post_id );
+        $this->client->delete_document( $this->engine_slug, $this->document_type_slug, $post_id );
         $this->num_indexed_documents -= 1;
         update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
-      } catch( SwiftypeError $e ) {}
+      } catch( SwiftypeError $e ) {
+        return;
+      }
     }
 
+  /**
+    * Converts a post into an array that can be sent to the Swiftype API to be indexed in the server-side engine.
+    *
+    * @param object $somepost The post that is to be converted
+    * @return array An array representing the post that is suitable for sending to the Swiftype API
+    */
     private function convert_post_to_document( $somepost ) {
       global $post;
       $post = $somepost;
@@ -370,18 +495,33 @@
       return $document;
     }
 
+  /**
+    * Includes the Swiftype Search plugin's admin page
+    */
     public function swiftype_admin_page() {
       include( 'swiftype-admin-page.php' );
     }
 
+  /**
+    * Creates a menu in the Wordpress admin for the Swiftype Search plugin
+    * This method is called by the admin_menu action.
+    */
     public function swiftype_menu() {
       add_menu_page( 'Swiftype Search', 'Swiftype Search', 'manage_options', __FILE__, array( $this, 'swiftype_admin_page' ), plugins_url( 'assets/swiftype_logo_menu.png', __FILE__ ) );
     }
 
+  /**
+    * Enqueues the styles used by the plugin's admin page.
+    * This method is called by the admin_enqueue_scripts action.
+    */
     public function enqueue_admin_assets() {
       wp_enqueue_style( 'styles', plugins_url( 'assets/admin_styles.css', __FILE__ ) );
     }
 
+  /**
+    * Enqueues the javascripts and styles to be used by the plugin on the primary website.
+    * This method is called by the wp_enqueue_scripts action.
+    */
     public function enqueue_swiftype_assets() {
       if( is_admin() )
         return;

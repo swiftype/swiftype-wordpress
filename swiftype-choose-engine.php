@@ -9,7 +9,7 @@
   <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
 
   <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-    <input type="hidden" name="action" value="swiftype_set_engine">
+    <input type="hidden" name="action" value="swiftype_create_engine">
 
     <table class="widefat" style="width: 650px;">
       <thead>
@@ -20,31 +20,53 @@
       <tbody>
         <tr>
           <td>
-            Please create a search engine for the plugin to use.<br/>
+            <br/>
+            Please name the search engine the plugin will use:<br/>
             <ul>
               <li>
                 <label>Engine name:</label>
-                <input type="text" name="engine_name" class="regular-text" />
+                <input type="text" name="engine_name" class="regular-text" placeholder="engine name" />
                 <span class="description">e.g. Wordpress Site Search</span>
               </li>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Use an existing engine.<br/>
-            <ul>
-              <li>
-                <label>Engine key:</label>
-                <input type="text" name="engine_key" class="regular-text" />
-              </li>
+              <br/>
+              <input type="submit" name="Submit" value="Create Engine"  class="button-primary" id="create_engine"/>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <br/>
-    <input type="submit" name="Submit" value="Save Engine Configuration"  class="button-primary" />
   </form>
+  <br/>
+
+  <a href="#" id="show_existing_engine">Advanced: Use an existing Swiftype Search Engine.</a>
+
+  <div id="existing_engine" style="display:none; margin: 10px 0;">
+    <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+      <input type="hidden" name="action" value="swiftype_use_existing_engine">
+      <table class="widefat" style="width: 650px;">
+        <thead>
+          <tr>
+            <th class="row-title">Use an existing engine.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <br/>
+              Please enter the engine key for the existing engine you would like to use.<br/>
+              The engine key for an engine can be found in the Swiftype dashboard.
+              <ul>
+                <li>
+                  <label>Engine key:</label>
+                  <input type="text" name="engine_key" class="regular-text" />
+                </li>
+                <br/>
+                <input type="submit" name="Submit" value="Use Existing Engine"  class="button-primary" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
 
   <hr/>
   <p>
@@ -58,3 +80,12 @@
   </form>
 
 </div>
+
+<script>
+
+  jQuery('#show_existing_engine').click(function() {
+    jQuery('#existing_engine').slideDown();
+    jQuery("#create_engine").attr("disabled", "disabled");
+  });
+
+</script>

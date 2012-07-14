@@ -1,4 +1,18 @@
 <?php
+
+/**
+  * The Swiftype Search Widget class
+  *
+  * This class encapsulates the Swiftype Search plugin's widget functionality.
+  * The widget allows users to add search boxes to any page of their Wordpress site
+  * and allows them to specify options for the way that search box will behave.
+  *
+  * @author  Quin Hoxie <qhoxie@swiftype.com>, Matt Riley <mriley@swiftype.com>
+  *
+  * @since 1.0
+  *
+  */
+
 class Swiftype_Search_Widget extends WP_Widget {
 
   function __construct() {
