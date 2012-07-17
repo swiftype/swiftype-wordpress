@@ -9615,6 +9615,10 @@ window['$stjq'] = jQuery.noConflict(true);
           }
         });
 
+        $(document).bind('scroll', function () {
+          $this.styleDropdown();
+        });
+
         // stupid hack to get around loss of focus on mousedown
         var mouseDown = false;
         var blurWait = false;
