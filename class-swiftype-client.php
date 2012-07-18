@@ -88,7 +88,6 @@ class SwiftypeClient {
 /**
   * Issue a query to an engine within a specific document_type
   *
-  * @uses apply_filters() Calls 'swiftype_search_params' for the search parameters
   * @param string $engine_id The engine_id of the engine to be searched
   * @param string $document_type_id The document_type_id of the document_type to be searched
   * @param string $query The search query
@@ -97,7 +96,6 @@ class SwiftypeClient {
   */
   public function search( $engine_id, $document_type_id, $query, $params = array() ) {
     $params = array_merge( $params, array( 'q' => $query, 'per_page' => 100, 'page' => 1 ) );
-    $params = apply_filters( 'swiftype_search_params', $params );
     $url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '/search';
     $response = $this->call_api( 'GET', $url, $params );
     return json_decode( $response['body'], true );

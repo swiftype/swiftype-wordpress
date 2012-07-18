@@ -98,6 +98,7 @@
     * request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
     * do not hit the Swiftype API either). Call from the pre_get_posts action.
     *
+    * @uses apply_filters() Calls 'swiftype_search_params' for the search parameters
     * @param WP_Query $wp_query The query for this request.
     */
     public function get_posts_from_swiftype( $wp_query ) {
@@ -110,17 +111,18 @@
         $query_string = $wp_query->query_vars['s'];
         $category = $_GET['st-cat'];
         if ( ! empty( $category ) ) {
-          $filter = array( 'filters[posts][category]' => $category );
-          $transient_key = 'stq-' . $query_string . '-' . $category;
+          $params = array( 'filters[posts][category]' => $category );
         } else {
-          $filter = array();
-          $transient_key = 'stq-' . $query_string;
+          $params = array();
         }
+
+        $params = apply_filters( 'swiftype_search_params', $params );
+        $transient_key = 'stq-' . $query_string . '-' . crc32( serialize( $params ) );
 
         if( false == ( $swiftype_post_ids = get_transient( $transient_key ) ) ) {
 
           try {
-            $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $filter );
+            $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
           } catch( SwiftypeError $e ) {
             $this->search_successful = false;
           }
