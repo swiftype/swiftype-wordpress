@@ -249,7 +249,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
     );
 
     if( 'GET' == $method || 'DELETE' == $method ) {
-      $url .= '?' . http_build_query( $params );
+      $url .= '?' . $this->serialize_params( $params );
       $args['method'] = $method;
       $args['body'] = array();
     } else if( $method == 'POST' ) {
@@ -275,6 +275,16 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
     }
   }
 
+/**
+  * Serialize parameters into query string.  Modifies http_build_query to remove array indexes.
+  *
+  * @param array $params An array of parameters to be passed along as part of the call
+  * @return string The serialized query string
+  */
+  private function serialize_params( $params ) {
+    $query_string = http_build_query( $params );
+    return preg_replace( '/%5B(?:[0-9]+)%5D=/', '%5B%5D=', $query_string );
+  }
 }
 
 ?>
