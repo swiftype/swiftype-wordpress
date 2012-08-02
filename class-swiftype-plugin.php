@@ -64,7 +64,7 @@
       add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
 
       add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
-      add_action( 'publish_post', array( $this, 'index_post' ) );
+      add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
       add_action( 'trashed_post', array( $this, 'delete_post' ) );
 
       add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
@@ -423,6 +423,20 @@
       header( "Content-Type: application/json" );
       print( "{}" );
       die();
+    }
+
+  /**
+    * Indexes or deletes a post based on status.
+    *
+    * @param int $post_id The ID of the post to be indexed.
+    */
+    public function handle_save_post( $post_id ) {
+      $post = get_post( $post_id );
+      if( "publish" == $post->post_status ) {
+        $this->index_post( $post_id );
+      } else {
+        $this->delete_post( $post_id );
+      }
     }
 
   /**
