@@ -93,8 +93,7 @@
     * Get search results from the Swiftype API
     *
     * Retrieves search results from the Swiftype API based on the user-input text query.
-    * Search results for individual keywords are cached for 5 minutes using the Transients API, so subsequent
-    * identical queries do not call the Swiftype API. Additionally, we retrieve 100 results during the initial
+    * We retrieve 100 results during the initial
     * request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
     * do not hit the Swiftype API either). Call from the pre_get_posts action.
     *
@@ -117,28 +116,23 @@
         }
 
         $params = apply_filters( 'swiftype_search_params', $params );
-        $transient_key = 'stq-' . $query_string . '-' . crc32( serialize( $params ) );
 
-        if( false == ( $swiftype_post_ids = get_transient( $transient_key ) ) ) {
+        try {
+          $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+        } catch( SwiftypeError $e ) {
+          $this->search_successful = false;
+        }
 
-          try {
-            $results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
-          } catch( SwiftypeError $e ) {
-            $this->search_successful = false;
-          }
+        if( ! isset( $results ) ) {
+          $this->search_successful = false;
+          return;
+        }
 
-          if( ! isset( $results ) ) {
-            $this->search_successful = false;
-            return;
-          }
+        $swiftype_post_ids = array();
+        $records = $results['records']['posts'];
 
-          $swiftype_post_ids = array();
-          $records = $results['records']['posts'];
-
-          foreach( $records as $record ) {
-            $swiftype_post_ids[] = $record['external_id'];
-          }
-          set_transient( $transient_key, $swiftype_post_ids, 60 * 1 );
+        foreach( $records as $record ) {
+          $swiftype_post_ids[] = $record['external_id'];
         }
 
         $page = get_query_var( 'paged' );
@@ -158,8 +152,7 @@
     * Check whether or not the Swiftype API client is authorized
     *
     * Retrieves search results from the Swiftype API based on the user-input text query.
-    * Search results for individual keywords are cached for 5 minutes using the Transients API, so subsequent
-    * identical queries do not call the Swiftype API. Additionally, we retrieve 100 results during the initial
+    * We retrieve 100 results during the initial
     * request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
     * do not hit the Swiftype API either). Called from the pre_get_posts action.
     *
