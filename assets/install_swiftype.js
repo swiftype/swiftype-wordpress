@@ -9889,13 +9889,12 @@ window['$stjq'] = jQuery.noConflict(true);
       typingDelay: 80
     };
 
-    Swiftype.engineKey = swiftypeParams.engineKey;
-
     var onComplete = function(dataItem,prefix) {
-      Swiftype.pingAutoSelection(Swiftype.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
+      Swiftype.pingAutoSelection(config.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
     };
 
     $(function() {
+      Swiftype.engineKey = swiftypeParams.engineKey;
       Swiftype.inputElements = $('input[name=s]');
       $.each(Swiftype.inputElements, function(idx, el) {
         var $el = $(el);
