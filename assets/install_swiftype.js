@@ -9889,17 +9889,18 @@ window['$stjq'] = jQuery.noConflict(true);
       typingDelay: 80
     };
 
-    var onComplete = function(dataItem,prefix) {
-      Swiftype.pingAutoSelection(config.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
-    };
+
 
     $(function() {
       Swiftype.engineKey = swiftypeParams.engineKey;
       Swiftype.inputElements = $('input[name=s]');
+
       $.each(Swiftype.inputElements, function(idx, el) {
         var $el = $(el);
         $el.swiftype({
-          onComplete: onComplete,
+          onComplete: function(dataItem,prefix) {
+            Swiftype.pingAutoSelection(Swiftype.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
+          },
           dataUrl: "http://api.swiftype.com/api/v1/public/engines/suggest.json",
           documentTypes: ['posts'],
           engineKey: Swiftype.engineKey,
