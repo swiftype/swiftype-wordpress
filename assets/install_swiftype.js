@@ -9889,8 +9889,6 @@ window['$stjq'] = jQuery.noConflict(true);
       typingDelay: 80
     };
 
-
-
     $(function() {
       Swiftype.engineKey = swiftypeParams.engineKey;
       Swiftype.inputElements = $('input[name=s]');
