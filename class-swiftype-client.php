@@ -257,7 +257,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 
     $response = wp_remote_request( $url, $args );
 
-    if( ! is_wp_error( $repsonse ) ) {
+    if( ! is_wp_error( $response ) ) {
       $response_code = wp_remote_retrieve_response_code( $response );
       $response_message = wp_remote_retrieve_response_message( $response );
       $response_body = wp_remote_retrieve_body( $response );
