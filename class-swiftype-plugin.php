@@ -1,25 +1,26 @@
 <?php
-
-  if( $_POST['action'] == 'swiftype_set_api_key' ) {
-    $api_key = sanitize_text_field( $_POST['api_key'] );
-    update_option( 'swiftype_api_key', $api_key );
-    delete_option( 'swiftype_engine_slug' );
-    delete_option( 'swiftype_num_indexed_documents' );
-  } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
-    $engine_name = sanitize_text_field( $_POST['engine_name'] );
-    update_option( 'swiftype_create_engine', $engine_name );
-  } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
-    $engine_key = sanitize_text_field( $_POST['engine_key'] );
-    update_option( 'swiftype_engine_key', $engine_key );
-  } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
-    delete_option( 'swiftype_api_key' );
-    delete_option( 'swiftype_api_authorized' );
-    delete_option( 'swiftype_engine_slug' );
-    delete_option( 'swiftype_engine_name' );
-    delete_option( 'swiftype_engine_key' );
-    delete_option( 'swiftype_engine_initialized' );
-    delete_option( 'swiftype_create_engine' );
-    delete_option( 'swiftype_num_indexed_documents' );
+  if( isset($_POST['action']) ) {
+    if( $_POST['action'] == 'swiftype_set_api_key' ) {
+      $api_key = sanitize_text_field( $_POST['api_key'] );
+      update_option( 'swiftype_api_key', $api_key );
+      delete_option( 'swiftype_engine_slug' );
+      delete_option( 'swiftype_num_indexed_documents' );
+    } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
+      $engine_name = sanitize_text_field( $_POST['engine_name'] );
+      update_option( 'swiftype_create_engine', $engine_name );
+    } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
+      $engine_key = sanitize_text_field( $_POST['engine_key'] );
+      update_option( 'swiftype_engine_key', $engine_key );
+    } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
+      delete_option( 'swiftype_api_key' );
+      delete_option( 'swiftype_api_authorized' );
+      delete_option( 'swiftype_engine_slug' );
+      delete_option( 'swiftype_engine_name' );
+      delete_option( 'swiftype_engine_key' );
+      delete_option( 'swiftype_engine_initialized' );
+      delete_option( 'swiftype_create_engine' );
+      delete_option( 'swiftype_num_indexed_documents' );
+    }
   }
 
 /**
