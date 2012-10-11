@@ -1,5 +1,5 @@
 <?php
-  if( isset($_POST['action']) ) {
+  if( isset( $_POST['action'] ) ) {
     if( $_POST['action'] == 'swiftype_set_api_key' ) {
       $api_key = sanitize_text_field( $_POST['api_key'] );
       update_option( 'swiftype_api_key', $api_key );
