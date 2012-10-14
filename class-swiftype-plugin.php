@@ -187,6 +187,8 @@
     * an instance variable is set and future calls are short-circuited.
     */
     public function check_engine_initialized() {
+      $engine = null;
+
       if( ! is_admin() )
         return;
       if( $this->engine_initialized )
@@ -223,7 +225,7 @@
         try {
           $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
         } catch( SwiftypeError $e ) {}
-        if( ! $document_type ) {
+        if( !isset($document_type) || !$document_type ) {
           try {
             $document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
           } catch( SwiftypeError $e ) {
