@@ -225,7 +225,7 @@
         try {
           $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
         } catch( SwiftypeError $e ) {}
-        if( !isset($document_type) || !$document_type ) {
+        if( ! isset( $document_type ) || ! $document_type ) {
           try {
             $document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
           } catch( SwiftypeError $e ) {
@@ -322,7 +322,7 @@
       try {
         $document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
       } catch( SwiftypeError $e ) {
-        http_response_code( 500 );
+        header('HTTP/1.1 500 Internal Server Error');
         die();
       }
       $this->num_indexed_documents = $document_type['document_count'];
@@ -359,7 +359,7 @@
         try {
           $resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
         } catch( SwiftypeError $e ) {
-          http_response_code( 500 );
+          header('HTTP/1.1 500 Internal Server Error');
           die();
         }
         $num_written = 0;
@@ -412,7 +412,7 @@
         try {
           $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
         } catch( SwiftypeError $e ) {
-          http_response_code( 500 );
+          header('HTTP/1.1 500 Internal Server Error');
           die();
         }
       }

@@ -264,12 +264,12 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
       if( 200 == $response_code ) {
         return array( 'code' => $response_code, 'body' => $response_body );
       } elseif( 200 != $response_code && ! empty( $response_message ) ) {
-        throw new SwiftypeError( $response_message, $reponse_code );
+        throw new SwiftypeError( $response_message, $response_code );
       } else {
-        throw new SwiftypeError( 'Unknown Error', $reponse_code );
+        throw new SwiftypeError( 'Unknown Error', $response_code );
       }
     } else {
-      throw new SwiftypeError( $response->get_error_message(), $response->get_error_code() );
+      throw new SwiftypeError( $response->get_error_message(), 500 );
     }
   }
 
