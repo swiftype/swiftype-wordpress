@@ -501,7 +501,14 @@
       $document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_COMPAT, "UTF-8" ) );
       $document['fields'][] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
       $document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
-      $document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories($post->ID) );
+      $document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories( $post->ID ) );
+
+      if ( has_post_thumbnail( $post->ID ) ) {
+        $image = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
+      } else {
+        $image = NULL;
+      }
+      $document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => $image );
 
       return $document;
     }
