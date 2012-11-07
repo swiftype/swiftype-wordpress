@@ -496,7 +496,7 @@
       $document['fields'][] = array( 'name' => 'object_type', 'type' => 'enum', 'value' => $post->post_type );
       $document['fields'][] = array( 'name' => 'url', 'type' => 'enum', 'value' => get_permalink( $post->ID ) );
       $document['fields'][] = array( 'name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt );
-      $document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => $post->post_title );
+      $document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => html_entity_decode( strip_tags( $post->post_title ), ENT_COMPAT, "UTF-8" ) );
       $document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_content ), ENT_COMPAT, "UTF-8" ) );
       $document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_COMPAT, "UTF-8" ) );
       $document['fields'][] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
