@@ -138,7 +138,7 @@ class SwiftypeClient {
   public function delete_document( $engine_id, $document_type_id, $external_id ) {
     $url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '/documents';
     $url .= '/' . $external_id;
-    $response = $this->call_api( 'DELETE', $url, $params );
+    $response = $this->call_api( 'DELETE', $url );
   }
 
 /**
