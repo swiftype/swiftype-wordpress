@@ -38,7 +38,6 @@
 
     private $client = NULL;
     private $document_type_slug = 'posts';
-    private $per_page = 10;
 
     private $api_key = NULL;
     private $engine_slug = NULL;
@@ -49,7 +48,9 @@
     private $engine_initialized = false;
 
     private $post_ids = NULL;
-    private $total_num_results = 0;
+    private $total_result_count = 0;
+    private $num_pages = 0;
+    private $per_page = 0;
     private $search_successful = false;
 
     public function SwiftypePlugin() { $this->__construct(); }
@@ -109,11 +110,11 @@
       if( is_search() && ! is_admin() ) {
 
         $query_string = $wp_query->query_vars['s'];
+        $page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
         $category = $_GET['st-cat'];
+        $params = array( 'page' => $page );
         if ( ! empty( $category ) ) {
-          $params = array( 'filters[posts][category]' => $category );
-        } else {
-          $params = array();
+          $params['filters[posts][category]'] = $category;
         }
 
         $params = apply_filters( 'swiftype_search_params', $params );
@@ -129,20 +130,18 @@
           return;
         }
 
-        $swiftype_post_ids = array();
+        $this->post_ids = array();
         $records = $results['records']['posts'];
 
         foreach( $records as $record ) {
-          $swiftype_post_ids[] = $record['external_id'];
+          $this->post_ids[] = $record['external_id'];
         }
 
-        $page = get_query_var( 'paged' );
-        $offset = 0;
-        if( $page > 0 )
-          $offset = ( $page - 1 ) * $this->per_page;
+        $result_info = $results['info']['posts'];
+        $this->per_page = $result_info['per_page'];
 
-        $this->total_num_results = count( $swiftype_post_ids );
-        $this->post_ids = array_slice( $swiftype_post_ids, $offset, $this->per_page );
+        $this->total_result_count = $result_info['total_result_count'];
+        $this->num_pages = $result_info['num_pages'];
         $wp_query->query_vars['post__in'] = $this->post_ids;
         $this->search_successful = true;
       }
@@ -262,7 +261,7 @@
         return $posts;
       }
       global $wp_query;
-      $wp_query->max_num_pages = $this->total_num_results / $this->per_page;
+      $wp_query->max_num_pages = $this->num_pages;
 
       $lookup_table = array();
       foreach( $posts as $post ) {
