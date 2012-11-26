@@ -260,8 +260,8 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
     if( ! is_wp_error( $response ) ) {
       $response_code = wp_remote_retrieve_response_code( $response );
       $response_message = wp_remote_retrieve_response_message( $response );
-      $response_body = wp_remote_retrieve_body( $response );
       if( 200 == $response_code ) {
+        $response_body = wp_remote_retrieve_body( $response );
         return array( 'code' => $response_code, 'body' => $response_body );
       } elseif( 200 != $response_code && ! empty( $response_message ) ) {
         throw new SwiftypeError( $response_message, $response_code );
