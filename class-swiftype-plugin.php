@@ -531,8 +531,10 @@
     * Enqueues the styles used by the plugin's admin page.
     * This method is called by the admin_enqueue_scripts action.
     */
-    public function enqueue_admin_assets() {
-      wp_enqueue_style( 'styles', plugins_url( 'assets/admin_styles.css', __FILE__ ) );
+    public function enqueue_admin_assets($hook) {
+      if( 'toplevel_page_swiftype' != $hook )
+        return;
+      wp_enqueue_style( 'admin_styles', plugins_url( 'assets/admin_styles.css', __FILE__ ) );
     }
 
   /**
