@@ -142,7 +142,7 @@
 
         $this->total_result_count = $result_info['total_result_count'];
         $this->num_pages = $result_info['num_pages'];
-        $wp_query->query_vars['post__in'] = $this->post_ids;
+        set_query_var( 'post__in', $this->post_ids);
         $this->search_successful = true;
       }
 
