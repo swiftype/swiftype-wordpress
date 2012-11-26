@@ -524,7 +524,7 @@
     * This method is called by the admin_menu action.
     */
     public function swiftype_menu() {
-      add_menu_page( 'Swiftype Search', 'Swiftype Search', 'manage_options', __FILE__, array( $this, 'swiftype_admin_page' ), plugins_url( 'assets/swiftype_logo_menu.png', __FILE__ ) );
+      add_menu_page( 'Swiftype Search', 'Swiftype Search', 'manage_options', "swiftype", array( $this, 'swiftype_admin_page' ), plugins_url( 'assets/swiftype_logo_menu.png', __FILE__ ) );
     }
 
   /**
