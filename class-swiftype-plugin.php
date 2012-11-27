@@ -109,7 +109,7 @@
       }
       if( is_search() && ! is_admin() ) {
 
-        $query_string = $wp_query->query_vars['s'];
+        $query_string = get_search_query();
         $page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
         $category = $_GET['st-cat'];
         $params = array( 'page' => $page );
