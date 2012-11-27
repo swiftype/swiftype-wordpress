@@ -129,11 +129,10 @@
       if( is_search() && ! is_admin() ) {
         $query_string = get_search_query();
         $page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-        $category = $_GET['st-cat'];
 
         $params = array( 'page' => $page );
-        if ( ! empty( $category ) ) {
-          $params['filters[posts][category]'] = $category;
+        if ( isset( $_GET['st-cat'] ) && ! empty( $_GET['st-cat'] ) ) {
+          $params['filters[posts][category]'] = sanitize_text_field( $_GET['st-cat'] );
         }
 
         $params = apply_filters( 'swiftype_search_params', $params );
