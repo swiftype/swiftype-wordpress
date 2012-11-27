@@ -45,6 +45,7 @@
 
 				$this->api_key = get_option( 'swiftype_api_key' );
 				$this->engine_slug = get_option( 'swiftype_engine_slug' );
+				$this->engine_key = get_option( 'swiftype_engine_key' );
 
 				$this->client = new SwiftypeClient;
 				$this->client->set_api_key( $this->api_key );
