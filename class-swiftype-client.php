@@ -284,5 +284,3 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
     return preg_replace( '/%5B(?:[0-9]+)%5D=/', '%5B%5D=', $query_string );
   }
 }
-
-?>

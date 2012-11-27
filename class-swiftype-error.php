@@ -13,5 +13,3 @@
   */
 
 class SwiftypeError extends Exception {}
-
-?>

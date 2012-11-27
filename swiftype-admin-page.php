@@ -12,5 +12,3 @@
   } else {
     include( 'swiftype-authorize.php' );
   }
-
-?>

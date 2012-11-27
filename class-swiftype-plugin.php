@@ -552,5 +552,3 @@
   }
 
   $swiftype_plugin = new SwiftypePlugin();
-
-?>
