@@ -8,7 +8,7 @@
 <div class="wrap">
   <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
 
-  <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
     <input type="hidden" name="action" value="swiftype_create_engine">
 
     <table class="widefat" style="width: 650px;">
@@ -40,7 +40,7 @@
   <a href="#" id="show_existing_engine">Advanced: Use an existing Swiftype Search Engine.</a>
 
   <div id="existing_engine" style="display:none; margin: 10px 0;">
-    <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
       <input type="hidden" name="action" value="swiftype_use_existing_engine">
       <table class="widefat" style="width: 650px;">
         <thead>
@@ -74,7 +74,7 @@
     you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter<br/>
     a new API key and create a new search engine.
   </p>
-  <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
     <input type="hidden" name="action" value="swiftype_clear_config">
     <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
   </form>

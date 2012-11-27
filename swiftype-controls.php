@@ -82,7 +82,7 @@
     you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter<br/>
     a new API key and create a new search engine.
   </p>
-  <form name="swiftype_settings" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
     <input type="hidden" name="action" value="swiftype_clear_config">
     <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
   </form>
