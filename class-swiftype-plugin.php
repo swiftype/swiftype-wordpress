@@ -53,6 +53,12 @@
 
 		}
 
+		/**
+			* Initialize the Swiftype Search plugin's admin screen
+			*
+			* Performs most of the mechanical work of the admin settings screen. Gets/Sets Option values based on user input, and binds
+			* functions ot different actions that are triggered in the admin area.
+			*/
 		public function initialize_admin_screen() {
 			if ( current_user_can( 'manage_options' ) ) {
 				// these methods make the Swiftype Plugin admin page work
