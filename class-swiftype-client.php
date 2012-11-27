@@ -77,6 +77,7 @@ class SwiftypeClient {
   * Create an engine
   *
   * @param array $params An array of engine parameters
+  * @return array The engine that was created
   */
   public function create_engine( $params ) {
     $engine = array( 'engine' => $params );
