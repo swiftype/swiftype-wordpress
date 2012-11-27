@@ -397,7 +397,8 @@
           'future',
           'private'
         ),
-        'post_type' => 'any'
+        'post_type' => 'any',
+        'fields' => 'ids'
       );
 
       $posts = get_posts( $posts_query );
