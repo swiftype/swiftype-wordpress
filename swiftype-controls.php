@@ -1,4 +1,5 @@
 <?php
+  $nonce = wp_create_nonce( 'swiftype-ajax-nonce' );
   $api_key = get_option( 'swiftype_api_key' );
   $engine_slug = get_option( 'swiftype_engine_slug' );
   $engine_name = get_option( 'swiftype_engine_name' );
@@ -83,6 +84,7 @@
     a new API key and create a new search engine.
   </p>
   <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <?php wp_nonce_field('swiftype-nonce'); ?>
     <input type="hidden" name="action" value="swiftype_clear_config">
     <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
   </form>
@@ -104,7 +106,7 @@
     set_progress();
     var offset = start || 0;
     if(offset >= total_posts) { return; }
-    var data = { action: 'index_batch_of_posts', offset: offset, batch_size: batch_size };
+    var data = { action: 'index_batch_of_posts', offset: offset, batch_size: batch_size, _ajax_nonce: '<?php echo $nonce ?>' };
     jQuery.ajax({
         url: ajaxurl,
         data: data,
@@ -130,7 +132,7 @@
   function delete_all_trashed_posts() {
     jQuery.ajax({
         url: ajaxurl,
-        data: { action: 'delete_all_trashed_posts' },
+        data: { action: 'delete_all_trashed_posts', _ajax_nonce: '<?php echo $nonce ?>' },
         dataType: 'json',
         type: 'POST',
         success: function(response, textStatus) {
@@ -150,7 +152,7 @@
   function refresh_num_indexed_documents() {
     jQuery.ajax({
         url: ajaxurl,
-        data: { action: 'refresh_num_indexed_documents' },
+        data: { action: 'refresh_num_indexed_documents', _ajax_nonce: '<?php echo $nonce ?>' },
         dataType: 'json',
         type: 'GET',
         success: function(response, textStatus) {

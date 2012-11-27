@@ -1,6 +1,7 @@
 <div class="wrap">
   <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
   <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <?php wp_nonce_field('swiftype-nonce'); ?>
     <input type="hidden" name="action" value="swiftype_set_api_key">
     <table class="widefat" style="width: 650px;">
       <thead>

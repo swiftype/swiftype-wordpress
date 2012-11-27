@@ -9,8 +9,8 @@
   <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
 
   <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <?php wp_nonce_field('swiftype-nonce'); ?>
     <input type="hidden" name="action" value="swiftype_create_engine">
-
     <table class="widefat" style="width: 650px;">
       <thead>
         <tr>
@@ -41,6 +41,7 @@
 
   <div id="existing_engine" style="display:none; margin: 10px 0;">
     <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+      <?php wp_nonce_field('swiftype-nonce'); ?>
       <input type="hidden" name="action" value="swiftype_use_existing_engine">
       <table class="widefat" style="width: 650px;">
         <thead>
@@ -75,6 +76,7 @@
     a new API key and create a new search engine.
   </p>
   <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <?php wp_nonce_field('swiftype-nonce'); ?>
     <input type="hidden" name="action" value="swiftype_clear_config">
     <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
   </form>

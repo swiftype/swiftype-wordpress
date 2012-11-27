@@ -1,27 +1,4 @@
 <?php
-  if( isset( $_POST['action'] ) ) {
-    if( $_POST['action'] == 'swiftype_set_api_key' ) {
-      $api_key = sanitize_text_field( $_POST['api_key'] );
-      update_option( 'swiftype_api_key', $api_key );
-      delete_option( 'swiftype_engine_slug' );
-      delete_option( 'swiftype_num_indexed_documents' );
-    } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
-      $engine_name = sanitize_text_field( $_POST['engine_name'] );
-      update_option( 'swiftype_create_engine', $engine_name );
-    } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
-      $engine_key = sanitize_text_field( $_POST['engine_key'] );
-      update_option( 'swiftype_engine_key', $engine_key );
-    } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
-      delete_option( 'swiftype_api_key' );
-      delete_option( 'swiftype_api_authorized' );
-      delete_option( 'swiftype_engine_slug' );
-      delete_option( 'swiftype_engine_name' );
-      delete_option( 'swiftype_engine_key' );
-      delete_option( 'swiftype_engine_initialized' );
-      delete_option( 'swiftype_create_engine' );
-      delete_option( 'swiftype_num_indexed_documents' );
-    }
-  }
 
 /**
   * The Swiftype Search Wordpress Plugin
@@ -56,22 +33,63 @@
     public function SwiftypePlugin() { $this->__construct(); }
 
     public function __construct() {
+      add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
+      add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
 
-      add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
+      if ( ! is_admin() ) {
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
+        add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ) );
+        add_filter( 'posts_search', array( $this, 'clear_sql_search_clause' ) );
+        add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
+        add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
+
+        $this->api_key = get_option( 'swiftype_api_key' );
+        $this->engine_slug = get_option( 'swiftype_engine_slug' );
+
+        $this->client = new SwiftypeClient;
+        $this->client->set_api_key( $this->api_key );
+      }
+
+    }
+
+    public function initialize_admin_screen() {
+
+      // these methods make the Swiftype Plugin admin page work
       add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
       add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
-
-      add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ) );
-      add_filter( 'posts_search', array( $this, 'clear_sql_search_clause' ) );
-      add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
-
-      add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
       add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
       add_action( 'trashed_post', array( $this, 'delete_post' ) );
-
       add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
       add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
       add_action( 'wp_ajax_delete_all_trashed_posts', array( $this, 'async_delete_all_trashed_posts' ) );
+
+      if( isset( $_POST['action'] ) ) {
+        if( $_POST['action'] == 'swiftype_set_api_key' ) {
+          check_admin_referer( 'swiftype-nonce' );
+          $api_key = sanitize_text_field( $_POST['api_key'] );
+          update_option( 'swiftype_api_key', $api_key );
+          delete_option( 'swiftype_engine_slug' );
+          delete_option( 'swiftype_num_indexed_documents' );
+        } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
+          check_admin_referer( 'swiftype-nonce' );
+          $engine_name = sanitize_text_field( $_POST['engine_name'] );
+          update_option( 'swiftype_create_engine', $engine_name );
+        } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
+          check_admin_referer( 'swiftype-nonce' );
+          $engine_key = sanitize_text_field( $_POST['engine_key'] );
+          update_option( 'swiftype_engine_key', $engine_key );
+        } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
+          check_admin_referer( 'swiftype-nonce' );
+          delete_option( 'swiftype_api_key' );
+          delete_option( 'swiftype_api_authorized' );
+          delete_option( 'swiftype_engine_slug' );
+          delete_option( 'swiftype_engine_name' );
+          delete_option( 'swiftype_engine_key' );
+          delete_option( 'swiftype_engine_initialized' );
+          delete_option( 'swiftype_create_engine' );
+          delete_option( 'swiftype_num_indexed_documents' );
+        }
+      }
 
       $this->api_key = get_option( 'swiftype_api_key' );
       $this->api_authorized = get_option( 'swiftype_api_authorized' );
@@ -89,6 +107,7 @@
       $this->check_engine_initialized();
       if( ! $this->engine_initialized )
         return;
+
     }
 
   /**
@@ -108,10 +127,10 @@
         return;
       }
       if( is_search() && ! is_admin() ) {
-
         $query_string = get_search_query();
         $page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
         $category = $_GET['st-cat'];
+
         $params = array( 'page' => $page );
         if ( ! empty( $category ) ) {
           $params['filters[posts][category]'] = $category;
@@ -315,6 +334,7 @@
     * an admin clicks the "synchronize with swiftype" button on the plugin Admin page.
     */
     public function async_refresh_num_indexed_documents() {
+      check_ajax_referer( 'swiftype-ajax-nonce' );
       $this->engine_slug = get_option( 'swiftype_engine_slug' );
       $this->engine_name = get_option( 'swiftype_engine_name' );
       $this->engine_key = get_option( 'swiftype_engine_key' );
@@ -339,6 +359,7 @@
     * on the plugin Admin page.
     */
     public function async_index_batch_of_posts() {
+      check_ajax_referer( 'swiftype-ajax-nonce' );
       $offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
       $batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
       $posts_query = array(
@@ -383,6 +404,8 @@
     * on the plugin Admin page.
     */
     public function async_delete_all_trashed_posts() {
+      check_ajax_referer( 'swiftype-ajax-nonce' );
+
       $document_ids = array();
 
       $posts_query = array(
