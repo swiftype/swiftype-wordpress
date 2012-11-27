@@ -53,61 +53,61 @@
     }
 
     public function initialize_admin_screen() {
+      if ( current_user_can( 'manage_options' ) ) {
+        // these methods make the Swiftype Plugin admin page work
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
+        add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
+        add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+        add_action( 'trashed_post', array( $this, 'delete_post' ) );
+        add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
+        add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
+        add_action( 'wp_ajax_delete_all_trashed_posts', array( $this, 'async_delete_all_trashed_posts' ) );
 
-      // these methods make the Swiftype Plugin admin page work
-      add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
-      add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
-      add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
-      add_action( 'trashed_post', array( $this, 'delete_post' ) );
-      add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
-      add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
-      add_action( 'wp_ajax_delete_all_trashed_posts', array( $this, 'async_delete_all_trashed_posts' ) );
-
-      if( isset( $_POST['action'] ) ) {
-        if( $_POST['action'] == 'swiftype_set_api_key' ) {
-          check_admin_referer( 'swiftype-nonce' );
-          $api_key = sanitize_text_field( $_POST['api_key'] );
-          update_option( 'swiftype_api_key', $api_key );
-          delete_option( 'swiftype_engine_slug' );
-          delete_option( 'swiftype_num_indexed_documents' );
-        } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
-          check_admin_referer( 'swiftype-nonce' );
-          $engine_name = sanitize_text_field( $_POST['engine_name'] );
-          update_option( 'swiftype_create_engine', $engine_name );
-        } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
-          check_admin_referer( 'swiftype-nonce' );
-          $engine_key = sanitize_text_field( $_POST['engine_key'] );
-          update_option( 'swiftype_engine_key', $engine_key );
-        } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
-          check_admin_referer( 'swiftype-nonce' );
-          delete_option( 'swiftype_api_key' );
-          delete_option( 'swiftype_api_authorized' );
-          delete_option( 'swiftype_engine_slug' );
-          delete_option( 'swiftype_engine_name' );
-          delete_option( 'swiftype_engine_key' );
-          delete_option( 'swiftype_engine_initialized' );
-          delete_option( 'swiftype_create_engine' );
-          delete_option( 'swiftype_num_indexed_documents' );
+        if( isset( $_POST['action'] ) ) {
+          if( $_POST['action'] == 'swiftype_set_api_key' ) {
+            check_admin_referer( 'swiftype-nonce' );
+            $api_key = sanitize_text_field( $_POST['api_key'] );
+            update_option( 'swiftype_api_key', $api_key );
+            delete_option( 'swiftype_engine_slug' );
+            delete_option( 'swiftype_num_indexed_documents' );
+          } elseif( $_POST['action'] == 'swiftype_create_engine' ) {
+            check_admin_referer( 'swiftype-nonce' );
+            $engine_name = sanitize_text_field( $_POST['engine_name'] );
+            update_option( 'swiftype_create_engine', $engine_name );
+          } elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
+            check_admin_referer( 'swiftype-nonce' );
+            $engine_key = sanitize_text_field( $_POST['engine_key'] );
+            update_option( 'swiftype_engine_key', $engine_key );
+          } elseif( $_POST['action'] == 'swiftype_clear_config' ) {
+            check_admin_referer( 'swiftype-nonce' );
+            delete_option( 'swiftype_api_key' );
+            delete_option( 'swiftype_api_authorized' );
+            delete_option( 'swiftype_engine_slug' );
+            delete_option( 'swiftype_engine_name' );
+            delete_option( 'swiftype_engine_key' );
+            delete_option( 'swiftype_engine_initialized' );
+            delete_option( 'swiftype_create_engine' );
+            delete_option( 'swiftype_num_indexed_documents' );
+          }
         }
+
+        $this->api_key = get_option( 'swiftype_api_key' );
+        $this->api_authorized = get_option( 'swiftype_api_authorized' );
+        $this->client = new SwiftypeClient;
+        $this->client->set_api_key( $this->api_key );
+        $this->check_api_authorized();
+        if( ! $this->api_authorized )
+          return;
+
+        $this->num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
+        $this->engine_slug = get_option( 'swiftype_engine_slug' );
+        $this->engine_name = get_option( 'swiftype_engine_name' );
+        $this->engine_key = get_option( 'swiftype_engine_key' );
+        $this->engine_initialized = get_option( 'swiftype_engine_initialized' );
+        $this->check_engine_initialized();
+        if( ! $this->engine_initialized )
+          return;
       }
-
-      $this->api_key = get_option( 'swiftype_api_key' );
-      $this->api_authorized = get_option( 'swiftype_api_authorized' );
-      $this->client = new SwiftypeClient;
-      $this->client->set_api_key( $this->api_key );
-      $this->check_api_authorized();
-      if( ! $this->api_authorized )
-        return;
-
-      $this->num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
-      $this->engine_slug = get_option( 'swiftype_engine_slug' );
-      $this->engine_name = get_option( 'swiftype_engine_name' );
-      $this->engine_key = get_option( 'swiftype_engine_key' );
-      $this->engine_initialized = get_option( 'swiftype_engine_initialized' );
-      $this->check_engine_initialized();
-      if( ! $this->engine_initialized )
-        return;
-
     }
 
   /**
