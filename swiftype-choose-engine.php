@@ -37,38 +37,6 @@
 	</form>
 	<br/>
 
-	<a href="#" id="show_existing_engine">Advanced: Use an existing Swiftype Search Engine.</a>
-
-	<div id="existing_engine" style="display:none; margin: 10px 0;">
-		<form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
-			<?php wp_nonce_field('swiftype-nonce'); ?>
-			<input type="hidden" name="action" value="swiftype_use_existing_engine">
-			<table class="widefat" style="width: 650px;">
-				<thead>
-					<tr>
-						<th class="row-title">Use an existing engine.</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<br/>
-							Please enter the engine key for the existing engine you would like to use.<br/>
-							The engine key for an engine can be found in the Swiftype dashboard.
-							<ul>
-								<li>
-									<label>Engine key:</label>
-									<input type="text" name="engine_key" class="regular-text" />
-								</li>
-								<br/>
-								<input type="submit" name="Submit" value="Use Existing Engine"  class="button-primary" />
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-	</div>
-
 	<hr/>
 	<p>
 		If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine,<br/>
@@ -82,12 +50,3 @@
 	</form>
 
 </div>
-
-<script>
-
-	jQuery('#show_existing_engine').click(function() {
-		jQuery('#existing_engine').slideDown();
-		jQuery("#create_engine").attr("disabled", "disabled");
-	});
-
-</script>

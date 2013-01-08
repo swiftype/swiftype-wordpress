@@ -81,10 +81,6 @@
 						check_admin_referer( 'swiftype-nonce' );
 						$engine_name = sanitize_text_field( $_POST['engine_name'] );
 						update_option( 'swiftype_create_engine', $engine_name );
-					} elseif( $_POST['action'] == 'swiftype_use_existing_engine' ) {
-						check_admin_referer( 'swiftype-nonce' );
-						$engine_key = sanitize_text_field( $_POST['engine_key'] );
-						update_option( 'swiftype_engine_key', $engine_key );
 					} elseif( $_POST['action'] == 'swiftype_clear_config' ) {
 						check_admin_referer( 'swiftype-nonce' );
 						delete_option( 'swiftype_api_key' );
