@@ -521,9 +521,9 @@
 			$document['fields'][] = array( 'name' => 'object_type', 'type' => 'enum', 'value' => $post->post_type );
 			$document['fields'][] = array( 'name' => 'url', 'type' => 'enum', 'value' => get_permalink( $post->ID ) );
 			$document['fields'][] = array( 'name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt );
-			$document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => html_entity_decode( strip_tags( $post->post_title ), ENT_COMPAT, "UTF-8" ) );
-			$document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_content ), ENT_COMPAT, "UTF-8" ) );
-			$document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_COMPAT, "UTF-8" ) );
+			$document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => html_entity_decode( strip_tags( $post->post_title ), ENT_QUOTES, "UTF-8" ) );
+			$document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_content ), ENT_QUOTES, "UTF-8" ) );
+			$document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_QUOTES, "UTF-8" ) );
 			$document['fields'][] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
 			$document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
 			$document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories( $post->ID ) );
