@@ -65,6 +65,7 @@
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 				add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
 				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 				add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
 				add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
@@ -447,7 +448,20 @@
 		}
 
 	/**
-		* Indexes or deletes a post based on status.
+		* Deletes a post from Swiftype's search index any time the post's status transitions from 'publish' to anything else.
+		*
+		* @param int $new_status The new status of the post
+		* @param int $old_status The old status of the post
+		* @param int $post The post
+		*/
+		public function handle_transition_post_status( $new_status, $old_status, $post ) {
+			if ( "publish" == $old_status && "publish" != $new_status ) {
+				$this->delete_post( $post->ID );
+			}
+		}
+
+	/**
+		* Sends a post to Swiftype for indexing as long as the status of the post is 'publish'
 		*
 		* @param int $post_id The ID of the post to be indexed.
 		*/
@@ -455,8 +469,6 @@
 			$post = get_post( $post_id );
 			if( "publish" == $post->post_status ) {
 				$this->index_post( $post_id );
-			} else {
-				$this->delete_post( $post_id );
 			}
 		}
 
