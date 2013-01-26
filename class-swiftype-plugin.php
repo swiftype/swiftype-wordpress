@@ -35,6 +35,7 @@
 		public function __construct() {
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
+			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );
 
 			if ( ! is_admin() ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
@@ -457,6 +458,17 @@
 		public function handle_transition_post_status( $new_status, $old_status, $post ) {
 			if ( "publish" == $old_status && "publish" != $new_status ) {
 				$this->delete_post( $post->ID );
+			}
+		}
+
+	/**
+		* Index a post when it transitions from the 'future' state to the 'publish' state
+		*
+		* @param int $post The post
+		*/
+		public function handle_future_to_publish( $post ) {
+			if( "publish" == $post->post_status ) {
+				$this->index_post( $post->ID );
 			}
 		}
 
