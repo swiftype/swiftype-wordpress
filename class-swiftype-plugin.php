@@ -30,6 +30,11 @@
 		private $per_page = 0;
 		private $search_successful = false;
 
+		private $allowed_post_types = array(
+			'post',
+			'page'
+		);
+
 		public function SwiftypePlugin() { $this->__construct(); }
 
 		public function __construct() {
@@ -372,7 +377,7 @@
 				'orderby' => 'id',
 				'order' => 'ASC',
 				'post_status' => 'publish',
-				'post_type' => 'any'
+				'post_type' => $this->allowed_post_types
 			);
 			$posts = get_posts( $posts_query );
 			if( count( $posts ) > 0 ) {
@@ -424,7 +429,7 @@
 					'future',
 					'private'
 				),
-				'post_type' => 'any',
+				'post_type' => $this->allowed_post_types,
 				'fields' => 'ids'
 			);
 
@@ -491,6 +496,10 @@
 		*/
 		public function index_post( $post_id ) {
 			$post = get_post( $post_id );
+			if ( ! $this->should_index_post($post) ) {
+				return;
+			}
+
 			$document = $this->convert_post_to_document( $post );
 			try {
 				$this->client->create_or_update_document( $this->engine_slug, $this->document_type_slug, $document );
@@ -597,6 +606,13 @@
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
 			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.js', __FILE__ ), array( 'jquery' ) );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
+		}
+
+	/**
+		* Determines if a post should be indexed.
+		*/
+		private function should_index_post( $post ) {
+			return in_array( $post->post_type, $this->allowed_post_types );
 		}
 
 	}
