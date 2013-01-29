@@ -136,7 +136,7 @@
 			if( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
 				return;
 			}
-			if( is_search() && ! is_admin() ) {
+			if( is_search() && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0) {
 				$query_string = get_search_query();
 				$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
