@@ -9,6 +9,8 @@ Version: 1.1.11
 Author URI: http://swiftype.com
 */
 
+define( 'SWIFTYPE_VERSION', '1.1.11' );
+
 require_once 'class-swiftype-client.php';
 require_once 'class-swiftype-error.php';
 require_once 'class-swiftype-plugin.php';

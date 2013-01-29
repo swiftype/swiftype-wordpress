@@ -233,7 +233,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 			throw new SwiftypeError( 'Unauthorized', 403 );
 
 		$headers = array(
-			'User-Agent' => 'Swiftype Wordpress Plugin/1.0',
+			'User-Agent' => 'Swiftype Wordpress Plugin/' . SWIFTYPE_VERSION,
 			'Content-Type' => 'application/json'
 		);
 
