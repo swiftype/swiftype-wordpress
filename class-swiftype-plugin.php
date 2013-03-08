@@ -604,7 +604,7 @@
 			if( is_admin() )
 				return;
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
-			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.js', __FILE__ ), array( 'jquery' ) );
+			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.min.js', __FILE__ ), array( 'jquery' ) );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
 		}
 
