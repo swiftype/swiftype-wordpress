@@ -73,7 +73,8 @@
 
 	<div id="synchronize_error" style="display: none; color: red;">
 		<b>There was an error during synchronization.</b><br/>
-		If this problem persists, please email support@swiftype.com and include any error message shown, as well as the information listed in the Swiftype Search Plugin Settings box above.</b><br/>
+		If this problem persists, please email support@swiftype.com and include any error message shown in the text box below, as well as the information listed in the Swiftype Search Plugin Settings box above.</b><br/>
+		<textarea id="error_text" style="width: 500px; height: 200px; margin-top: 20px;"></textarea>
 	</div>
 
 	<br/>
@@ -119,7 +120,6 @@
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {
 						errorMsg = JSON.parse(jqXHR.responseText).message;
-						show_error(errorMsg);
 					} catch (e) {
 						errorMsg = jqXHR.responseText;
 						show_error(errorMsg);
@@ -143,6 +143,7 @@
 						errorMsg = JSON.parse(jqXHR.responseText).message;
 					} catch (e) {
 						errorMsg = jqXHR.responseText;
+						show_error(errorMsg);
 					}
 				}
 			}
@@ -175,7 +176,7 @@
 		jQuery('#synchronizing').fadeOut();
 		jQuery('#synchronize_error').fadeIn();
 		if(message.length > 0) {
-			jQuery('#synchronize_error').append("Error message: " + message);
+			jQuery('#error_text').append(message).show();
 		}
 	}
 

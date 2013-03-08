@@ -389,6 +389,10 @@
 					$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
 				} catch( SwiftypeError $e ) {
 					header('HTTP/1.1 500 Internal Server Error');
+					print("Error in Create or Update Documents. ");
+					print("Offset: " . $offset . " ");
+					print("Batch Size: " . $batch_size . " ");
+					print_r($e);
 					die();
 				}
 				$num_written = 0;
@@ -436,8 +440,8 @@
 			$posts = get_posts( $posts_query );
 
 			if( count( $posts ) > 0 ) {
-				foreach( $posts as $post ) {
-					$document_ids[] = $post->ID;
+				foreach( $posts as $post_id ) {
+					$document_ids[] = $post_id;
 				}
 			}
 			if( count( $document_ids ) > 0 ) {
@@ -445,6 +449,8 @@
 					$this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
 				} catch( SwiftypeError $e ) {
 					header('HTTP/1.1 500 Internal Server Error');
+					print("Error in Delete all Trashed Posts. ");
+					print_r($e);
 					die();
 				}
 			}
