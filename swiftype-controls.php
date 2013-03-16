@@ -7,7 +7,6 @@
 	$post_types = array( 'post', 'page' );
 	$total_posts = 0;
 	$total_posts_in_trash = 0;
-	$total_ops = $total_posts + $total_posts_in_trash;
 	foreach( $post_types as $type ) {
 		$total_posts += wp_count_posts( $type )->publish;
 		$total_posts_in_trash += wp_count_posts( $type )->trash;
