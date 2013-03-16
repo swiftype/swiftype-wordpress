@@ -75,7 +75,7 @@
 				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 				add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
 				add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
-				add_action( 'wp_ajax_delete_all_trashed_posts', array( $this, 'async_delete_all_trashed_posts' ) );
+				add_action( 'wp_ajax_delete_batch_of_trashed_posts', array( $this, 'async_delete_batch_of_trashed_posts' ) );
 
 				if( isset( $_POST['action'] ) ) {
 					if( $_POST['action'] == 'swiftype_set_api_key' ) {
@@ -416,14 +416,17 @@
 		* This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
 		* on the plugin Admin page.
 		*/
-		public function async_delete_all_trashed_posts() {
+		public function async_delete_batch_of_trashed_posts() {
 			check_ajax_referer( 'swiftype-ajax-nonce' );
+
+			$offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
+			$batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
 
 			$document_ids = array();
 
 			$posts_query = array(
-				'numberposts' => -1,
-				'offset' => 0,
+				'numberposts' => $batch_size,
+				'offset' => $offset,
 				'orderby' => 'id',
 				'order' => 'ASC',
 				'post_status' => array(

@@ -4,17 +4,16 @@
 	$engine_slug = get_option( 'swiftype_engine_slug' );
 	$engine_name = get_option( 'swiftype_engine_name' );
 	$num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
-	if ( function_exists( 'get_post_types' ) ) {
-		$pt_1 = get_post_types( array( 'exclude_from_search' => '0' ) );
-		$pt_2 = get_post_types( array( 'exclude_from_search' => false ) );
-		$custom_types = array_merge( $pt_1, $pt_2 );
-		$custom_types_string = implode( ', ', $custom_types );
-	}
-	$total_post_count = 0;
-	foreach( $custom_types as $type ) {
-		if( $type == 'attachment' )
-			continue;
-		$total_post_count += wp_count_posts( $type )->publish;
+	$post_types = array( 'post', 'page' );
+	$total_posts = 0;
+	$total_posts_in_trash = 0;
+	$total_ops = $total_posts + $total_posts_in_trash;
+	foreach( $post_types as $type ) {
+		$total_posts += wp_count_posts( $type )->publish;
+		$total_posts_in_trash += wp_count_posts( $type )->trash;
+		$total_posts_in_trash += wp_count_posts( $type )->draft;
+		$total_posts_in_trash += wp_count_posts( $type )->pending;
+		$total_posts_in_trash += wp_count_posts( $type )->future;
 	}
 ?>
 
@@ -96,14 +95,14 @@
 
 	jQuery('#index_posts_button').click(function() {
 		index_batch_of_posts(0);
-		delete_all_trashed_posts();
+		delete_batch_of_posts(0);
 	});
 
-	var batch_size = 30;
+	var batch_size = 15;
 
-	var total_indexed_posts = 0;
-	var total_posts = <?php print( $total_post_count ) ?>;
-	function index_batch_of_posts(start) {
+	var total_posts_processed = 0;
+	var total_posts = <?php print( $total_posts ) ?>;
+	var index_batch_of_posts = function(start) {
 		set_progress();
 		var offset = start || 0;
 		if(offset >= total_posts) { return; }
@@ -114,8 +113,11 @@
 				dataType: 'json',
 				type: 'POST',
 				success: function(response, textStatus) {
-					total_indexed_posts += batch_size;
-					index_batch_of_posts(offset + batch_size);
+					if(response['num_written']) {
+						var increment = response['num_written'];
+						total_posts_processed += increment;
+					}
+					index_batch_of_posts(offset + increment);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {
@@ -129,14 +131,21 @@
 		);
 	}
 
-	function delete_all_trashed_posts() {
+	var total_posts_in_trash_processed = 0;
+	var total_posts_in_trash = <?php print( $total_posts_in_trash ) ?>;
+	var delete_batch_of_posts = function(start) {
+		set_progress();
+		var offset = start || 0;
+		if(offset >= total_posts_in_trash) { return; }
+		var data = { action: 'delete_batch_of_trashed_posts', offset: offset, batch_size: batch_size, _ajax_nonce: '<?php echo $nonce ?>' };
 		jQuery.ajax({
 				url: ajaxurl,
-				data: { action: 'delete_all_trashed_posts', _ajax_nonce: '<?php echo $nonce ?>' },
+				data: data,
 				dataType: 'json',
 				type: 'POST',
 				success: function(response, textStatus) {
-					return;
+					total_posts_in_trash_processed += batch_size;
+					delete_batch_of_posts(offset + batch_size);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {
@@ -181,22 +190,23 @@
 	}
 
 	function set_progress() {
-
-		if(total_indexed_posts > total_posts) { total_indexed_posts = total_posts; }
-		var progress_width = Math.round(total_indexed_posts / total_posts * 245);
+		var total_ops = total_posts + total_posts_in_trash;
+		var progress = total_posts_processed + total_posts_in_trash_processed;
+		if(progress > total_ops) { progress = total_ops; }
+		var progress_width = Math.round(progress / total_ops * 245);
 		if(progress_width < 10) { progress_width = 10; }
-		if(total_indexed_posts == 0) {
+		if(progress == 0) {
 			jQuery('#progress_bar').fadeIn();
 		}
-		jQuery('#num_indexed_documents').html(total_indexed_posts);
+		jQuery('#num_indexed_documents').html(total_posts_processed);
 		jQuery('#progress_bar').find('div.bar').show().width(progress_width);
-		if(total_indexed_posts >= total_posts) {
+		if(progress >= total_ops) {
 			refresh_num_indexed_documents();
 			jQuery('#index_posts_button').html('Indexing Complete!');
 			jQuery('#progress_bar').fadeOut();
 			jQuery('#index_posts_button').unbind();
 		} else {
-			jQuery('#index_posts_button').html('Indexing progress... ' + Math.round(total_indexed_posts / total_posts * 100) + '%');
+			jQuery('#index_posts_button').html('Indexing progress... ' + Math.round(progress / total_ops * 100) + '%');
 		}
 	}
 
