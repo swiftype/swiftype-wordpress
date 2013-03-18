@@ -96,7 +96,6 @@ class SwiftypeClient {
 	* @return array An array of search results matching the issued query
 	*/
 	public function search( $engine_id, $document_type_id, $query, $params = array() ) {
-		$query = stripslashes( htmlspecialchars_decode( $query ) );
 		$params = array_merge( array( 'q' => $query, 'page' => 1, 'fetch_fields[posts]' => array( 'external_id' ) ), $params );
 		$url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '/search';
 		$response = $this->call_api( 'GET', $url, $params );
