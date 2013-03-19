@@ -31,6 +31,9 @@
 		private $search_successful = false;
 		private $error = NULL;
 
+		private $max_retries = 3;
+		private $retry_delay = 2;
+
 		public function SwiftypePlugin() { $this->__construct(); }
 
 		public function __construct() {
@@ -390,7 +393,6 @@
 				'post_type' => $this->allowed_post_types()
 			);
 			$posts = get_posts( $posts_query );
-			$max_retries = 3;
 			$retries = 0;
 			$resp = NULL;
 
@@ -403,7 +405,7 @@
 					try {
 						$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
 					} catch( SwiftypeError $e ) {
-						if( $retries > $max_retries ) {
+						if( $retries >= $this->max_retries ) {
 							header('HTTP/1.1 500 Internal Server Error');
 							print("Error in Create or Update Documents. ");
 							print("Offset: " . $offset . " ");
@@ -413,6 +415,7 @@
 							die();
 						} else {
 							$retries++;
+							sleep($this->retry_delay);
 						}
 					}
 				}
