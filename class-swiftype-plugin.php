@@ -631,7 +631,7 @@
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
-			return in_array( $post->post_type, $this->allowed_post_types() );
+		  return ( in_array( $post->post_type, $this->allowed_post_types() ) && ! empty( $post->post_title ) );
 		}
 
 		private function allowed_post_types() {

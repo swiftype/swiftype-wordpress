@@ -5,12 +5,6 @@
 	$engine_name = get_option( 'swiftype_engine_name' );
 	$num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
 
-	if ( function_exists( 'get_post_types' ) ) {
-		$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ) , get_post_types( array( 'exclude_from_search' => false ) ) );
-	} else {
-		$allowed_post_types = array( 'post', 'page' );
-	}
-
 	$total_posts = 0;
 	$total_posts_in_trash = 0;
 	foreach( wp_count_posts() as $status => $count) {
