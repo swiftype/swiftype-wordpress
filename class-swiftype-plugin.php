@@ -31,7 +31,7 @@
 		private $search_successful = false;
 		private $error = NULL;
 
-		private $max_retries = 3;
+		private $max_retries = 5;
 		private $retry_delay = 2;
 
 		public function SwiftypePlugin() { $this->__construct(); }
@@ -466,6 +466,8 @@
 			);
 
 			$posts = get_posts( $posts_query );
+			$retries = 0;
+			$resp = NULL;
 
 			if( count( $posts ) > 0 ) {
 				foreach( $posts as $post_id ) {
@@ -473,13 +475,20 @@
 				}
 			}
 			if( count( $document_ids ) > 0 ) {
-				try {
-					$this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
-				} catch( SwiftypeError $e ) {
-					header('HTTP/1.1 500 Internal Server Error');
-					print("Error in Delete all Trashed Posts. ");
-					print_r($e);
-					die();
+				while( is_null( $resp ) ) {
+					try {
+						$resp = $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
+					} catch( SwiftypeError $e ) {
+						if( $retries >= $this->max_retries ) {
+							header('HTTP/1.1 500 Internal Server Error');
+							print("Error in Delete all Trashed Posts. ");
+							print_r($e);
+							die();
+						} else {
+							$retries++;
+							sleep($this->retry_delay);
+						}
+					}
 				}
 			}
 			header( "Content-Type: application/json" );
