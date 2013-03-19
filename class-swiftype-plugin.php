@@ -390,25 +390,37 @@
 				'post_type' => $this->allowed_post_types()
 			);
 			$posts = get_posts( $posts_query );
+			$max_retries = 3;
+			$retries = 0;
+			$resp = NULL;
+
 			if( count( $posts ) > 0 ) {
 				$documents = array();
 				foreach( $posts as $post ) {
 					$documents[] = $this->convert_post_to_document( $post );
 				}
-				try {
-					$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
-				} catch( SwiftypeError $e ) {
-					header('HTTP/1.1 500 Internal Server Error');
-					print("Error in Create or Update Documents. ");
-					print("Offset: " . $offset . " ");
-					print("Batch Size: " . $batch_size . " ");
-					print_r($e);
-					die();
+				while( is_null( $resp ) ) {
+					try {
+						$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
+					} catch( SwiftypeError $e ) {
+						if( $retries > $max_retries ) {
+							header('HTTP/1.1 500 Internal Server Error');
+							print("Error in Create or Update Documents. ");
+							print("Offset: " . $offset . " ");
+							print("Batch Size: " . $batch_size . " ");
+							print("Retries: " . $retries . " ");
+							print_r($e);
+							die();
+						} else {
+							$retries++;
+						}
+					}
 				}
 				$num_written = 0;
 				foreach( $resp as $record ) {
-					if( $record )
+					if( $record ) {
 						$num_written += 1;
+					}
 				}
 			} else {
 				$num_written = 0;
