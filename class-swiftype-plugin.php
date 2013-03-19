@@ -30,11 +30,6 @@
 		private $per_page = 0;
 		private $search_successful = false;
 
-		private $allowed_post_types = array(
-			'post',
-			'page'
-		);
-
 		public function SwiftypePlugin() { $this->__construct(); }
 
 		public function __construct() {
@@ -377,7 +372,7 @@
 				'orderby' => 'id',
 				'order' => 'ASC',
 				'post_status' => 'publish',
-				'post_type' => $this->allowed_post_types
+				'post_type' => $this->allowed_post_types()
 			);
 			$posts = get_posts( $posts_query );
 			if( count( $posts ) > 0 ) {
@@ -436,7 +431,7 @@
 					'future',
 					'private'
 				),
-				'post_type' => $this->allowed_post_types,
+				'post_type' => $this->allowed_post_types(),
 				'fields' => 'ids'
 			);
 
@@ -621,7 +616,15 @@
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
-			return in_array( $post->post_type, $this->allowed_post_types );
+			return in_array( $post->post_type, $this->allowed_post_types() );
+		}
+
+		private function allowed_post_types() {
+			$allowed_post_types = array( 'post', 'page' );
+			if ( function_exists( 'get_post_types' ) ) {
+				$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ) , get_post_types( array( 'exclude_from_search' => false ) ) );
+			}
+			return $allowed_post_types;
 		}
 
 	}

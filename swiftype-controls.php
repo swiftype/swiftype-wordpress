@@ -4,16 +4,23 @@
 	$engine_slug = get_option( 'swiftype_engine_slug' );
 	$engine_name = get_option( 'swiftype_engine_name' );
 	$num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
-	$post_types = array( 'post', 'page' );
+
+	if ( function_exists( 'get_post_types' ) ) {
+		$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ) , get_post_types( array( 'exclude_from_search' => false ) ) );
+	} else {
+		$allowed_post_types = array( 'post', 'page' );
+	}
+
 	$total_posts = 0;
 	$total_posts_in_trash = 0;
-	foreach( $post_types as $type ) {
-		$total_posts += wp_count_posts( $type )->publish;
-		$total_posts_in_trash += wp_count_posts( $type )->trash;
-		$total_posts_in_trash += wp_count_posts( $type )->draft;
-		$total_posts_in_trash += wp_count_posts( $type )->pending;
-		$total_posts_in_trash += wp_count_posts( $type )->future;
+	foreach( wp_count_posts() as $status => $count) {
+		if( "publish" == $status ) {
+			$total_posts += $count;
+		} else {
+			$total_posts_in_trash += $count;
+		}
 	}
+
 ?>
 
 <div class="wrap">
@@ -38,7 +45,7 @@
 				<td><?php print( $engine_name ); ?></td>
 			</tr>
 			<tr>
-				<td>Number of Indexed Documents:</td>
+				<td>Number of Searchable Posts:</td>
 				<td><span id="num_indexed_documents"><?php print( $num_indexed_documents ); ?></span></td>
 			</tr>
 		</tbody>
@@ -47,7 +54,7 @@
 
 	<?php if ( $num_indexed_documents == 0 ) : ?>
 		<p>
-			<b>Important:</b> Before your site is searchable, you need to index all of your posts. Click the 'synchronize' button below to begin indexing.
+			<b>Important:</b> Before your site is searchable, you need to synchronize your posts. Click the 'synchronize' button below to begin the process.
 		</p>
 	<?php endif; ?>
 
@@ -99,6 +106,7 @@
 
 	var batch_size = 15;
 
+	var total_posts_written = 0;
 	var total_posts_processed = 0;
 	var total_posts = <?php print( $total_posts ) ?>;
 	var index_batch_of_posts = function(start) {
@@ -114,9 +122,10 @@
 				success: function(response, textStatus) {
 					if(response['num_written']) {
 						var increment = response['num_written'];
-						total_posts_processed += increment;
+						total_posts_written += increment;
 					}
-					index_batch_of_posts(offset + increment);
+					total_posts_processed += batch_size;
+					index_batch_of_posts(offset + batch_size);
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {
@@ -197,7 +206,7 @@
 		if(progress == 0) {
 			jQuery('#progress_bar').fadeIn();
 		}
-		jQuery('#num_indexed_documents').html(total_posts_processed);
+		jQuery('#num_indexed_documents').html(total_posts_written);
 		jQuery('#progress_bar').find('div.bar').show().width(progress_width);
 		if(progress >= total_ops) {
 			refresh_num_indexed_documents();
