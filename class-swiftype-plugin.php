@@ -29,6 +29,7 @@
 		private $num_pages = 0;
 		private $per_page = 0;
 		private $search_successful = false;
+		private $error = NULL;
 
 		public function SwiftypePlugin() { $this->__construct(); }
 
@@ -71,6 +72,8 @@
 				add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
 				add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
 				add_action( 'wp_ajax_delete_batch_of_trashed_posts', array( $this, 'async_delete_batch_of_trashed_posts' ) );
+				add_action( 'admin_notices', array( $this, 'error_notice' ) );
+
 
 				if( isset( $_POST['action'] ) ) {
 					if( $_POST['action'] == 'swiftype_set_api_key' ) {
@@ -109,10 +112,21 @@
 				$this->engine_name = get_option( 'swiftype_engine_name' );
 				$this->engine_key = get_option( 'swiftype_engine_key' );
 				$this->engine_initialized = get_option( 'swiftype_engine_initialized' );
-				$this->check_engine_initialized();
+				$this->error = $this->check_engine_initialized();
 				if( ! $this->engine_initialized )
 					return;
 			}
+		}
+
+	/**
+	 * Display an error message in the dashboard if there was an error in the plugin
+	 */
+		public function error_notice() {
+			if( ! is_admin() )
+				return;
+		  if( isset( $this->error ) && ! empty( $this->error ) ) {
+		  	echo '<div class="error"><p>' . $this->error . '</p></div>';
+		  }
 		}
 
 	/**
@@ -223,7 +237,8 @@
 				try {
 					$engine = $this->client->create_engine( array( 'name' => $engine_name ) );
 				} catch( SwiftypeError $e ) {
-					return;
+					$error_message = json_decode( $e->getMessage() );
+					return "<b>There was an error creating your search engine on the Swiftype servers.</b> There error message was: " . $error_message->error;
 				}
 				$this->engine_slug = $engine['slug'];
 			}

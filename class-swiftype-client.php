@@ -265,7 +265,8 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 				$response_body = wp_remote_retrieve_body( $response );
 				return array( 'code' => $response_code, 'body' => $response_body );
 			} elseif( 200 != $response_code && ! empty( $response_message ) ) {
-				throw new SwiftypeError( $response_message, $response_code );
+				$response_body = wp_remote_retrieve_body( $response );
+				throw new SwiftypeError( $response_body, $response_code );
 			} else {
 				throw new SwiftypeError( 'Unknown Error', $response_code );
 			}
