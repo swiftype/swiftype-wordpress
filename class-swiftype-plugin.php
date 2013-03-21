@@ -393,13 +393,16 @@
 				'post_type' => $this->allowed_post_types()
 			);
 			$posts = get_posts( $posts_query );
+			$total_posts = count( $posts );
 			$retries = 0;
 			$resp = NULL;
 
-			if( count( $posts ) > 0 ) {
+			if( $total_posts > 0 ) {
 				$documents = array();
 				foreach( $posts as $post ) {
-					$documents[] = $this->convert_post_to_document( $post );
+					if ( $this->should_index_post($post) ) {
+						$documents[] = $this->convert_post_to_document( $post );
+					}
 				}
 				while( is_null( $resp ) ) {
 					try {
@@ -430,7 +433,7 @@
 			}
 
 			header( 'Content-Type: application/json' );
-			print( json_encode( array( 'num_written' => $num_written ) ) );
+			print( json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
 			die();
 		}
 

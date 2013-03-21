@@ -106,7 +106,6 @@
 	var index_batch_of_posts = function(start) {
 		set_progress();
 		var offset = start || 0;
-		if(offset >= total_posts) { return; }
 		var data = { action: 'index_batch_of_posts', offset: offset, batch_size: batch_size, _ajax_nonce: '<?php echo $nonce ?>' };
 		jQuery.ajax({
 				url: ajaxurl,
@@ -114,12 +113,17 @@
 				dataType: 'json',
 				type: 'POST',
 				success: function(response, textStatus) {
-					if(response['num_written']) {
-						var increment = response['num_written'];
+					var increment = response['num_written'];
+					if (increment) {
 						total_posts_written += increment;
 					}
 					total_posts_processed += batch_size;
-					index_batch_of_posts(offset + batch_size);
+					if (response['total'] > 0) {
+						index_batch_of_posts(offset + batch_size);
+					} else {
+						total_posts_processed = total_posts;
+						set_progress();
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {
@@ -131,14 +135,14 @@
 				}
 			}
 		);
-	}
+	};
 
 	var total_posts_in_trash_processed = 0;
 	var total_posts_in_trash = <?php print( $total_posts_in_trash ) ?>;
 	var delete_batch_of_posts = function(start) {
 		set_progress();
 		var offset = start || 0;
-		if(offset >= total_posts_in_trash) { return; }
+		if (offset >= total_posts_in_trash) { return; }
 		var data = { action: 'delete_batch_of_trashed_posts', offset: offset, batch_size: batch_size, _ajax_nonce: '<?php echo $nonce ?>' };
 		jQuery.ajax({
 				url: ajaxurl,
@@ -159,7 +163,7 @@
 				}
 			}
 		);
-	}
+	};
 
 	function refresh_num_indexed_documents() {
 		jQuery.ajax({
