@@ -5,16 +5,21 @@
 	$engine_name = get_option( 'swiftype_engine_name' );
 	$num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
 
-	$total_posts = 0;
-	$total_posts_in_trash = 0;
-	foreach( wp_count_posts() as $status => $count) {
-		if( "publish" == $status ) {
-			$total_posts += $count;
-		} else {
-			$total_posts_in_trash += $count;
+	$allowed_post_types = array( 'post', 'page' );
+	if ( function_exists( 'get_post_types' ) ) {
+		$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ), get_post_types( array( 'exclude_from_search' => false ) ) );
+	}
+	$counts = array( 'publish' => 0, 'trash' => 0 );
+	foreach( $allowed_post_types as $type ) {
+		$type_count = wp_count_posts($type);
+		foreach( $type_count as $status => $count) {
+			if( 'publish' == $status ) {
+				$total_posts += $count;
+			} else {
+				$total_posts_in_trash += $count;
+			}
 		}
 	}
-
 ?>
 
 <div class="wrap">
@@ -142,7 +147,6 @@
 	var delete_batch_of_posts = function(start) {
 		set_progress();
 		var offset = start || 0;
-		if (offset >= total_posts_in_trash) { return; }
 		var data = { action: 'delete_batch_of_trashed_posts', offset: offset, batch_size: batch_size, _ajax_nonce: '<?php echo $nonce ?>' };
 		jQuery.ajax({
 				url: ajaxurl,
@@ -151,7 +155,12 @@
 				type: 'POST',
 				success: function(response, textStatus) {
 					total_posts_in_trash_processed += batch_size;
-					delete_batch_of_posts(offset + batch_size);
+					if (response['total'] > 0) {
+						delete_batch_of_posts(offset + batch_size);
+					} else {
+						total_posts_in_trash_processed = total_posts_in_trash;
+						set_progress();
+					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					try {

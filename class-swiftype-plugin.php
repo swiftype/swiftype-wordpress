@@ -400,7 +400,7 @@
 			if( $total_posts > 0 ) {
 				$documents = array();
 				foreach( $posts as $post ) {
-					if ( $this->should_index_post($post) ) {
+					if( $this->should_index_post( $post ) ) {
 						$documents[] = $this->convert_post_to_document( $post );
 					}
 				}
@@ -409,16 +409,16 @@
 						$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
 					} catch( SwiftypeError $e ) {
 						if( $retries >= $this->max_retries ) {
-							header('HTTP/1.1 500 Internal Server Error');
-							print("Error in Create or Update Documents. ");
-							print("Offset: " . $offset . " ");
-							print("Batch Size: " . $batch_size . " ");
-							print("Retries: " . $retries . " ");
-							print_r($e);
+							header( 'HTTP/1.1 500 Internal Server Error' );
+							print( "Error in Create or Update Documents. " );
+							print( "Offset: " . $offset . " " );
+							print( "Batch Size: " . $batch_size . " " );
+							print( "Retries: " . $retries . " " );
+							print_r( $e );
 							die();
 						} else {
 							$retries++;
-							sleep($this->retry_delay);
+							sleep( $this->retry_delay );
 						}
 					}
 				}
@@ -457,22 +457,17 @@
 				'offset' => $offset,
 				'orderby' => 'id',
 				'order' => 'ASC',
-				'post_status' => array(
-					'trash',
-					'draft',
-					'pending',
-					'future',
-					'private'
-				),
+				'post_status' => array_diff( get_post_stati(), array( 'publish' ) ),
 				'post_type' => $this->allowed_post_types(),
 				'fields' => 'ids'
 			);
 
 			$posts = get_posts( $posts_query );
+			$total_posts = count( $posts );
 			$retries = 0;
 			$resp = NULL;
 
-			if( count( $posts ) > 0 ) {
+			if( $total_posts ) {
 				foreach( $posts as $post_id ) {
 					$document_ids[] = $post_id;
 				}
@@ -483,19 +478,19 @@
 						$resp = $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
 					} catch( SwiftypeError $e ) {
 						if( $retries >= $this->max_retries ) {
-							header('HTTP/1.1 500 Internal Server Error');
-							print("Error in Delete all Trashed Posts. ");
-							print_r($e);
+							header( 'HTTP/1.1 500 Internal Server Error');
+							print( 'Error in Delete all Trashed Posts.' );
+							print_r( $e );
 							die();
 						} else {
 							$retries++;
-							sleep($this->retry_delay);
+							sleep( $this->retry_delay );
 						}
 					}
 				}
 			}
 			header( "Content-Type: application/json" );
-			print( "{}" );
+			print( json_encode( array( 'total' => $total_posts ) ) );
 			die();
 		}
 
@@ -542,7 +537,7 @@
 		*/
 		public function index_post( $post_id ) {
 			$post = get_post( $post_id );
-			if ( ! $this->should_index_post($post) ) {
+			if ( ! $this->should_index_post( $post ) ) {
 				return;
 			}
 
@@ -664,7 +659,7 @@
 		private function allowed_post_types() {
 			$allowed_post_types = array( 'post', 'page' );
 			if ( function_exists( 'get_post_types' ) ) {
-				$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ) , get_post_types( array( 'exclude_from_search' => false ) ) );
+				$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ), get_post_types( array( 'exclude_from_search' => false ) ) );
 			}
 			return $allowed_post_types;
 		}
