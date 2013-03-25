@@ -9,7 +9,8 @@
 	if ( function_exists( 'get_post_types' ) ) {
 		$allowed_post_types = array_merge( get_post_types( array( 'exclude_from_search' => '0' ) ), get_post_types( array( 'exclude_from_search' => false ) ) );
 	}
-	$counts = array( 'publish' => 0, 'trash' => 0 );
+	$total_posts = 0;
+	$total_posts_in_trash = 0;
 	foreach( $allowed_post_types as $type ) {
 		$type_count = wp_count_posts($type);
 		foreach( $type_count as $status => $count) {
