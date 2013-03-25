@@ -478,7 +478,7 @@
 						$resp = $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
 					} catch( SwiftypeError $e ) {
 						if( $retries >= $this->max_retries ) {
-							header( 'HTTP/1.1 500 Internal Server Error');
+							header( 'HTTP/1.1 500 Internal Server Error' );
 							print( 'Error in Delete all Trashed Posts.' );
 							print_r( $e );
 							die();
