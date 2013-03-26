@@ -36,6 +36,14 @@ rm -rf $svn_directory/trunk/*
 cp -R $git_directory/* $svn_directory/trunk/
 echo " done"
 
+read -p "Are you sure you want to publish $version (y/n)? "
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+  echo "Exiting..."
+  rm -rf $directory
+  exit 1
+fi
+
 echo -n "Tagging $version in svn..."
 cd $svn_directory
 svn cp -q trunk tags/$number
