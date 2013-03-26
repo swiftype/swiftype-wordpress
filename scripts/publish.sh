@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 if [ -z "$1" ]
 then
   echo "You must specify the version."
