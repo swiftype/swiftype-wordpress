@@ -1,0 +1,23 @@
+# Swiftype WordPress Plugin
+
+The [Swiftype WordPress Plugin](https://swiftype.com/wordpress) replaces WordPress's default search with a better search engine that is fully customizable via the Swiftype dashboard.
+
+## Installation
+
+1. Go to [http://swiftype.com](http://swiftype.com) and sign up for a free Swiftype account. (Be sure to validate your account via the confirmation email we send.)
+2. After logging in to Swiftype, go to the Account Settings screen and get your API key.
+3. Install the Swiftype Search Wordpress plugin in your Wordpress dashboard.
+4. Activate the plugin through the 'Plugins' menu in WordPress.
+5. Go to the Swiftype Search plugin page and enter your Swiftype API key on the first screen.
+6. Name your search engine, following the instructions on the screen.
+7. Build your search index by clicking the "Synchronize with Swiftype" button.
+8. See the Demo video for additional details, or email support@swiftype.com if you are having trouble.
+
+## Development
+
+### Pre-commit hook
+
+There is a pre-commit hook to automatically minify JavaScript every time you commit.
+
+1. Install `jsmin` (homebrew is easiest: `brew install jsmin`)
+2. Install the pre-commit hook:  `ln -s ../../scripts/pre-commit .git/hooks/pre-commit`

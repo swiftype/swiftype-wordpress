@@ -1,0 +1,14 @@
+#! /bin/bash
+git stash -q --keep-index
+
+if [ -x $(which jsmin) ]; then
+    jsmin < assets/install_swiftype.js > assets/install_swiftype.min.js
+    RESULT=$?
+    [ $RESULT -ne 0 ] && exit 1
+
+    git add assets/install_swiftype.min.js
+else
+    echo "ERROR: install jsmin (brew install jsmin)"
+fi
+
+git stash pop -q

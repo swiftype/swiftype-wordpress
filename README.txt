@@ -38,6 +38,13 @@ Sign up for a free account at [http://swiftype.com](http://swiftype.com)
 
 == Changelog ==
 
+= 1.1.17 =
 
+* Support for indexing custom post types
+* Improved synchronization of posts with Swiftype
+
+= 1.0 =
+
+Initial release.
 
 == Upgrade notice ==
