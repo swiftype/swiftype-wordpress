@@ -404,29 +404,33 @@
 						$documents[] = $this->convert_post_to_document( $post );
 					}
 				}
-				while( is_null( $resp ) ) {
-					try {
-						$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
-					} catch( SwiftypeError $e ) {
-						if( $retries >= $this->max_retries ) {
-							header( 'HTTP/1.1 500 Internal Server Error' );
-							print( "Error in Create or Update Documents. " );
-							print( "Offset: " . $offset . " " );
-							print( "Batch Size: " . $batch_size . " " );
-							print( "Retries: " . $retries . " " );
-							print_r( $e );
-							die();
-						} else {
-							$retries++;
-							sleep( $this->retry_delay );
+				if( count( $documents ) > 0 ) {
+					while( is_null( $resp ) ) {
+						try {
+							$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
+						} catch( SwiftypeError $e ) {
+							if( $retries >= $this->max_retries ) {
+								header( 'HTTP/1.1 500 Internal Server Error' );
+								print( "Error in Create or Update Documents. " );
+								print( "Offset: " . $offset . " " );
+								print( "Batch Size: " . $batch_size . " " );
+								print( "Retries: " . $retries . " " );
+								print_r( $e );
+								die();
+							} else {
+								$retries++;
+								sleep( $this->retry_delay );
+							}
 						}
 					}
-				}
-				$num_written = 0;
-				foreach( $resp as $record ) {
-					if( $record ) {
-						$num_written += 1;
+					$num_written = 0;
+					foreach( $resp as $record ) {
+						if( $record ) {
+							$num_written += 1;
+						}
 					}
+				} else {
+					$num_written = 0;
 				}
 			} else {
 				$num_written = 0;
