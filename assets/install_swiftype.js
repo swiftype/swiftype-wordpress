@@ -9898,7 +9898,7 @@ window['$stjq'] = jQuery.noConflict(true);
 			    return undefined;
 			  }
 
-			  return window.swiftypeConfig[option];
+			  return function() { return window.swiftypeConfig[option] };
 			}
 
 			var SwiftypeConfigManager = {
