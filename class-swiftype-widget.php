@@ -1,11 +1,9 @@
 <?php
 
 /**
-	* The Swiftype Search Widget class
+	* The Swiftype Category Filtered Search Widget class
 	*
-	* This class encapsulates the Swiftype Search plugin's widget functionality.
-	* The widget allows users to add search boxes to any page of their Wordpress site
-	* and allows them to specify options for the way that search box will behave.
+	* This class provides a widget that filters searches to a specific category.
 	*
 	* @author  Quin Hoxie <qhoxie@swiftype.com>, Matt Riley <mriley@swiftype.com>
 	*
