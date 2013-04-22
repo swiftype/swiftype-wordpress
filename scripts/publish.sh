@@ -32,8 +32,13 @@ svn co -q http://plugins.svn.wordpress.org/swiftype-search $svn_directory
 echo " done"
 
 echo -n "Copying current git state to svn trunk..."
+mv $svn_directory/trunk/.svn svn-bak
 rm -rf $svn_directory/trunk/*
+mv svn-bak $svn_directory/trunk/.svn
 cp -R $git_directory/* $svn_directory/trunk/
+cd $svn_directory
+svn st | grep ^! | awk '{print " --force "$2}' | xargs svn rm
+svn ci -qm "bump version to $version"
 echo " done"
 
 read -p "Are you sure you want to publish $version (y/n)? "
@@ -45,9 +50,8 @@ then
 fi
 
 echo -n "Tagging $version in svn..."
-cd $svn_directory
 svn cp -q trunk tags/$number
-svn ci -qm "bump version to $version"
+svn ci -qm "tag $version"
 echo " done"
 
 echo -n "Cleaning up..."
