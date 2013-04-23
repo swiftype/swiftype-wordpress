@@ -32,9 +32,7 @@ svn co -q http://plugins.svn.wordpress.org/swiftype-search $svn_directory
 echo " done"
 
 echo -n "Copying current git state to svn trunk..."
-mv $svn_directory/trunk/.svn svn-bak
-rm -rf $svn_directory/trunk/*
-mv svn-bak $svn_directory/trunk/.svn
+find $svn_directory/trunk -type f ! -path '*.svn*' -exec rm {} \;
 cp -R $git_directory/* $svn_directory/trunk/
 cd $svn_directory
 svn st | grep ^! | awk '{print " --force "$2}' | xargs svn rm
