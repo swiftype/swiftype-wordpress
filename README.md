@@ -15,6 +15,18 @@ The [Swiftype WordPress Plugin](https://swiftype.com/wordpress) replaces WordPre
 
 ## Development
 
+### Version Tagging
+
+1. Find next version using `git tag --list`
+2. Change version number in `README.txt` (1 occurrence) and `swiftype.php` (2 occurrences)
+3. Update changelog in `README.txt`
+4. Commit updates `git commit -am "bump version"`
+5. `git push`
+4. Tag version `git tag v1.x.yz`
+5. `git push --tags`
+6. Publish to WP `./script/publish.sh 1.x.yz`
+
+
 ### Pre-commit hook
 
 There is a pre-commit hook to automatically minify JavaScript every time you commit.
