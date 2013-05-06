@@ -12,4 +12,8 @@
 	*
 	*/
 
-class SwiftypeError extends Exception {}
+class SwiftypeError extends Exception {
+	public function isInvalidAuthentication() {
+		return $this->code == 401;
+	}
+}

@@ -1,10 +1,3 @@
-<?php
-	$api_key = get_option( 'swiftype_api_key' );
-	$client = new SwiftypeClient;
-	$client->set_api_key( $api_key );
-	$engines = $client->get_engines();
-?>
-
 <div class="wrap">
 	<h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
 
