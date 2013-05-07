@@ -606,7 +606,7 @@
 			$document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
 			$document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories( $post->ID ) );
 
-			if ( has_post_thumbnail( $post->ID ) ) {
+			if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID ) ) {
 				$image = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
 			} else {
 				$image = NULL;
