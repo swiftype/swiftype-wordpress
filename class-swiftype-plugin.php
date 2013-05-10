@@ -600,7 +600,7 @@
 			$document['fields'][] = array( 'name' => 'url', 'type' => 'enum', 'value' => get_permalink( $post->ID ) );
 			$document['fields'][] = array( 'name' => 'timestamp', 'type' => 'date', 'value' => $post->post_date_gmt );
 			$document['fields'][] = array( 'name' => 'title', 'type' => 'string', 'value' => html_entity_decode( strip_tags( $post->post_title ), ENT_QUOTES, "UTF-8" ) );
-			$document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( strip_shortcodes( $post->post_content ) ), ENT_QUOTES, "UTF-8" ) );
+			$document['fields'][] = array( 'name' => 'body', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $this->strip_shortcodes_retain_contents( $post->post_content ) ), ENT_QUOTES, "UTF-8" ) );
 			$document['fields'][] = array( 'name' => 'excerpt', 'type' => 'text', 'value' => html_entity_decode( strip_tags( $post->post_excerpt ), ENT_QUOTES, "UTF-8" ) );
 			$document['fields'][] = array( 'name' => 'author', 'type' => 'string', 'value' => array( $nickname, $name ) );
 			$document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
@@ -614,6 +614,23 @@
 			$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => $image );
 
 			return $document;
+		}
+
+	/**
+		* Strip shortcodes, retaining any content inside of them.
+		* @param string $content The string to strip shortcodes from
+		* @return string A string with the shortcodes removed
+		*/
+		private function strip_shortcodes_retain_contents( $content ) {
+			global $shortcode_tags;
+
+			if ( empty($shortcode_tags) || !is_array($shortcode_tags) )
+				return $content;
+
+			$pattern = get_shortcode_regex();
+
+			# Replace the short code with its content (the 5th capture group) surrounded by spaces
+			return preg_replace("/$pattern/s", ' $5 ', $content);
 		}
 
 	/**
