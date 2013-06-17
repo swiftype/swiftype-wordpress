@@ -75,6 +75,7 @@ You can install the plugin for each site with its own search engine, but we don'
 
 = 1.1.24 =
 * Added a filter to the end of document creation to allow for additional fields to be indexed.
+* Moving all api calls to https
 
 = 1.1.22 =
 * Remove API calls on set engine screen

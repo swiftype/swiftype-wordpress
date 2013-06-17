@@ -19,7 +19,7 @@ class SwiftypeClient {
 /**
 	* The URL endpoint that is the basis for all calls to the Swiftype API
 	*/
-	private $endpoint = 'http://api.swiftype.com/api/v1/';
+	private $endpoint = 'https://api.swiftype.com/api/v1/';
 
 /**
 	* The Swiftype API Key that this client should use for authenticating its calls

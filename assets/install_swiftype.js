@@ -9409,7 +9409,7 @@ window['$stjq'] = jQuery.noConflict(true);
 		var ident = 0;
 
 		window.Swiftype = window.Swiftype || {};
-		Swiftype.root_url = 'http://api.swiftype.com';
+		Swiftype.root_url = 'https://api.swiftype.com';
 		Swiftype.pingUrl = function(endpoint, callback) {
 			var img  = new Image();
 			img.onload = img.onerror = callback;
