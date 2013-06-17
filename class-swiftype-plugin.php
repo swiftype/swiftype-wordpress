@@ -613,6 +613,8 @@
 			}
 			$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => $image );
 
+			$document = apply_filters( "swiftype_document_builder", $document, $post );
+
 			return $document;
 		}
 
