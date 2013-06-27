@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 3.5
-Stable tag: 1.1.25
+Stable tag: 1.1.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,9 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
+= 1.1.26 =
+* Work around SSL verification issue on some systems
+
 = 1.1.24 =
 * Added a filter to the end of document creation to allow for additional fields to be indexed.
 * Moving all api calls to https
@@ -98,4 +101,7 @@ You can install the plugin for each site with its own search engine, but we don'
 
 Initial release.
 
-== Upgrade notice ==
+== Upgrade Notice ==
+
+= 1.1.26 =
+This fixes an important issue for many users that prevented synchronization of new posts and first time authentication.  Please upgrade immediately and resynchronize your posts.
