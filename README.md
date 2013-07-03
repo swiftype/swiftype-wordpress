@@ -29,7 +29,8 @@ The [Swiftype WordPress Plugin](https://swiftype.com/wordpress) replaces WordPre
 
 ### Pre-commit hook
 
-There is a pre-commit hook to automatically minify JavaScript every time you commit.
+There is a pre-commit hook to automatically concatenate and minify JavaScript every time you commit. This is done with [Grunt](http://gruntjs.com/).
 
-1. Install `jsmin` (homebrew is easiest: `brew install jsmin`)
-2. Install the pre-commit hook:  `ln -s ../../scripts/pre-commit .git/hooks/pre-commit`
+1. Install `grunt-cli` (`npm install -g grunt-cli`)
+2. Test by running `grunt build`.
+3. Install the pre-commit hook:  `ln -s ../../scripts/pre-commit .git/hooks/pre-commit`
