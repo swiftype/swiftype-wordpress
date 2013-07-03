@@ -23,6 +23,15 @@
       },
       getSortDirection: function() {
         return readSwiftypeConfigFor('sortDirection');
+      },
+      getFunctionalBoosts: function() {
+        return readSwiftypeConfigFor('functionalBoosts');
+      },
+      getDisableAutocomplete: function() {
+        return readSwiftypeConfigFor('disableAutocomplete');
+      },
+      getResultLimit: function() {
+        return readSwiftypeConfigFor('resultLimit');
       }
     };
 
@@ -33,9 +42,12 @@
       documentTypes: ['posts'],
       engineKey: Swiftype.engineKey,
       filters: SwiftypeConfigManager.getFilters(),
+      functionalBoosts: SwiftypeConfigManager.getFunctionalBoosts(),
       searchFields: SwiftypeConfigManager.getSearchFields(),
       sortField: SwiftypeConfigManager.getSortField(),
-      sortDirection: SwiftypeConfigManager.getSortDirection()
+      sortDirection: SwiftypeConfigManager.getSortDirection(),
+      disableAutocomplete: SwiftypeConfigManager.getDisableAutocomplete(),
+      resultLimit: SwiftypeConfigManager.getResultLimit()
     };
 
     $.each(Swiftype.inputElements, function(idx, el) {

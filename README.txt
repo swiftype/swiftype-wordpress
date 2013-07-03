@@ -73,6 +73,9 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
+= 1.1.27 =
+* Add support for customizing functional boosts and number of items returned by the autocomplete, as well as disabling the autocomplete entirely
+
 = 1.1.26 =
 * Work around SSL verification issue on some systems
 
