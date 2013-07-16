@@ -606,12 +606,18 @@
 			$document['fields'][] = array( 'name' => 'tags', 'type' => 'string', 'value' => $tag_strings );
 			$document['fields'][] = array( 'name' => 'category', 'type' => 'enum', 'value' => wp_get_post_categories( $post->ID ) );
 
+			$image = NULL;
+
 			if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID ) ) {
+				// NOTE: returns false on failure
 				$image = wp_get_attachment_url( get_post_thumbnail_id( $post->ID ) );
-			} else {
-				$image = NULL;
 			}
-			$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => $image );
+
+			if ( $image ) {
+				$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => $image );
+			} else {
+				$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => NULL );
+			}
 
 			$document = apply_filters( "swiftype_document_builder", $document, $post );
 
