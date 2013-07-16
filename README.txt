@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 3.5
-Stable tag: 1.1.26
+Stable tag: 1.1.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,7 @@ You can install the plugin for each site with its own search engine, but we don'
 
 = 1.1.27 =
 * Add support for customizing functional boosts and number of items returned by the autocomplete, as well as disabling the autocomplete entirely
+* Handle thumbnail URLs that fail to load
 
 = 1.1.26 =
 * Work around SSL verification issue on some systems
