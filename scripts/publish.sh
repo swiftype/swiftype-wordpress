@@ -36,6 +36,7 @@ find $svn_directory/trunk -type f ! -path '*.svn*' -exec rm {} \;
 cp -R $git_directory/* $svn_directory/trunk/
 cd $svn_directory
 svn st | grep ^! | awk '{print " --force "$2}' | xargs svn rm
+svn st | grep ^? | awk '{print " "$2}' | xargs svn add
 svn ci -qm "bump version to $version"
 echo " done"
 
