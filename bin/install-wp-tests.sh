@@ -22,11 +22,11 @@ tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C $WP_CORE_DIR
 svn co --ignore-externals --quiet http://unit-tests.svn.wordpress.org/trunk/ $WP_TESTS_DIR
 
 cd $WP_TESTS_DIR
-cp wp-tests-config-sample.php wp-tests-config.php
-sed -i '.bak' "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" wp-tests-config.php
-sed -i '.bak' "s/yourdbnamehere/$DB_NAME/" wp-tests-config.php
-sed -i '.bak' "s/yourusernamehere/$DB_USER/" wp-tests-config.php
-sed -i '.bak' "s/yourpasswordhere/$DB_PASS/" wp-tests-config.php
+cat wp-tests-config-sample.php |
+  sed "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" |
+  sed "s/yourdbnamehere/$DB_NAME/" |
+  sed "s/yourusernamehere/$DB_USER/" |
+  sed "s/yourpasswordhere/$DB_PASS/" > wp-tests-config.php
 
 # create database
-mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"
+mysql --user="$DB_USER" --password="$DB_PASS" -e "create database if not exists $DB_NAME"
