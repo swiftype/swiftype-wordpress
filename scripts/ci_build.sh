@@ -19,4 +19,4 @@ else
 fi
 
 # Run tests
-exec phpunit -c $TEST_CONFIG
+exec phpunit -c $TEST_CONFIG --strict --log-junit tests/report.xml
