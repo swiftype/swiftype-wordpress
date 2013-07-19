@@ -1,6 +1,6 @@
 <?php
 
-class CheckSwiftypePluginInfrastructureLogicTest extends WP_UnitTestCase {
+class SwiftypePluginFiltersTest extends SwiftypeTestCase {
   // Make sure testing framework works
   function test_tests() {
     $this->assertTrue(true);
@@ -26,20 +26,10 @@ class CheckSwiftypePluginInfrastructureLogicTest extends WP_UnitTestCase {
     $this->assertHasFilter('admin_init', $action);
   }
 
-  //------------------------------------------------------------------------------------------------
-  function assertHasFilter($tag, $function_to_check) {
-    $this->assertGreaterThan(0, has_filter($tag, $function_to_check));
-  }
-
-  private function swiftypePluginObject() {
-    global $wp_filter;
-    $admin_init_filters = $wp_filter["admin_init"];
-    foreach (array_keys($admin_init_filters) as $priority) {
-      foreach (array_keys($admin_init_filters[$priority]) as $filter_key) {
-        if (preg_match("/^\w{32}initialize_admin_screen$/", $filter_key)) {
-          return $admin_init_filters[$priority][$filter_key]["function"][0];
-        }
-      }
-    }
+  // Check to make sure enqueue_swiftype_assets hook is added for non-admin pages
+  function test_assets_filter_added() {
+    $swiftype_plugin = $this->swiftypePluginObject();
+    $action = array($swiftype_plugin, 'enqueue_swiftype_assets');
+    $this->assertHasFilter('wp_enqueue_scripts', $action);
   }
 }

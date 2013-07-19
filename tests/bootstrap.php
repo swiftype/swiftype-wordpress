@@ -13,3 +13,6 @@ function _manually_load_plugin() {
 tests_add_filter('muplugins_loaded', '_manually_load_plugin');
 
 require "$wp_tests_dir/includes/bootstrap.php";
+
+// Load our testcase base class
+require dirname( __FILE__ ) . '/swiftype-testcase.php';
