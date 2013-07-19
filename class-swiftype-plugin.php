@@ -11,6 +11,9 @@
 	*
 	*/
 
+// Check if plugin has already been loaded
+if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
+
 	class SwiftypePlugin {
 
 		private $client = NULL;
@@ -696,4 +699,6 @@
 
 	}
 
-	$swiftype_plugin = new SwiftypePlugin();
+  // Store a reference to the plugin in GLOBALS so that our unit tests can access it
+  $GLOBALS['swiftype-wordpress'] = new SwiftypePlugin();
+}
