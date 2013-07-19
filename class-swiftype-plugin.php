@@ -37,28 +37,34 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 		private $max_retries = 5;
 		private $retry_delay = 2;
 
-		public function SwiftypePlugin() { $this->__construct(); }
+		/**
+		  * Initialize swiftype API client
+		  */
+		public function initialize_api_client() {
+			$this->api_key = get_option('swiftype_api_key');
+			$this->engine_slug = get_option('swiftype_engine_slug');
+			$this->engine_key = get_option('swiftype_engine_key');
 
-		public function __construct() {
+			$this->client = new SwiftypeClient;
+			$this->client->set_api_key($this->api_key);
+		}
+
+		/**
+		  * Configures wordpress filters and actions with callbacks from this plugin instance
+		  */
+		public function setup_filters() {
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
 			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );
 
-			if ( ! is_admin() ) {
+			// Filters/actions for non-admin pages
+			if (!is_admin()) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
 				add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ) );
 				add_filter( 'posts_search', array( $this, 'clear_sql_search_clause' ) );
 				add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
 				add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
-
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->engine_slug = get_option( 'swiftype_engine_slug' );
-				$this->engine_key = get_option( 'swiftype_engine_key' );
-
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
 			}
-
 		}
 
 		/**
@@ -105,13 +111,10 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 					}
 				}
 
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->api_authorized = get_option( 'swiftype_api_authorized' );
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
+				// Initialize API client, check if our API key is authorized, and return if it is not
+				$this->initialize_api_client();
 				$this->check_api_authorized();
-				if( ! $this->api_authorized )
-					return;
+				if (!$this->api_authorized) return;
 
 				$this->num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
 				$this->engine_slug = get_option( 'swiftype_engine_slug' );
@@ -194,20 +197,18 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 	/**
 		* Check whether or not the Swiftype API client is authorized
 		*
-		* Retrieves search results from the Swiftype API based on the user-input text query.
-		* We retrieve 100 results during the initial
-		* request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
-		* do not hit the Swiftype API either). Called from the pre_get_posts action.
-		*
 		* @return null
 		*/
-		private function check_api_authorized() {
-			if( ! is_admin() )
-				return;
-			if( $this->api_authorized )
-				return;
+		public function check_api_authorized() {
+			// Check if we already know if the API key is authorized
+			$this->api_authorized = get_option('swiftype_api_authorized');
+			if ($this->api_authorized) return;
 
-			if( $this->api_key && strlen( $this->api_key ) > 0 ) {
+			// Only perform the API check call on admin pages
+			if (!is_admin()) return;
+
+			// If we have the key, try to ask API client for authorization
+			if ($this->api_key && strlen($this->api_key) > 0) {
 				try {
 					$this->api_authorized = $this->client->authorized();
 				} catch( SwiftypeError $e ) {
@@ -217,7 +218,8 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 				$this->api_authorized = false;
 			}
 
-			update_option( 'swiftype_api_authorized', $this->api_authorized );
+			// Save the result in options
+			update_option('swiftype_api_authorized', $this->api_authorized);
 		}
 
 	/**
@@ -699,6 +701,12 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 
 	}
 
+  //------------------------------------------------------------------------------------------------
+  // Create an instance of our plugin and wire it up with wordpress stuff
+  $swiftype_plugin = new SwiftypePlugin();
+  $swiftype_plugin->setup_filters();
+  $swiftype_plugin->initialize_api_client();
+
   // Store a reference to the plugin in GLOBALS so that our unit tests can access it
-  $GLOBALS['swiftype-wordpress'] = new SwiftypePlugin();
+  $GLOBALS['swiftype-wordpress'] = $swiftype_plugin;
 }
