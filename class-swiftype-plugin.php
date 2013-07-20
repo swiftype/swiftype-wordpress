@@ -12,7 +12,7 @@
 	*/
 
 // Check if plugin has already been loaded
-if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
+if ( ! array_key_exists( 'swiftype-wordpress', $GLOBALS ) ) {
 
 	class SwiftypePlugin {
 
@@ -41,12 +41,12 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 		  * Initialize swiftype API client
 		  */
 		public function initialize_api_client() {
-			$this->api_key = get_option('swiftype_api_key');
-			$this->engine_slug = get_option('swiftype_engine_slug');
-			$this->engine_key = get_option('swiftype_engine_key');
+			$this->api_key = get_option( 'swiftype_api_key' );
+			$this->engine_slug = get_option( 'swiftype_engine_slug' );
+			$this->engine_key = get_option( 'swiftype_engine_key' );
 
 			$this->client = new SwiftypeClient;
-			$this->client->set_api_key($this->api_key);
+			$this->client->set_api_key( $this->api_key );
 		}
 
 		/**
@@ -114,7 +114,7 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 				// Initialize API client, check if our API key is authorized, and return if it is not
 				$this->initialize_api_client();
 				$this->check_api_authorized();
-				if (!$this->api_authorized) return;
+				if ( ! $this->api_authorized ) return;
 
 				$this->num_indexed_documents = get_option( 'swiftype_num_indexed_documents' );
 				$this->engine_slug = get_option( 'swiftype_engine_slug' );
@@ -201,14 +201,14 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 		*/
 		public function check_api_authorized() {
 			// Check if we already know if the API key is authorized
-			$this->api_authorized = get_option('swiftype_api_authorized');
-			if ($this->api_authorized) return;
+			$this->api_authorized = get_option( 'swiftype_api_authorized' );
+			if ( $this->api_authorized ) return;
 
 			// Only perform the API check call on admin pages
-			if (!is_admin()) return;
+			if ( ! is_admin() ) return;
 
 			// If we have the key, try to ask API client for authorization
-			if ($this->api_key && strlen($this->api_key) > 0) {
+			if  ($this->api_key && strlen( $this->api_key)  > 0 ) {
 				try {
 					$this->api_authorized = $this->client->authorized();
 				} catch( SwiftypeError $e ) {
@@ -219,7 +219,7 @@ if (!array_key_exists('swiftype-wordpress', $GLOBALS)) {
 			}
 
 			// Save the result in options
-			update_option('swiftype_api_authorized', $this->api_authorized);
+			update_option( 'swiftype_api_authorized', $this->api_authorized );
 		}
 
 	/**
