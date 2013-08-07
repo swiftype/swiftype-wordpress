@@ -55,7 +55,6 @@
 				$this->client = new SwiftypeClient;
 				$this->client->set_api_key( $this->api_key );
 			}
-
 		}
 
 		/**
@@ -184,6 +183,8 @@
 				$this->num_pages = $result_info['num_pages'];
 				set_query_var( 'post__in', $this->post_ids);
 				$this->search_successful = true;
+
+				add_filter( 'post_class', array( $this, 'swiftype_post_class' ) );
 			}
 
 		}
@@ -671,12 +672,24 @@
 		* This method is called by the wp_enqueue_scripts action.
 		*/
 		public function enqueue_swiftype_assets() {
-			if( is_admin() )
+			if ( is_admin() )
 				return;
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
 			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.min.js', __FILE__ ) );
 			wp_enqueue_script( 'swiftype_te', plugins_url( 'assets/install_te.js', __FILE__ ), NULL, NULL, true );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
+		}
+
+	/**
+		* Add a Swiftype-specific post class to the list of post classes.
+		*/
+		public function swiftype_post_class( $classes ) {
+			global $post;
+
+			$classes[] = 'swiftype-result';
+			$classes[] = 'swiftype-result-' . $post->ID;
+
+			return $classes;
 		}
 
 	/**
