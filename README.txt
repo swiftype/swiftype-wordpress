@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 3.5
-Stable tag: 1.1.27
+Stable tag: 1.1.28
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,10 @@ You can install the plugin for each site with its own search engine, but we don'
 2. The Swiftype search result controls dashboard.  Here you can customize any aspect of your results.  You can drag and drop to reoder search results, remove results you don't want to show up in the search, and even add results that don't show up automatically.
 
 == Changelog ==
+
+= 1.1.28 = 
+* Add support for tracking search result clicks. Now you'll be able see top clicked content in the Swiftype Dashboard.
+* Fix an issue displaying search results when a deleted post hasn't been deleted from Swiftype.
 
 = 1.1.27 =
 * Add support for customizing functional boosts and number of items returned by the autocomplete, as well as disabling the autocomplete entirely
