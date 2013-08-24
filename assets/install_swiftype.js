@@ -10378,7 +10378,13 @@ window['$stjq'] = jQuery.noConflict(true);
         return undefined;
       }
 
-      return function() { return window.swiftypeConfig[option] };
+      return function() { 
+        if (typeof window.swiftypeConfig[option] === 'function') {
+          return window.swiftypeConfig[option].call();
+        } else {
+          return window.swiftypeConfig[option];
+        }
+      };
     }
 
     var SwiftypeConfigManager = {
