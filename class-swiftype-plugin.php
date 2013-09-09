@@ -704,6 +704,13 @@
 		}
 
 	/**
+		* Return the total number of results after a search is performed.
+		*/
+		public function get_total_result_count() {
+			return $this->total_result_count;
+		}
+
+	/**
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
