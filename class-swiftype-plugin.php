@@ -30,6 +30,7 @@
 		private $per_page = 0;
 		private $search_successful = false;
 		private $error = NULL;
+		private $results = NULL;
 
 		private $max_retries = 5;
 		private $retry_delay = 2;
@@ -159,24 +160,25 @@
 				$params = apply_filters( 'swiftype_search_params', $params );
 
 				try {
-					$results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+					$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
 				} catch( SwiftypeError $e ) {
+					$this->results = NULL;
 					$this->search_successful = false;
 				}
 
-				if( ! isset( $results ) ) {
+				if( ! isset( $this->results ) ) {
 					$this->search_successful = false;
 					return;
 				}
 
 				$this->post_ids = array();
-				$records = $results['records']['posts'];
+				$records = $this->results['records']['posts'];
 
 				foreach( $records as $record ) {
 					$this->post_ids[] = $record['external_id'];
 				}
 
-				$result_info = $results['info']['posts'];
+				$result_info = $this->results['info']['posts'];
 				$this->per_page = $result_info['per_page'];
 
 				$this->total_result_count = $result_info['total_result_count'];
@@ -695,6 +697,20 @@
 		}
 
 	/**
+		* Return the raw Swiftype results array after a search is performed.
+		*/
+		public function results() {
+			return $this->results;
+		}
+
+	/**
+		* Return the total number of results after a search is performed.
+		*/
+		public function get_total_result_count() {
+			return $this->total_result_count;
+		}
+
+	/**
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
@@ -710,5 +726,3 @@
 		}
 
 	}
-
-	$swiftype_plugin = new SwiftypePlugin();
