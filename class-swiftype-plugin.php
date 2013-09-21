@@ -90,14 +90,7 @@
 						update_option( 'swiftype_create_engine', $engine_name );
 					} elseif( $_POST['action'] == 'swiftype_clear_config' ) {
 						check_admin_referer( 'swiftype-nonce' );
-						delete_option( 'swiftype_api_key' );
-						delete_option( 'swiftype_api_authorized' );
-						delete_option( 'swiftype_engine_slug' );
-						delete_option( 'swiftype_engine_name' );
-						delete_option( 'swiftype_engine_key' );
-						delete_option( 'swiftype_engine_initialized' );
-						delete_option( 'swiftype_create_engine' );
-						delete_option( 'swiftype_num_indexed_documents' );
+						$this->clear_config();
 					}
 				}
 
@@ -234,51 +227,38 @@
 			if( $this->engine_initialized )
 				return;
 
-			// create the engine if they asked you too, using the name submitted.
-			if( get_option( 'swiftype_create_engine' ) ) {
-				$engine_name = get_option( 'swiftype_create_engine' );
-				delete_option( 'swiftype_create_engine' );
-				try {
-					$engine = $this->client->create_engine( array( 'name' => $engine_name ) );
-				} catch( SwiftypeError $e ) {
-					$error_message = json_decode( $e->getMessage() );
-					return "<b>There was an error creating your search engine on the Swiftype servers.</b> There error message was: " . $error_message->error;
-				}
-				$this->engine_slug = $engine['slug'];
+			$engine_name = get_option( 'swiftype_create_engine' );
+
+			if ( $engine_name == false ) {
+				return;
 			}
 
 			try {
-				$engines = $this->client->get_engines();
-			} catch( SwiftypeError $e ) {
-				return;
+				$this->initialize_engine( $engine_name );
+			} catch ( SwiftypeError $e ) {
+				$error_message = json_decode( $e->getMessage() );
+				return "<b>There was an error creating your search engine on the Swiftype servers.</b> There error message was: " . $error_message->error;
 			}
-			foreach( $engines as $remote_engine ) {
-				if( $remote_engine['key'] == $this->engine_key ) {
-					$engine = $remote_engine;
-					break;
-				}
+		}
+
+	/**
+		* Initialize the search engine for this WordPress installation.
+		*/
+		public function initialize_engine( $engine_name ) {
+			$engine = $this->client->create_engine( array( 'name' => $engine_name ) );
+
+			$this->engine_slug = $engine['slug'];
+			$this->engine_name = $engine['name'];
+			$this->engine_key = $engine['key'];
+
+			$document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
+
+			if( $document_type ) {
+				$this->engine_initialized = true;
+				$this->num_indexed_documents = $document_type['document_count'];
 			}
 
-			if( $engine ) {
-				$this->engine_slug = $engine['slug'];
-				$this->engine_name = $engine['name'];
-				$this->engine_key = $engine['key'];
-				try {
-					$document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
-				} catch( SwiftypeError $e ) {}
-				if( ! isset( $document_type ) || ! $document_type ) {
-					try {
-						$document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
-					} catch( SwiftypeError $e ) {
-						return;
-					}
-				}
-				if( $document_type ) {
-					$this->engine_initialized = true;
-					$this->num_indexed_documents = $document_type['document_count'];
-				}
-			}
-
+			delete_option( 'swiftype_create_engine' );
 			update_option( 'swiftype_engine_name', $this->engine_name );
 			update_option( 'swiftype_engine_slug', $this->engine_slug );
 			update_option( 'swiftype_engine_key', $this->engine_key );
@@ -387,6 +367,28 @@
 			check_ajax_referer( 'swiftype-ajax-nonce' );
 			$offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
 			$batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
+
+			try {
+				list( $num_written, $total_posts ) = $this->index_batch_of_posts( $offset, $batch_size );
+
+				header( 'Content-Type: application/json' );
+				print( json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
+				die();
+
+			} catch ( SwiftypeError $e ) {
+				header( 'HTTP/1.1 500 Internal Server Error' );
+				print( "Error in Create or Update Documents. " );
+				print( "Offset: " . $offset . " " );
+				print( "Batch Size: " . $batch_size . " " );
+				print( "Retries: " . $retries . " " );
+				print_r( $e );
+				die();
+			}
+
+		}
+
+
+		public function index_batch_of_posts( $offset, $batch_size ) {
 			$posts_query = array(
 				'numberposts' => $batch_size,
 				'offset' => $offset,
@@ -399,6 +401,7 @@
 			$total_posts = count( $posts );
 			$retries = 0;
 			$resp = NULL;
+			$num_written = 0;
 
 			if( $total_posts > 0 ) {
 				$documents = array();
@@ -413,35 +416,23 @@
 							$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
 						} catch( SwiftypeError $e ) {
 							if( $retries >= $this->max_retries ) {
-								header( 'HTTP/1.1 500 Internal Server Error' );
-								print( "Error in Create or Update Documents. " );
-								print( "Offset: " . $offset . " " );
-								print( "Batch Size: " . $batch_size . " " );
-								print( "Retries: " . $retries . " " );
-								print_r( $e );
-								die();
+								throw $e;
 							} else {
 								$retries++;
 								sleep( $this->retry_delay );
 							}
 						}
 					}
-					$num_written = 0;
+
 					foreach( $resp as $record ) {
 						if( $record ) {
 							$num_written += 1;
 						}
 					}
-				} else {
-					$num_written = 0;
 				}
-			} else {
-				$num_written = 0;
 			}
 
-			header( 'Content-Type: application/json' );
-			print( json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
-			die();
+			return array( $num_written, $total_posts );
 		}
 
 	/**
@@ -456,7 +447,24 @@
 
 			$offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
 			$batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
+			$total_posts = 0;
 
+			try {
+				$total_posts = $this->delete_batch_of_trashed_posts( $offset, $batch_size );
+			} catch ( SwiftypeError $e ) {
+				header( 'HTTP/1.1 500 Internal Server Error' );
+				print( 'Error in Delete all Trashed Posts.' );
+				print_r( $e );
+				die();
+			}
+
+			header( "Content-Type: application/json" );
+			print( json_encode( array( 'total' => $total_posts ) ) );
+			die();
+		}
+
+
+		public function delete_batch_of_trashed_posts( $offset, $batch_size ) {
 			$document_ids = array();
 
 			$posts_query = array(
@@ -485,10 +493,7 @@
 						$resp = $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
 					} catch( SwiftypeError $e ) {
 						if( $retries >= $this->max_retries ) {
-							header( 'HTTP/1.1 500 Internal Server Error' );
-							print( 'Error in Delete all Trashed Posts.' );
-							print_r( $e );
-							die();
+							throw $e;
 						} else {
 							$retries++;
 							sleep( $this->retry_delay );
@@ -496,9 +501,9 @@
 					}
 				}
 			}
-			header( "Content-Type: application/json" );
-			print( json_encode( array( 'total' => $total_posts ) ) );
-			die();
+
+			return $total_posts;
+
 		}
 
 	/**
@@ -692,6 +697,28 @@
 			$classes[] = 'swiftype-result-' . $post->ID;
 
 			return $classes;
+		}
+
+	/**
+		* Return the SwiftypeClient instance
+		*/
+		public function client() {
+			return $this->client;
+		}
+
+	/**
+		* Delete all stored options for the Swiftype plugin.
+		*/
+		public function clear_config() {
+			delete_option( 'swiftype_create_engine' );
+			delete_option( 'swiftype_api_key' );
+			delete_option( 'swiftype_api_authorized' );
+			delete_option( 'swiftype_engine_slug' );
+			delete_option( 'swiftype_engine_name' );
+			delete_option( 'swiftype_engine_key' );
+			delete_option( 'swiftype_engine_initialized' );
+			delete_option( 'swiftype_create_engine' );
+			delete_option( 'swiftype_num_indexed_documents' );
 		}
 
 	/**

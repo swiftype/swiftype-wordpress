@@ -130,6 +130,16 @@ class SwiftypeClient {
 	}
 
 /**
+	* Delete a document_type within an engine.
+	*
+	* @param string $engine_id The slug or ID of the engine that owns the document_type
+	* @param string $document_type_id The slug or ID of the document_type to delete
+	*/
+	public function delete_document_type( $engine_id, $document_type_id ) {
+		$url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '.json';
+		$response = $this->call_api( 'DELETE', $url );
+	}
+/**
 	* Delete a document from an engine within a specific document_type
 	*
 	* @param string $engine_id The engine_id of the engine from which to delete the document
@@ -261,10 +271,10 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 		if( ! is_wp_error( $response ) ) {
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_message = wp_remote_retrieve_response_message( $response );
-			if( 200 == $response_code ) {
+			if( $response_code >= 200 && $response_code < 300 ) {
 				$response_body = wp_remote_retrieve_body( $response );
 				return array( 'code' => $response_code, 'body' => $response_body );
-			} elseif( 200 != $response_code && ! empty( $response_message ) ) {
+			} elseif( ! empty( $response_message ) ) {
 				$response_body = wp_remote_retrieve_body( $response );
 				throw new SwiftypeError( $response_body, $response_code );
 			} else {
