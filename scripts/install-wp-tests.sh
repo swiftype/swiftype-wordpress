@@ -26,7 +26,8 @@ cat wp-tests-config-sample.php |
   sed "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" |
   sed "s/yourdbnamehere/$DB_NAME/" |
   sed "s/yourusernamehere/$DB_USER/" |
-  sed "s/yourpasswordhere/$DB_PASS/" > wp-tests-config.php
+  sed "s/yourpasswordhere/$DB_PASS/" |
+  sed "s/localhost/127.0.0.1/" > wp-tests-config.php
 
 # create database
 mysql --user="$DB_USER" --password="$DB_PASS" -e "create database if not exists $DB_NAME"
