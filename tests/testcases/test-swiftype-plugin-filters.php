@@ -1,11 +1,6 @@
 <?php
 
 class SwiftypePluginFiltersTest extends SwiftypeTestCase {
-  // Make sure testing framework works
-  function test_tests() {
-    $this->assertTrue(true);
-  }
-
   // Make sure we could get our plugin object
   function test_swiftype_plugin_object() {
     $swiftype_plugin = $this->globalPluginObject();

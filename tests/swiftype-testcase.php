@@ -8,7 +8,9 @@ class SwiftypeTestCase extends WP_UnitTestCase {
 
   // Returns swiftype plugin object for current request
   function globalPluginObject() {
-    return $GLOBALS['swiftype-wordpress'];
+    global $swiftype_plugin;
+
+    return $swiftype_plugin;
   }
 
   // Returns a valid API key if it is available in environment or skips the test if not

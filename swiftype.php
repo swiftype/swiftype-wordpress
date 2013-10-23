@@ -15,3 +15,5 @@ require_once 'class-swiftype-client.php';
 require_once 'class-swiftype-error.php';
 require_once 'class-swiftype-plugin.php';
 require_once 'class-swiftype-widget.php';
+
+$swiftype_plugin = new SwiftypePlugin();
