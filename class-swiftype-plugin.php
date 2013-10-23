@@ -30,6 +30,7 @@
 		private $per_page = 0;
 		private $search_successful = false;
 		private $error = NULL;
+		private $results = NULL;
 
 		private $max_retries = 5;
 		private $retry_delay = 2;
@@ -163,30 +164,33 @@
 				$params = apply_filters( 'swiftype_search_params', $params );
 
 				try {
-					$results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+					$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
 				} catch( SwiftypeError $e ) {
+					$this->results = NULL;
 					$this->search_successful = false;
 				}
 
-				if( ! isset( $results ) ) {
+				if( ! isset( $this->results ) ) {
 					$this->search_successful = false;
 					return;
 				}
 
 				$this->post_ids = array();
-				$records = $results['records']['posts'];
+				$records = $this->results['records']['posts'];
 
 				foreach( $records as $record ) {
 					$this->post_ids[] = $record['external_id'];
 				}
 
-				$result_info = $results['info']['posts'];
+				$result_info = $this->results['info']['posts'];
 				$this->per_page = $result_info['per_page'];
 
 				$this->total_result_count = $result_info['total_result_count'];
 				$this->num_pages = $result_info['num_pages'];
 				set_query_var( 'post__in', $this->post_ids);
 				$this->search_successful = true;
+
+				add_filter( 'post_class', array( $this, 'swiftype_post_class' ) );
 			}
 
 		}
@@ -310,7 +314,9 @@
 
 			$ordered_posts = array();
 			foreach( $this->post_ids as $pid ) {
-				$ordered_posts[] = $lookup_table[ $pid ];
+				if ( $lookup_table[ $pid ] ) {
+					$ordered_posts[] = $lookup_table[ $pid ];
+				}
 			}
 
 			return $ordered_posts;
@@ -670,12 +676,38 @@
 		* This method is called by the wp_enqueue_scripts action.
 		*/
 		public function enqueue_swiftype_assets() {
-			if( is_admin() )
+			if ( is_admin() )
 				return;
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
 			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.min.js', __FILE__ ) );
 			wp_enqueue_script( 'swiftype_te', plugins_url( 'assets/install_te.js', __FILE__ ), NULL, NULL, true );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
+		}
+
+	/**
+		* Add a Swiftype-specific post class to the list of post classes.
+		*/
+		public function swiftype_post_class( $classes ) {
+			global $post;
+
+			$classes[] = 'swiftype-result';
+			$classes[] = 'swiftype-result-' . $post->ID;
+
+			return $classes;
+		}
+
+	/**
+		* Return the raw Swiftype results array after a search is performed.
+		*/
+		public function results() {
+			return $this->results;
+		}
+
+	/**
+		* Return the total number of results after a search is performed.
+		*/
+		public function get_total_result_count() {
+			return $this->total_result_count;
 		}
 
 	/**
