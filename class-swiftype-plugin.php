@@ -49,13 +49,20 @@
 				add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
 				add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
 
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->engine_slug = get_option( 'swiftype_engine_slug' );
-				$this->engine_key = get_option( 'swiftype_engine_key' );
-
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
+				$this->initialize_api_client();
 			}
+		}
+
+		/**
+		 * Initialize swiftype API client
+		 */
+		public function initialize_api_client() {
+			$this->api_key = get_option( 'swiftype_api_key' );
+			$this->engine_slug = get_option( 'swiftype_engine_slug' );
+			$this->engine_key = get_option( 'swiftype_engine_key' );
+
+			$this->client = new SwiftypeClient();
+			$this->client->set_api_key( $this->api_key );
 		}
 
 		/**
@@ -102,10 +109,7 @@
 					}
 				}
 
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->api_authorized = get_option( 'swiftype_api_authorized' );
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
+				$this->initialize_api_client();
 				$this->check_api_authorized();
 				if( ! $this->api_authorized )
 					return;
@@ -194,19 +198,15 @@
 	/**
 		* Check whether or not the Swiftype API client is authorized
 		*
-		* Retrieves search results from the Swiftype API based on the user-input text query.
-		* We retrieve 100 results during the initial
-		* request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
-		* do not hit the Swiftype API either). Called from the pre_get_posts action.
-		*
 		* @return null
 		*/
-		private function check_api_authorized() {
+		public function check_api_authorized() {
 			if( ! is_admin() )
 				return;
 			if( $this->api_authorized )
 				return;
-
+			
+			// If we have the key, try to ask API client for authorization
 			if( $this->api_key && strlen( $this->api_key ) > 0 ) {
 				try {
 					$this->api_authorized = $this->client->authorized();
