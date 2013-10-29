@@ -78,9 +78,9 @@ You can install the plugin for each site with its own search engine, but we don'
 == Changelog ==
 
 = 1.1.29 =
-
 * Allow JavaScript functions for autocomplete dropdown configuration.
 * Add theme functions for accessing Swiftype search results and total number of results.
+* Add unit tests to the plugin.
 
 = 1.1.28 = 
 * Add support for tracking search result clicks. Now you'll be able see top clicked content in the Swiftype Dashboard.
