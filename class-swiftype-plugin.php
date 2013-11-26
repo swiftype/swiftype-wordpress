@@ -294,7 +294,7 @@
 
 
 	/**
-		* Get posts from the database in the order dicated by the Swiftype API
+		* Get posts from the database in the order dictated by the Swiftype API
 		*
 		* Apply the correct ordering to the posts retrieved in the main query, based on results from the Swiftype API.
 		* Called by the the_posts filter.
@@ -310,6 +310,7 @@
 			}
 			global $wp_query;
 			$wp_query->max_num_pages = $this->num_pages;
+			$wp_query->found_posts = $this->total_result_count;
 
 			$lookup_table = array();
 			foreach( $posts as $post ) {
