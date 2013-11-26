@@ -76,9 +76,6 @@
 				// these methods make the Swiftype Plugin admin page work
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 				add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
-				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
-				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
-				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 				add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
 				add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
 				add_action( 'wp_ajax_delete_batch_of_trashed_posts', array( $this, 'async_delete_batch_of_trashed_posts' ) );
@@ -108,6 +105,13 @@
 						delete_option( 'swiftype_num_indexed_documents' );
 					}
 				}
+			}
+
+			if ( current_user_can( 'edit_posts' ) ) {
+				// hooks for sending post updates to the Swiftype API
+				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
+				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 
 				$this->initialize_api_client();
 				$this->check_api_authorized();
@@ -205,7 +209,7 @@
 				return;
 			if( $this->api_authorized )
 				return;
-			
+
 			// If we have the key, try to ask API client for authorization
 			if( $this->api_key && strlen( $this->api_key ) > 0 ) {
 				try {
