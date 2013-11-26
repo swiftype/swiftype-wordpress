@@ -3,8 +3,8 @@ Contributors: matthewtyriley, qhoxie
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
-Tested up to: 3.5
-Stable tag: 1.1.29
+Tested up to: 3.7
+Stable tag: 1.1.30
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ Fast, intelligent, and fully customizable search for your site. Comes with detai
 
 == Description ==
 
-The Swiftype Search plugin replaces the standard WordPress search with a better, more relevant search engine. It also gives you detailed insight into what your users are searching for, so you know which keywords to target when customizing your search engine results. The Swiftype search plugin is WordPress VIP-approved and already used on huge sites.  The search plugin is complemented by our dashboard, [full-featured developer API](https://swiftype.com/search-api), and [powerful analytics](https://swiftype.com/search-analytics).  Manage search results with drag and drop and see the changes reflected instantly.  
+The Swiftype Search plugin replaces the standard WordPress search with a better, more relevant search engine. It also gives you detailed insight into what your users are searching for, so you know which keywords to target when customizing your search engine results. The Swiftype search plugin is WordPress VIP-approved and already used on huge sites.  The search plugin is complemented by our dashboard, [full-featured developer API](https://swiftype.com/search-api), and [powerful analytics](https://swiftype.com/search-analytics).  Manage search results with drag and drop and see the changes reflected instantly.
 
-The base ranking algorithm is based on industry best-practices for search and provides more relevant results by default, but we also allow for any result set to be fully customized via our drag-and-drop interface for result reordering. To make customizations you simply create a Swiftype account and install the Swiftype Search plugin. You can then login to our dashboard to customize results and read through detailed search analytics. See the short demo video below for more details.  
+The base ranking algorithm is based on industry best-practices for search and provides more relevant results by default, but we also allow for any result set to be fully customized via our drag-and-drop interface for result reordering. To make customizations you simply create a Swiftype account and install the Swiftype Search plugin. You can then login to our dashboard to customize results and read through detailed search analytics. See the short demo video below for more details.
 
 Do you have a mobile app displaying content from your WordPress site? Swiftype’s [mobile SDKs](https://swiftype.com/mobile) make it simple to add powerful search to your mobile apps.  Combine our WordPress plugin with our mobile SDKs to create the same search experience on your site and in your app.
 
@@ -77,12 +77,15 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
+= 1.1.30 =
+* Allow editors and contributors to update posts in index.
+
 = 1.1.29 =
 * Allow JavaScript functions for autocomplete dropdown configuration.
 * Add theme functions for accessing Swiftype search results and total number of results.
 * Add unit tests to the plugin.
 
-= 1.1.28 = 
+= 1.1.28 =
 * Add support for tracking search result clicks. Now you'll be able see top clicked content in the Swiftype Dashboard.
 * Fix an issue displaying search results when a deleted post hasn't been deleted from Swiftype.
 
