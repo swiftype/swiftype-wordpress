@@ -14,7 +14,9 @@ set -ex
 
 # set up a WP install
 WP_CORE_DIR=/tmp/wordpress/
+WP_TESTS_DIR=/tmp/wordpress-testing/
 mkdir -p $WP_CORE_DIR
+mkdir -p $WP_TESTS_DIR
 wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/WordPress/tarball/$WP_VERSION
 tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C $WP_CORE_DIR
 
