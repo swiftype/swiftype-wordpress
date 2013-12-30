@@ -3,8 +3,8 @@ Contributors: matthewtyriley, qhoxie
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
-Tested up to: 3.7
-Stable tag: 1.1.30
+Tested up to: 3.8
+Stable tag: 1.1.31
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,9 @@ You can install the plugin for each site with its own search engine, but we don'
 2. The Swiftype search result controls dashboard.  Here you can customize any aspect of your results.  You can drag and drop to reoder search results, remove results you don't want to show up in the search, and even add results that don't show up automatically.
 
 == Changelog ==
+
+= 1.1.31 =
+* Better support for WordPress 3.8.
 
 = 1.1.30 =
 * Allow editors and contributors to update posts in index.
