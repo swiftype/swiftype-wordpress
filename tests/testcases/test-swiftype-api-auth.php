@@ -9,7 +9,9 @@ class SwiftypePluginApiAuthTest extends SwiftypeTestCase {
     parent::setUp();
 
     // This is an admin page
-    define('WP_ADMIN', true);
+    if ( ! defined( 'WP_ADMIN' ) ) {
+      define( 'WP_ADMIN', true );
+    }
 
     // Create plugin for testing
     $this->plugin = new SwiftypePlugin();
@@ -29,6 +31,7 @@ class SwiftypePluginApiAuthTest extends SwiftypeTestCase {
     // Check authorization
     $this->plugin->check_api_authorized();
     $this->assertTrue(get_option('swiftype_api_authorized'));
+    $this->assertNoErrors();
   }
 
   //------------------------------------------------------------------------------------------------
@@ -41,6 +44,6 @@ class SwiftypePluginApiAuthTest extends SwiftypeTestCase {
     // Check authorization
     $this->plugin->check_api_authorized();
     $this->assertFalse(get_option('swiftype_api_authorized'));
+    $this->assertNoErrors();
   }
-
 }

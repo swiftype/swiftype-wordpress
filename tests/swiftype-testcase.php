@@ -23,4 +23,23 @@ class SwiftypeTestCase extends WP_UnitTestCase {
     $this->markTestSkipped($message);
     throw new Exception($message);
   }
+
+  function assertNoErrors() {
+    global $wp_test_errors;
+
+    $has_swiftype_errors = false;
+    foreach ($wp_test_errors as $error_string) {
+      if ( preg_match( '/swiftype/i', $error_string ) ) {
+        print_r($error_string);
+        $has_swiftype_errors = true;
+        break;
+      }
+    }
+
+    if ( $has_swiftype_errors ) {
+      print("\nErrors containing 'swiftype' were found:\n");
+      print_r($wp_test_errors);
+    }
+    $this->assertFalse($has_swiftype_errors);
+  }
 }
