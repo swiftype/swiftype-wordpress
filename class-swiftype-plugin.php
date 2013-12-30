@@ -35,8 +35,6 @@
 		private $max_retries = 5;
 		private $retry_delay = 2;
 
-		public function SwiftypePlugin() { $this->__construct(); }
-
 		public function __construct() {
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
