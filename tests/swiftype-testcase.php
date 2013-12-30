@@ -30,7 +30,6 @@ class SwiftypeTestCase extends WP_UnitTestCase {
     $has_swiftype_errors = false;
     foreach ($wp_test_errors as $error_string) {
       if ( preg_match( '/swiftype/i', $error_string ) ) {
-        print_r($error_string);
         $has_swiftype_errors = true;
         break;
       }
