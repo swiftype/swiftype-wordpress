@@ -317,7 +317,7 @@
 
 			$ordered_posts = array();
 			foreach( $this->post_ids as $pid ) {
-				if ( $lookup_table[ $pid ] ) {
+				if ( isset( $lookup_table[ $pid ] ) ) {
 					$ordered_posts[] = $lookup_table[ $pid ];
 				}
 			}
