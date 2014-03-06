@@ -36,6 +36,8 @@
 		private $retry_delay = 2;
 
 		public function __construct() {
+			$this->api_authorized = get_option( 'swiftype_api_authorized' );
+
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
 			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );

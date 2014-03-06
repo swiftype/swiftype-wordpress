@@ -17,9 +17,9 @@ The [Swiftype WordPress Plugin](https://swiftype.com/wordpress) replaces WordPre
 
 ### Running unit tests
 
-To run the unit tests locally, first install the WordPress unit testing framework and a local copy of WordPress by running `scripts/install-wp-tests.sh <db name> <db user name> <wordpress version>`.
+To run the unit tests locally, first install the WordPress unit testing framework and a local copy of WordPress by running `scripts/install-wp-tests.sh <db name> <db user name> <db password>`.
 
-Next, run the tests with `script/run_tests.sh`. This runs the non-Multisite tests against the version of WordPress you installed in the previous commands.
+Next, run the tests with `scripts/run_tests.sh`. This runs the non-Multisite tests against the version of WordPress you installed in the previous commands.
 
 When new commits are pushed, the tests will be run automatically on Swiftype's CI server using several different versions of PHP and WordPress (see `scripts/ci_build.sh`). We are working on making these test runs public.
 
