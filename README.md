@@ -33,7 +33,7 @@ When new commits are pushed, the tests will be run automatically on Swiftype's C
 5. `git push`
 4. Tag version `git tag v1.x.yz`
 5. `git push --tags`
-6. Publish to WP `./script/publish.sh 1.x.yz`
+6. Publish to WP `./scripts/publish.sh 1.x.yz`
 
 
 ### Pre-commit hook
