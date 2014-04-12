@@ -685,7 +685,7 @@
 				return;
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
 			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.min.js', __FILE__ ) );
-			wp_enqueue_script( 'swiftype_te', plugins_url( 'assets/install_te.js', __FILE__ ), NULL, NULL, true );
+			wp_enqueue_script( 'swiftype_cc', plugins_url( 'assets/install_counter.js', __FILE__ ), NULL, NULL, true );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
 		}
 
