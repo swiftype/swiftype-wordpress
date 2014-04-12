@@ -44,7 +44,7 @@
           theWindow = window.open('about:blank', '_blank');
         }
 
-        Swiftype.pingSearchResultClick(Swiftype.engineKey, docId, getSearchQuery(), function() {
+        Swiftype.pingSearchResultClick(Swiftype.key, docId, getSearchQuery(), function() {
           theWindow.location = $element.attr("href");
         });
       }
