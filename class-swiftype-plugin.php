@@ -411,7 +411,11 @@
 				$documents = array();
 				foreach( $posts as $post ) {
 					if( $this->should_index_post( $post ) ) {
-						$documents[] = $this->convert_post_to_document( $post );
+						$document = $this->convert_post_to_document( $post );
+
+						if ( $document ) {
+							$documents[] = $document;
+						}
 					}
 				}
 				if( count( $documents ) > 0 ) {
