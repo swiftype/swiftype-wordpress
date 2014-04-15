@@ -78,6 +78,7 @@ You can install the plugin for each site with its own search engine, but we don'
 == Changelog ==
 
 = 1.1.34 =
+* Skip NULL documents in indexing API request. You can use the `swiftype_document_builder` filter to exclude documents from the search engine by returning NULL.
 * Remove development files from the released version of the plugin for smaller download size.
 
 = 1.1.33 =
