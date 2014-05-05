@@ -10,8 +10,6 @@ run yum -y install libyaml ok-ruby-2.0 rubygems make gcc gcc-c++ kernel-devel li
 
 run yum -y install Percona-Server-server-55 git which tar wget bzip2 libcurl-devel libjpeg-devel libpng-devel libmcrypt-devel readline-devel libtidy-devel php-xml php-pear php-mysql sendmail
 
-RUN echo 'eval "$(phpenv init -)"' >> /etc/bashrc
-
 ENV HOME /php
 WORKDIR /php
 
@@ -22,14 +20,17 @@ RUN mkdir -p /php/.phpenv/plugins; \
     cd /php/.phpenv/plugins; \
         git clone https://github.com/CHH/php-build.git
 
+RUN echo 'eval "$(phpenv init -)"' >> /etc/bashrc
+
+ENV PATH /php/.phpenv/shims:/php/.phpenv/bin:$PATH
+
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
+ENV PATH /php/.composer/vendor/bin:$PATH
 
 RUN phpenv install 5.3.28
 RUN phpenv install 5.4.23 
 RUN phpenv install 5.5.7
-
-ENV PATH /php/.composer/vendor/bin:$PATH
 
 RUN composer global require 'phpunit/phpunit=3.7.*'
 
