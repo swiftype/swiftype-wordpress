@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Fail on all errors
-set +ex
+set -e
 
 /etc/init.d/mysql start
 
