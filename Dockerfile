@@ -34,8 +34,6 @@ RUN phpenv install 5.5.7
 
 RUN composer global require 'phpunit/phpunit=3.7.*'
 
-RUN phpenv local 5.4.23
-
 ADD ./ /data
 
 RUN /data/scripts/ci_build.sh
