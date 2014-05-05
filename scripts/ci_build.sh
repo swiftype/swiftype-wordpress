@@ -5,8 +5,6 @@ set +ex
 
 /etc/init.d/mysql start
 
-PHP_VERSION=$1
-
 export WP_TESTS_DIR=/tmp/wordpress-testing
 export WP_DIR=/tmp/wordpress
 
@@ -31,4 +29,4 @@ php -v
 phpunit --version
 
 # Run tests
-exec phpunit -c $WP_DIR/wp-content/plugins/swiftype-search/$TEST_CONFIG --strict --log-junit tests/report.xml
+exec phpunit --verbose -c $WP_DIR/wp-content/plugins/swiftype-search/$TEST_CONFIG --strict --log-junit tests/report.xml

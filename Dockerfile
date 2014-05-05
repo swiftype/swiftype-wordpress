@@ -36,4 +36,4 @@ RUN composer global require 'phpunit/phpunit=3.7.*'
 
 ADD ./ /data
 
-RUN /data/scripts/ci_build.sh
+#RUN /data/scripts/ci_build.sh
