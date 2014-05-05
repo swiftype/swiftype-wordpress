@@ -3,6 +3,8 @@
 # Fail on all errors
 set +ex
 
+/etc/init.d/mysql start
+
 export WP_TESTS_DIR=/tmp/wordpress-testing
 export WP_DIR=/tmp/wordpress
 
