@@ -10370,7 +10370,7 @@ window['$stjq'] = jQuery.noConflict(true);
 
 (function($) {
   $(function() {
-    Swiftype.engineKey = swiftypeParams.engineKey;
+    Swiftype.key = swiftypeParams.engineKey;
     Swiftype.inputElements = $('input[name=s]');
 
     function readSwiftypeConfigFor(option) {
@@ -10413,10 +10413,10 @@ window['$stjq'] = jQuery.noConflict(true);
 
     var swiftypeOptions = {
       onComplete: function(dataItem, prefix) {
-        Swiftype.pingAutoSelection(Swiftype.engineKey, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
+        Swiftype.pingAutoSelection(Swiftype.key, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
       },
       documentTypes: ['posts'],
-      engineKey: Swiftype.engineKey,
+      engineKey: Swiftype.key,
       filters: SwiftypeConfigManager.getFilters(),
       functionalBoosts: SwiftypeConfigManager.getFunctionalBoosts(),
       searchFields: SwiftypeConfigManager.getSearchFields(),
@@ -10430,6 +10430,13 @@ window['$stjq'] = jQuery.noConflict(true);
       var $el = $(el);
       $el.swiftype(swiftypeOptions);
     });
+
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = '//s.swiftypecdn.com/cc.js';
+    var entry = document.getElementsByTagName('script')[0];
+    entry.parentNode.insertBefore(script, entry);
   });
 })(jQuery);
 
@@ -10480,7 +10487,7 @@ window['$stjq'] = jQuery.noConflict(true);
           theWindow = window.open('about:blank', '_blank');
         }
 
-        Swiftype.pingSearchResultClick(Swiftype.engineKey, docId, getSearchQuery(), function() {
+        Swiftype.pingSearchResultClick(Swiftype.key, docId, getSearchQuery(), function() {
           theWindow.location = $element.attr("href");
         });
       }

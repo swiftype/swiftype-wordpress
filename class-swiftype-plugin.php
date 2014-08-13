@@ -30,13 +30,14 @@
 		private $per_page = 0;
 		private $search_successful = false;
 		private $error = NULL;
+		private $results = NULL;
 
 		private $max_retries = 5;
 		private $retry_delay = 2;
 
-		public function SwiftypePlugin() { $this->__construct(); }
-
 		public function __construct() {
+			$this->api_authorized = get_option( 'swiftype_api_authorized' );
+
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
 			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );
@@ -48,13 +49,20 @@
 				add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
 				add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
 
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->engine_slug = get_option( 'swiftype_engine_slug' );
-				$this->engine_key = get_option( 'swiftype_engine_key' );
-
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
+				$this->initialize_api_client();
 			}
+		}
+
+		/**
+		 * Initialize swiftype API client
+		 */
+		public function initialize_api_client() {
+			$this->api_key = get_option( 'swiftype_api_key' );
+			$this->engine_slug = get_option( 'swiftype_engine_slug' );
+			$this->engine_key = get_option( 'swiftype_engine_key' );
+
+			$this->client = new SwiftypeClient();
+			$this->client->set_api_key( $this->api_key );
 		}
 
 		/**
@@ -68,9 +76,6 @@
 				// these methods make the Swiftype Plugin admin page work
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 				add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
-				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
-				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
-				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 				add_action( 'wp_ajax_refresh_num_indexed_documents', array( $this, 'async_refresh_num_indexed_documents' ) );
 				add_action( 'wp_ajax_index_batch_of_posts', array( $this, 'async_index_batch_of_posts' ) );
 				add_action( 'wp_ajax_delete_batch_of_trashed_posts', array( $this, 'async_delete_batch_of_trashed_posts' ) );
@@ -93,11 +98,15 @@
 						$this->clear_config();
 					}
 				}
+			}
 
-				$this->api_key = get_option( 'swiftype_api_key' );
-				$this->api_authorized = get_option( 'swiftype_api_authorized' );
-				$this->client = new SwiftypeClient;
-				$this->client->set_api_key( $this->api_key );
+			if ( current_user_can( 'edit_posts' ) ) {
+				// hooks for sending post updates to the Swiftype API
+				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
+				add_action( 'trashed_post', array( $this, 'delete_post' ) );
+
+				$this->initialize_api_client();
 				$this->check_api_authorized();
 				if( ! $this->api_authorized )
 					return;
@@ -152,24 +161,25 @@
 				$params = apply_filters( 'swiftype_search_params', $params );
 
 				try {
-					$results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+					$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
 				} catch( SwiftypeError $e ) {
+					$this->results = NULL;
 					$this->search_successful = false;
 				}
 
-				if( ! isset( $results ) ) {
+				if( ! isset( $this->results ) ) {
 					$this->search_successful = false;
 					return;
 				}
 
 				$this->post_ids = array();
-				$records = $results['records']['posts'];
+				$records = $this->results['records']['posts'];
 
 				foreach( $records as $record ) {
 					$this->post_ids[] = $record['external_id'];
 				}
 
-				$result_info = $results['info']['posts'];
+				$result_info = $this->results['info']['posts'];
 				$this->per_page = $result_info['per_page'];
 
 				$this->total_result_count = $result_info['total_result_count'];
@@ -185,19 +195,15 @@
 	/**
 		* Check whether or not the Swiftype API client is authorized
 		*
-		* Retrieves search results from the Swiftype API based on the user-input text query.
-		* We retrieve 100 results during the initial
-		* request to Swiftype and cache all results, so pagination is done locally as well (i.e. requests for page 2, 3, etc.
-		* do not hit the Swiftype API either). Called from the pre_get_posts action.
-		*
 		* @return null
 		*/
-		private function check_api_authorized() {
+		public function check_api_authorized() {
 			if( ! is_admin() )
 				return;
 			if( $this->api_authorized )
 				return;
 
+			// If we have the key, try to ask API client for authorization
 			if( $this->api_key && strlen( $this->api_key ) > 0 ) {
 				try {
 					$this->api_authorized = $this->client->authorized();
@@ -268,7 +274,7 @@
 
 
 	/**
-		* Get posts from the database in the order dicated by the Swiftype API
+		* Get posts from the database in the order dictated by the Swiftype API
 		*
 		* Apply the correct ordering to the posts retrieved in the main query, based on results from the Swiftype API.
 		* Called by the the_posts filter.
@@ -284,6 +290,7 @@
 			}
 			global $wp_query;
 			$wp_query->max_num_pages = $this->num_pages;
+			$wp_query->found_posts = $this->total_result_count;
 
 			$lookup_table = array();
 			foreach( $posts as $post ) {
@@ -292,7 +299,7 @@
 
 			$ordered_posts = array();
 			foreach( $this->post_ids as $pid ) {
-				if ( $lookup_table[ $pid ] ) {
+				if ( isset( $lookup_table[ $pid ] ) ) {
 					$ordered_posts[] = $lookup_table[ $pid ];
 				}
 			}
@@ -407,7 +414,11 @@
 				$documents = array();
 				foreach( $posts as $post ) {
 					if( $this->should_index_post( $post ) ) {
-						$documents[] = $this->convert_post_to_document( $post );
+						$document = $this->convert_post_to_document( $post );
+
+						if ( $document ) {
+							$documents[] = $document;
+						}
 					}
 				}
 				if( count( $documents ) > 0 ) {
@@ -683,7 +694,6 @@
 				return;
 			wp_enqueue_style( 'swiftype', plugins_url( 'assets/autocomplete.css', __FILE__ ) );
 			wp_enqueue_script( 'swiftype', plugins_url( 'assets/install_swiftype.min.js', __FILE__ ) );
-			wp_enqueue_script( 'swiftype_te', plugins_url( 'assets/install_te.js', __FILE__ ), NULL, NULL, true );
 			wp_localize_script( 'swiftype', 'swiftypeParams', array( 'engineKey' => $this->engine_key ) );
 		}
 
@@ -722,6 +732,20 @@
 		}
 
 	/**
+		* Return the raw Swiftype results array after a search is performed.
+		*/
+		public function results() {
+			return $this->results;
+		}
+
+	/**
+		* Return the total number of results after a search is performed.
+		*/
+		public function get_total_result_count() {
+			return $this->total_result_count;
+		}
+
+	/**
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
@@ -737,5 +761,3 @@
 		}
 
 	}
-
-	$swiftype_plugin = new SwiftypePlugin();
