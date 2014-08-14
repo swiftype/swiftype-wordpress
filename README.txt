@@ -141,3 +141,22 @@ Initial release.
 
 = 1.1.26 =
 This fixes an important issue for many users that prevented synchronization of new posts and first time authentication.  Please upgrade immediately and resynchronize your posts.
+
+== WP-CLI Support ==
+
+Swiftype Search supports [WP-CLI](http://wp-cli.org/).
+
+To see the available commands type `wp swiftype` in your WordPress install directory.
+
+The CLI is particularly useful if you have a large number of posts (more than 10,000) because it can synchronize posts with Swiftype more quickly by controlling the indexing batch size. Also, the CLI provides an option to destructively reindex the contents of your WordPress site which will be faster if you have a large number of deleted posts or simply want to start fresh.
+
+To index your WordPress site with the CLI, make sure you have WP-CLI installed and configure the plugin with your API key and search engine. Then run:
+
+`wp swiftype sync`
+
+To index more content at once, increase the batch size:
+
+`wp swiftype sync --index-batch-size 100`
+
+In general, using a larger batch size will be faster. However, the size of the batch you can use is determined by how large your posts are on average.
+
