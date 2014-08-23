@@ -1,4 +1,5 @@
-FROM centos
+# Use the latest available CentOS 6 image
+FROM centos:centos6
 
 run rpm -Uh --quiet http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.x86_64.rpm || :
 
