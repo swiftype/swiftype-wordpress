@@ -77,6 +77,10 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
+= 1.1.36 =
+* WP-CLI commands. If you use [WP-CLI](http://wp-cli.org/), you can now use the command line to index your content much faster. Great for large sites. Type `wp swiftype` in your WordPress directory for details.
+* Add `swiftype_search_query_string` filter to make modifying the query easier. Thanks to Paul Morrison for the patch.
+
 = 1.1.35 =
 * Streamline script concatenation.
 
