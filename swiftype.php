@@ -17,4 +17,8 @@ require_once 'class-swiftype-plugin.php';
 require_once 'class-swiftype-widget.php';
 require_once 'swiftype-theme-functions.php';
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once 'swiftype-command.php';
+}
+
 $swiftype_plugin = new SwiftypePlugin();
