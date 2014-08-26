@@ -150,7 +150,7 @@
 				return;
 			}
 			if( is_search() && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0) {
-				$query_string = stripslashes( get_search_query( false ) );
+				$query_string = apply_filters( 'swiftype_search_query_string', stripslashes( get_search_query( false ) ) );
 				$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
 				$params = array( 'page' => $page );
