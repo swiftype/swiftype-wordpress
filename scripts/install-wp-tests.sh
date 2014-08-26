@@ -22,12 +22,12 @@ tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C $WP_CORE_DIR
 
 # set up testing suite
 n=0
-until [ $n -ge 3 ]
+until [ $n -ge 5 ]
 do
   svn co --ignore-externals --quiet http://unit-tests.svn.wordpress.org/trunk/ $WP_TESTS_DIR
   [ $? -eq 0 ] && break
   let "n = $n + 1"
-  sleep 5
+  sleep 30
 done
 
 cd $WP_TESTS_DIR
