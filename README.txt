@@ -160,3 +160,32 @@ To index more content at once, increase the batch size:
 
 In general, using a larger batch size will be faster. However, the size of the batch you can use is determined by how large your posts are on average.
 
+== Modifying search parameters ==
+
+The Swiftype Search plugin provides a filter called `swiftype_search_params` that allows you to modify the search parameters before they are sent to Swiftype.
+
+For example, to add a filter so only pages are returned by the search results, you can add the following to your functions.php file:
+
+    function swiftype_search_params_filter( $params ) {
+        $params['filters[posts][object_type]'] = array( 'page' );
+
+        return $params;
+    }
+
+    add_filter( 'swiftype_search_params', 'swiftype_search_params_filter', 8, 1 );
+
+For more details, check out our [WordPress customization tutorial](https://swiftype.com/documentation/tutorials/customizing_wordpress_search) and the Swiftype [Search API documentation](https://swiftype.com/documentation/searching).
+
+== Modifying the query string ==
+
+The Swiftype Search plugin provides a filter called `swiftype_search_query_string` that makes it easier to modify the query string before it is sent to Swiftype.
+
+For example, to add a term to every query string, you can add the following to your functions.php file:
+
+    function swiftype_search_query_filter( $query ) {
+        return $query . ' ThisWillAlwaysBeInEveryQuery';
+    }
+
+    add_filter( 'swiftype_search_query_string', 'swiftype_search_query_filter', 8, 1 );
+
+You can use this filter to pre-process queries before they are executed.
