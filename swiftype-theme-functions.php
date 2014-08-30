@@ -31,3 +31,61 @@ function swiftype_total_result_count() {
 
 	return $swiftype_plugin->get_total_result_count();
 }
+
+/**
+ * Echo a facet listing from the search results. This should only be used on
+ * the search results page, because Swiftype search results must be present.
+ *
+ * You must modify the Swiftype query parameters to request facets.
+ *
+ * Facets are rendered inside a <div> with class st-facets.
+ *
+ * @return void
+ */
+function swiftype_render_facets() {
+	$results = swiftype_search_results();
+
+	$facets = $results['info']['posts']['facets'];
+
+
+	if ( empty( $facets ) ) {
+		return '';
+	}
+
+	$html = '<div class="st-facets">';
+
+	foreach ( $facets as $facet_field => $facet_values ) {
+		if ( empty($facet_values) ) {
+			continue;
+		}
+
+		$html .= "<h4>" . esc_html($facet_field) . "</h4>";
+		$html .= '<ul>';
+
+		foreach ( $facet_values as $facet_term => $facet_count ) {
+			if ( trim( $facet_term ) === '' ) {
+				continue;
+			}
+
+			$facet_display = $facet_term;
+
+			// special case for category since it's stored as an ID
+			if ( $facet_field == 'category' ) {
+				$facet_display = get_cat_name( $facet_term );
+				if ( $facet_display === '' ) {
+					continue;
+				}
+			}
+
+			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $facet_term ), get_search_link() );
+			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_count ) . ")</li>";
+		}
+
+		$html .= '<ul>';
+
+	}
+
+	$html .= '</div>';
+
+	echo $html;
+}

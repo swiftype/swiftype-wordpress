@@ -158,6 +158,10 @@
 					$params['filters[posts][category]'] = sanitize_text_field( $_GET['st-cat'] );
 				}
 
+				if ( isset( $_GET['st-facet-field'] ) && isset( $_GET['st-facet-term'] ) ) {
+					$params['filters[posts][' . $_GET['st-facet-field'] . ']'] = $_GET['st-facet-term'];
+				}
+
 				$params = apply_filters( 'swiftype_search_params', $params );
 
 				try {
