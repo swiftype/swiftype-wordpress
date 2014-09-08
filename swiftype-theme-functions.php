@@ -81,7 +81,7 @@ function swiftype_render_facets() {
 			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_count ) . ")</li>";
 		}
 
-		$html .= '<ul>';
+		$html .= '</ul>';
 
 	}
 
