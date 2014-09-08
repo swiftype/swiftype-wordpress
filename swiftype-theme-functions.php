@@ -59,7 +59,7 @@ function swiftype_render_facets() {
 			continue;
 		}
 
-		$html .= "<h4>" . esc_html($facet_field) . "</h4>";
+		$html .= '<h4 class="st-facet-field st-facet-field-' . sanitize_title_with_dashes( $facet_field ) . '">' . esc_html( $facet_field ) . '</h4>';
 		$html .= '<ul>';
 
 		foreach ( $facet_values as $facet_term => $facet_count ) {
