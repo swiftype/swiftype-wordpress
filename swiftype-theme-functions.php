@@ -40,9 +40,13 @@ function swiftype_total_result_count() {
  *
  * Facets are rendered inside a <div> with class st-facets.
  *
+ * @param String $term_order Optional. Sort order for faceted terms. Default
+ *                                     is 'count'; if 'alphabetical' faceted 
+ *                                     terms will be sorted alphabetically.
+ *
  * @return void
  */
-function swiftype_render_facets() {
+function swiftype_render_facets( $term_order = 'count' ) {
 	$results = swiftype_search_results();
 
 	$facets = $results['info']['posts']['facets'];
@@ -62,6 +66,8 @@ function swiftype_render_facets() {
 		$html .= '<h4 class="st-facet-field st-facet-field-' . sanitize_title_with_dashes( $facet_field ) . '">' . esc_html( $facet_field ) . '</h4>';
 		$html .= '<ul>';
 
+		$term_counts = array();
+
 		foreach ( $facet_values as $facet_term => $facet_count ) {
 			if ( trim( $facet_term ) === '' ) {
 				continue;
@@ -77,6 +83,14 @@ function swiftype_render_facets() {
 				}
 			}
 
+			$term_counts[$facet_display] = $facet_count;
+		}
+
+		if ( $term_order == 'alphabetical' ) {
+			ksort( $term_counts, SORT_FLAG_CASE | SORT_NATURAL );
+		}
+
+		foreach ( $term_counts as $facet_display => $facet_count ) {
 			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $facet_term ), get_search_link() );
 			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_count ) . ")</li>";
 		}
