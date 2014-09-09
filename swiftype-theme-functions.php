@@ -91,7 +91,9 @@ function swiftype_render_facets( $term_order = 'count' ) {
 		}
 
 		foreach ( $term_counts as $facet_display => $facet_details ) {
-			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $facet_details['term'] ), get_search_link() );
+			// apparently WordPress's add_query_arg does not properly handle & in a value; escape it with %26 beforehand.
+			$escaped_facet_term = str_replace( '&', '%26', $facet_details['term'] );
+			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $escaped_facet_term ), get_search_link() );
 			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_details['count'] ) . ")</li>";
 		}
 
