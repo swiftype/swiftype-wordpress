@@ -83,16 +83,16 @@ function swiftype_render_facets( $term_order = 'count' ) {
 				}
 			}
 
-			$term_counts[$facet_display] = $facet_count;
+			$term_counts[$facet_display] = array( 'term' => $facet_term, 'count' => $facet_count );
 		}
 
 		if ( $term_order == 'alphabetical' ) {
 			ksort( $term_counts, SORT_FLAG_CASE | SORT_NATURAL );
 		}
 
-		foreach ( $term_counts as $facet_display => $facet_count ) {
-			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $facet_term ), get_search_link() );
-			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_count ) . ")</li>";
+		foreach ( $term_counts as $facet_display => $facet_details ) {
+			$url = add_query_arg( array( 'st-facet-field' => $facet_field, 'st-facet-term' => $facet_details['term'] ), get_search_link() );
+			$html .= "<li><a href=\"" . esc_attr( $url ) . "\">" . esc_html( $facet_display ) . "</a> (" . esc_html( $facet_details['count'] ) . ")</li>";
 		}
 
 		$html .= '</ul>';
