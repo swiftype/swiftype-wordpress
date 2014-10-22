@@ -10425,7 +10425,8 @@ window['$stjq'] = jQuery.noConflict(true);
       disableAutocomplete: SwiftypeConfigManager.getDisableAutocomplete(),
       resultLimit: SwiftypeConfigManager.getResultLimit(),
       renderFunction: function(document_type, item) {
-        return '<p class="title">' + item['highlight']['title'] || Swiftype.htmlEscape(item['title']) + '</p>';
+        var title = item['highlight']['title'] || Swiftype.htmlEscape(item['title']);
+        return '<p class="title">' + title + '</p>';
        }
     };
 
