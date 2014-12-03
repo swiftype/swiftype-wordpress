@@ -5,36 +5,35 @@ run rpm -Uh --quiet http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-
 
 run curl -s http://yum.swiftype.net/swiftype.repo > /etc/yum.repos.d/swiftype.repo
 
+run rpm -Uh --quiet http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm || :
+
 run yum -y update
 
 run yum -y install libyaml ok-ruby-2.0 rubygems make gcc gcc-c++ kernel-devel libxml2 libxml2-devel libxslt libxslt-devel openssl-devel 
 
-run yum -y install Percona-Server-server-55 git which tar wget bzip2 libcurl-devel libjpeg-devel libpng-devel libmcrypt-devel readline-devel libtidy-devel php-xml php-pear php-mysql sendmail
+run yum -y install Percona-Server-server-55 git which tar wget bzip2 libcurl-devel libjpeg-devel libpng-devel libmcrypt-devel readline-devel libtidy-devel php-xml php-pear php-mysql sendmail bzip2-devel libicu-devel
 
 ENV HOME /php
 WORKDIR /php
 
-# install phpenv
-RUN curl https://raw.githubusercontent.com/CHH/phpenv/master/bin/phpenv-install.sh | bash
-RUN echo 'export PATH="/php/.phpenv/bin:$PATH"' >> /etc/bashrc
-RUN mkdir -p /php/.phpenv/plugins; \
-    cd /php/.phpenv/plugins; \
-        git clone https://github.com/CHH/php-build.git
+# Install phpbrew
+RUN curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew
+RUN chmod +x phpbrew
+RUN mv phpbrew /usr/bin/phpbrew
+RUN phpbrew init
+RUN echo "source ~/.phpbrew/bashrc" >> ~/.bashrc
 
-RUN echo 'eval "$(phpenv init -)"' >> /etc/bashrc
-
-ENV PATH /php/.phpenv/shims:/php/.phpenv/bin:$PATH
-
+# Install composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
 ENV PATH /php/.composer/vendor/bin:$PATH
 
-RUN phpenv install 5.3.28
-RUN phpenv install 5.4.23 
-RUN phpenv install 5.5.7
-
+# Install phpunit
 RUN composer global require 'phpunit/phpunit=3.7.*'
 
-ADD ./ /data
+# Install php
+RUN phpbrew install 5.3.28 +mysql +ctype +curl +fileinfo +ftp +gd +iconv +mbstring
+RUN phpbrew install 5.4.23 +mysql +ctype +curl +fileinfo +ftp +gd +iconv +mbstring
+RUN phpbrew install 5.5.7 +mysql +ctype +curl +fileinfo +ftp +gd +iconv +mbstring
 
-#RUN /data/scripts/ci_build.sh
+ADD ./ /data

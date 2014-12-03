@@ -24,7 +24,9 @@ else
   TEST_CONFIG=tests/phpunit.xml
 fi
 
-phpenv local $PHP_VERSION
+source ~/.phpbrew/bashrc
+
+phpbrew switch $PHP_VERSION
 php -v
 phpunit --version
 
