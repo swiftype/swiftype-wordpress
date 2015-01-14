@@ -144,12 +144,12 @@
 		* @uses apply_filters() Calls 'swiftype_search_params' for the search parameters
 		* @param WP_Query $wp_query The query for this request.
 		*/
-		public function get_posts_from_swiftype( $wp_query ) {
+		public function get_posts_from_swiftype( $wp_query, $force_search=false ) {
 			$this->search_successful = false;
-			if( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
-				return;
-			}
-			if( is_search() && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0) {
+			if( !$force_search && function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
+  			return;
+	    }
+      if( ( $force_search || is_search() ) && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0) {
 				$query_string = apply_filters( 'swiftype_search_query_string', stripslashes( get_search_query( false ) ) );
 				$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
