@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 4.0
-Stable tag: 1.1.39
+Stable tag: 1.1.40
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,9 @@ You can install the plugin for each site with its own search engine, but we don'
 2. The Swiftype search result controls dashboard.  Here you can customize any aspect of your results.  You can drag and drop to reoder search results, remove results you don't want to show up in the search, and even add results that don't show up automatically.
 
 == Changelog ==
+
+= 1.1.40 =
+* Refactor public search api to allow for integration options with other plugins.
 
 = 1.1.39 =
 * Fix error that caused some titles in the autocomplete dropdown to display as "undefined".
