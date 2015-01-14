@@ -129,8 +129,18 @@
 			if( ! is_admin() )
 				return;
 		  if( isset( $this->error ) && ! empty( $this->error ) ) {
-		  	echo '<div class="error"><p>' . $this->error . '</p></div>';
+			echo '<div class="error"><p>' . $this->error . '</p></div>';
 		  }
+		}
+
+		public function can_we_search( $wp_query ) {
+			if ( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
+				return false;
+			} elseif ( is_search() && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0 ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 	/**
@@ -146,54 +156,79 @@
 		*/
 		public function get_posts_from_swiftype( $wp_query ) {
 			$this->search_successful = false;
-			if( function_exists( 'is_main_query' ) && ! $wp_query->is_main_query() ) {
-				return;
-			}
-			if( is_search() && ! is_admin() && $this->engine_slug && strlen( $this->engine_slug ) > 0) {
+			if( $this->can_we_search( $wp_query ) ) {
+				// Get query string from 's' url parameter.
 				$query_string = apply_filters( 'swiftype_search_query_string', stripslashes( get_search_query( false ) ) );
-				$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-
-				$params = array( 'page' => $page );
-				if ( isset( $_GET['st-cat'] ) && ! empty( $_GET['st-cat'] ) ) {
-					$params['filters[posts][category]'] = sanitize_text_field( $_GET['st-cat'] );
-				}
-
-				if ( isset( $_GET['st-facet-field'] ) && isset( $_GET['st-facet-term'] ) ) {
-					$params['filters[posts][' . $_GET['st-facet-field'] . ']'] = $_GET['st-facet-term'];
-				}
-
-				$params = apply_filters( 'swiftype_search_params', $params );
-
-				try {
-					$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
-				} catch( SwiftypeError $e ) {
-					$this->results = NULL;
-					$this->search_successful = false;
-				}
+				// Get params from url. page, filters etc.
+				$params = $this->url_params();
+				// Actually do the search.
+				$this->search_swiftype( $query_string, $params );
 
 				if( ! isset( $this->results ) ) {
 					$this->search_successful = false;
 					return;
 				}
-
-				$this->post_ids = array();
-				$records = $this->results['records']['posts'];
-
-				foreach( $records as $record ) {
-					$this->post_ids[] = $record['external_id'];
-				}
-
-				$result_info = $this->results['info']['posts'];
-				$this->per_page = $result_info['per_page'];
-
-				$this->total_result_count = $result_info['total_result_count'];
-				$this->num_pages = $result_info['num_pages'];
-				set_query_var( 'post__in', $this->post_ids);
-				$this->search_successful = true;
-
+ 
+				$this->extract_and_save_ids();
+				// Adds an HTML class to the results.
 				add_filter( 'post_class', array( $this, 'swiftype_post_class' ) );
 			}
 
+		}
+
+		/** 
+		* We only want the IDs of the posts from the results. After
+		* we get the results we extract 'external_id' and populate the
+		* 'post__in' query variable for wordpress to use local results.
+		**/ 
+		public function extract_and_save_ids() {
+			$this->post_ids = array();
+			$records = $this->results['records']['posts'];
+			
+			foreach( $records as $record ) {
+				$this->post_ids[] = $record['external_id'];
+			}
+
+			$result_info = $this->results['info']['posts'];
+			$this->per_page = $result_info['per_page'];
+
+			$this->total_result_count = $result_info['total_result_count'];
+			$this->num_pages = $result_info['num_pages'];
+			set_query_var( 'post__in', $this->post_ids);
+			$this->search_successful = true;
+		}
+
+		/** 
+		* Get and return common url parameters for swiftype search. 
+		**/
+		public function url_params() {
+			$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+
+			$params = array( 'page' => $page );
+			if ( isset( $_GET['st-cat'] ) && ! empty( $_GET['st-cat'] ) ) {
+				$params['filters[posts][category]'] = sanitize_text_field( $_GET['st-cat'] );
+			}
+
+			if ( isset( $_GET['st-facet-field'] ) && isset( $_GET['st-facet-term'] ) ) {
+				$params['filters[posts][' . $_GET['st-facet-field'] . ']'] = $_GET['st-facet-term'];
+			}
+
+			$params = apply_filters( 'swiftype_search_params', $params );
+
+			return $params;
+		}
+
+		/**
+		* Actually do the search using the Swiftype client.
+		**/
+		public function search_swiftype( $query_string, $params ) {
+			try {
+				$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+			} catch( SwiftypeError $e ) {
+				$this->results = NULL;
+				$this->search_successful = false;
+			}
+		  
 		}
 
 	/**
