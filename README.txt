@@ -79,6 +79,7 @@ You can install the plugin for each site with its own search engine, but we don'
 
 = 1.1.40 =
 * Refactor public search api to allow for integration options with other plugins.
+* Tested with WordPress 4.1.
 
 = 1.1.39 =
 * Fix error that caused some titles in the autocomplete dropdown to display as "undefined".
