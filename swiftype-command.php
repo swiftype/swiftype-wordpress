@@ -10,13 +10,13 @@ class Swiftype_Command extends WP_CLI_Command {
 	 *
 	 * <api-key>
 	 * : Swiftype API key.
-	 * 
+	 *
 	 * <engine>
 	 * : Name of the search engine to create.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp swiftype setup --api-key=your_api_key --engine="My WordPress Search" 
+	 *     wp swiftype setup --api-key=your_api_key --engine="My WordPress Search"
 	 *
 	 * @synopsis --api-key=<your-api-key> --engine=<name>
 	 */
@@ -42,7 +42,7 @@ class Swiftype_Command extends WP_CLI_Command {
 	 * Synchronize your WordPress database with the Swiftype search engine configured in the WordPress admin.
 	 *
 	 * ## OPTIONS
-	 * 
+	 *
 	 * <index-batch-size>
 	 * : The number of posts to index at once. Defaults to 15.
 	 *
@@ -55,7 +55,7 @@ class Swiftype_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 * Synchronize with the default settings:
-	 * 
+	 *
 	 *     wp swiftype sync
 	 *
 	 * Destructively synchronize with a large index batch size. This will be faster, but large batch sizes only work with small post data.
@@ -127,6 +127,7 @@ class Swiftype_Command extends WP_CLI_Command {
 
 		do {
 			WP_CLI::log( "Indexing " . $index_batch_size . " posts from offset " . $offset );
+			$this->clear_caches();
 			list($num_written, $posts_indexed_in_batch) = $swiftype_plugin->index_batch_of_posts( $offset, $index_batch_size );
 			$offset += $posts_indexed_in_batch;
 			WP_CLI::log( "Successfully indexed " . $posts_indexed_in_batch . " posts" );
@@ -143,6 +144,19 @@ class Swiftype_Command extends WP_CLI_Command {
 		}
 
 		return $value;
+	}
+
+	private function clear_caches() {
+		global $wpdb, $wp_object_cache;
+		$wpdb->queries = array();
+		if ( !is_object( $wp_object_cache ) )
+			return;
+		$wp_object_cache->group_ops = array();
+		$wp_object_cache->stats = array();
+		$wp_object_cache->memcache_debug = array();
+		$wp_object_cache->cache = array();
+		if ( method_exists( $wp_object_cache, '__remoteset' ) )
+			$wp_object_cache->__remoteset();
 	}
 }
 
