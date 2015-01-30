@@ -176,7 +176,7 @@ To index your WordPress site with the CLI, make sure you have WP-CLI installed a
 
 To index more content at once, increase the batch size:
 
-`wp swiftype sync --index-batch-size 100`
+`wp swiftype sync --index-batch-size=100`
 
 In general, using a larger batch size will be faster. However, the size of the batch you can use is determined by how large your posts are on average.
 
@@ -214,7 +214,7 @@ You can use this filter to pre-process queries before they are executed.
 
 The Swiftype Search plugin provides the `swiftype_render_facets` theme function to allow you to easily add faceting to your search results page. To use it, follow these steps:
 
-1.  Add a `swiftype_search_params_filter` function to your theme's `functions.php` file that adds facet parameters to the search. 
+1.  Add a `swiftype_search_params_filter` function to your theme's `functions.php` file that adds facet parameters to the search.
 
     The version below will facet on tags and category:
 
