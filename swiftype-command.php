@@ -73,6 +73,7 @@ class Swiftype_Command extends WP_CLI_Command {
 			WP_CLI::confirm( "Delete all documents and re-index?" );
 
 			$engine_slug = get_option( 'swiftype_engine_slug' );
+			WP_CLI::log("Deleting existing documents...");
 
 			try {
 				$swiftype_plugin->client()->delete_document_type( $engine_slug, 'posts' );
@@ -82,6 +83,15 @@ class Swiftype_Command extends WP_CLI_Command {
 				} else {
 					WP_CLI::log( $e );
 					WP_CLI::error( "Could not delete 'posts' DocumentType, aborting." );
+				}
+			}
+
+			while ( true ) {
+				try {
+					$swiftype_plugin->client()->find_document_type( $engine_slug, 'posts' );
+				} catch( SwiftypeError $e ) {
+					// DocumentType is gone now.
+					break;
 				}
 			}
 
