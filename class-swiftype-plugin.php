@@ -785,6 +785,13 @@
 		}
 
 	/**
+		* Return the total number of pages after a search is performed.
+		*/
+		public function get_num_pages() {
+		  return $this->num_pages;
+		}
+
+	/**
 		* Determines if a post should be indexed.
 		*/
 		private function should_index_post( $post ) {
