@@ -13,6 +13,12 @@ The [Swiftype WordPress Plugin](https://swiftype.com/wordpress) replaces WordPre
 7. Build your search index by clicking the "Synchronize with Swiftype" button.
 8. See the Demo video for additional details, or email support@swiftype.com if you are having trouble.
 
+## Usage
+
+For additional information on how to use and extend the plugin, please
+visit the [plugin notes
+page](https://wordpress.org/plugins/swiftype-search/other_notes/).
+
 ## Development
 
 ### Running unit tests
