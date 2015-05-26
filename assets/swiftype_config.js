@@ -2,6 +2,12 @@
   $(function() {
     Swiftype.key = swiftypeParams.engineKey;
     Swiftype.inputElements = $('input[name=s]');
+    var defaultRenderFunction = function() {
+      return function(document_type, item) {
+        var title = item['highlight']['title'] || Swiftype.htmlEscape(item['title']);
+        return '<p class="title">' + title + '</p>';
+      };
+    };
 
     function readSwiftypeConfigFor(option) {
       if ((typeof window.swiftypeConfig === 'undefined') || (typeof window.swiftypeConfig[option] === 'undefined') || window.swiftypeConfig[option] === null) {
@@ -9,7 +15,7 @@
       }
 
       return function() { 
-        if (typeof window.swiftypeConfig[option] === 'function') {
+        if (typeof window.swiftypeConfig[option] === 'function' && option != 'renderFunction') {
           return window.swiftypeConfig[option].call();
         } else {
           return window.swiftypeConfig[option];
@@ -38,7 +44,8 @@
       },
       getResultLimit: function() {
         return readSwiftypeConfigFor('resultLimit');
-      }
+      },
+      getRenderFunction: readSwiftypeConfigFor('renderFunction') || defaultRenderFunction
     };
 
     var swiftypeOptions = {
@@ -54,10 +61,7 @@
       sortDirection: SwiftypeConfigManager.getSortDirection(),
       disableAutocomplete: SwiftypeConfigManager.getDisableAutocomplete(),
       resultLimit: SwiftypeConfigManager.getResultLimit(),
-      renderFunction: function(document_type, item) {
-        var title = item['highlight']['title'] || Swiftype.htmlEscape(item['title']);
-        return '<p class="title">' + title + '</p>';
-       }
+      renderFunction: SwiftypeConfigManager.getRenderFunction()
     };
 
     $.each(Swiftype.inputElements, function(idx, el) {
