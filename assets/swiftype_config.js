@@ -2,11 +2,9 @@
   $(function() {
     Swiftype.key = swiftypeParams.engineKey;
     Swiftype.inputElements = $('input[name=s]');
-    var defaultRenderFunction = function() {
-      return function(document_type, item) {
+    var defaultRenderFunction = function(document_type, item) {
         var title = item['highlight']['title'] || Swiftype.htmlEscape(item['title']);
         return '<p class="title">' + title + '</p>';
-      };
     };
 
     function readSwiftypeConfigFor(option) {
@@ -15,7 +13,7 @@
       }
 
       return function() { 
-        if (typeof window.swiftypeConfig[option] === 'function' && option != 'renderFunction') {
+        if (typeof window.swiftypeConfig[option] === 'function') {
           return window.swiftypeConfig[option].call();
         } else {
           return window.swiftypeConfig[option];
@@ -44,8 +42,7 @@
       },
       getResultLimit: function() {
         return readSwiftypeConfigFor('resultLimit');
-      },
-      getRenderFunction: readSwiftypeConfigFor('renderFunction') || defaultRenderFunction
+      }
     };
 
     var swiftypeOptions = {
@@ -61,7 +58,7 @@
       sortDirection: SwiftypeConfigManager.getSortDirection(),
       disableAutocomplete: SwiftypeConfigManager.getDisableAutocomplete(),
       resultLimit: SwiftypeConfigManager.getResultLimit(),
-      renderFunction: SwiftypeConfigManager.getRenderFunction()
+      renderFunction: window.swiftypeConfig["renderFunction"] || defaultRenderFunction
     };
 
     $.each(Swiftype.inputElements, function(idx, el) {
