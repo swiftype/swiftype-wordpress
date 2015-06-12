@@ -12,7 +12,7 @@
         return undefined;
       }
 
-      return function() { 
+      return function() {
         if (typeof window.swiftypeConfig[option] === 'function') {
           return window.swiftypeConfig[option].call();
         } else {
@@ -58,7 +58,7 @@
       sortDirection: SwiftypeConfigManager.getSortDirection(),
       disableAutocomplete: SwiftypeConfigManager.getDisableAutocomplete(),
       resultLimit: SwiftypeConfigManager.getResultLimit(),
-      renderFunction: window.swiftypeConfig["renderFunction"] || defaultRenderFunction
+      renderFunction: (window.swiftypeConfig && window.swiftypeConfig["renderFunction"]) || defaultRenderFunction
     };
 
     $.each(Swiftype.inputElements, function(idx, el) {
