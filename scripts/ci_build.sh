@@ -3,13 +3,16 @@
 # Fail on all errors
 set -e
 
+# Install the command line retry tool
+gem install retryit
+
+# Start MySQL
 /etc/init.d/mysql start
 
 export WP_TESTS_DIR=/tmp/wordpress-testing
 export WP_DIR=/tmp/wordpress
 
 SCRIPTS_DIR=`dirname $0`
-#WP_VERSION="$1"
 
 # Prepare testing frameworks and test database
 bash $SCRIPTS_DIR/install-wp-tests.sh wordpress_test root '' $WP_VERSION
@@ -30,5 +33,6 @@ phpbrew switch $PHP_VERSION
 php -v
 phpunit --version
 
+#----------------------------------------------------------------------------------------------------
 # Run tests
 exec phpunit --verbose -c $WP_DIR/wp-content/plugins/swiftype-search/$TEST_CONFIG --strict --log-junit tests/report.xml
