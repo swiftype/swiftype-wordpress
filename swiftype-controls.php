@@ -44,10 +44,6 @@
 				<td>Search Engine:</td>
 				<td><?php print( $engine_name ); ?></td>
 			</tr>
-			<tr>
-				<td>Number of Searchable Posts:</td>
-				<td><span id="num_indexed_documents"><?php print( $num_indexed_documents ); ?></span></td>
-			</tr>
 		</tbody>
 	</table>
 	<br/>
