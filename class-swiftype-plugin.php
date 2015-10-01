@@ -41,7 +41,8 @@
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
 			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );
-
+			add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+			
 			if ( ! is_admin() ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
 				add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ) );
@@ -102,7 +103,6 @@
 
 			if ( current_user_can( 'edit_posts' ) ) {
 				// hooks for sending post updates to the Swiftype API
-				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
 				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
 				add_action( 'trashed_post', array( $this, 'delete_post' ) );
 
