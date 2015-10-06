@@ -40,7 +40,12 @@
 
 			add_action( 'admin_menu', array( $this, 'swiftype_menu' ) );
 			add_action( 'admin_init', array( $this, 'initialize_admin_screen' ) );
+
+			// hooks for sending post updates to the Swiftype API
 			add_action( 'future_to_publish' , array( $this, 'handle_future_to_publish' ) );
+			add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
+			add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
+			add_action( 'trashed_post', array( $this, 'delete_post' ) );
 
 			if ( ! is_admin() ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
@@ -101,11 +106,6 @@
 			}
 
 			if ( current_user_can( 'edit_posts' ) ) {
-				// hooks for sending post updates to the Swiftype API
-				add_action( 'save_post', array( $this, 'handle_save_post' ), 99, 1 );
-				add_action( 'transition_post_status' , array( $this, 'handle_transition_post_status' ), 99, 3 );
-				add_action( 'trashed_post', array( $this, 'delete_post' ) );
-
 				$this->initialize_api_client();
 				$this->check_api_authorized();
 				if( ! $this->api_authorized )
@@ -168,7 +168,7 @@
 					$this->search_successful = false;
 					return;
 				}
- 
+
 				$this->extract_and_save_ids();
 				// Adds an HTML class to the results.
 				add_filter( 'post_class', array( $this, 'swiftype_post_class' ) );
@@ -176,15 +176,15 @@
 
 		}
 
-		/** 
+		/**
 		* We only want the IDs of the posts from the results. After
 		* we get the results we extract 'external_id' and populate the
 		* 'post__in' query variable for wordpress to use local results.
-		**/ 
+		**/
 		public function extract_and_save_ids() {
 			$this->post_ids = array();
 			$records = $this->results['records']['posts'];
-			
+
 			foreach( $records as $record ) {
 				$this->post_ids[] = $record['external_id'];
 			}
@@ -198,8 +198,8 @@
 			$this->search_successful = true;
 		}
 
-		/** 
-		* Get and return common url parameters for swiftype search. 
+		/**
+		* Get and return common url parameters for swiftype search.
 		**/
 		public function url_params() {
 			$page = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
@@ -228,7 +228,7 @@
 				$this->results = NULL;
 				$this->search_successful = false;
 			}
-		  
+
 		}
 
 	/**
