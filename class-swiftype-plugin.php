@@ -45,7 +45,7 @@
 			
 			if ( ! is_admin() ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_swiftype_assets' ) );
-				add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ) );
+				add_action( 'pre_get_posts', array( $this, 'get_posts_from_swiftype' ), 11 );
 				add_filter( 'posts_search', array( $this, 'clear_sql_search_clause' ) );
 				add_filter( 'post_limits', array( $this, 'set_sql_limit' ) );
 				add_filter( 'the_posts', array( $this, 'get_search_result_posts' ) );
