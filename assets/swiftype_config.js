@@ -6,6 +6,10 @@
         var title = item['highlight']['title'] || Swiftype.htmlEscape(item['title']);
         return '<p class="title">' + title + '</p>';
     };
+   
+    var defaultOnComplete =  function(dataItem, prefix) {
+     Swiftype.pingAutoSelection(Swiftype.key, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
+   };
 
     function readSwiftypeConfigFor(option) {
       if ((typeof window.swiftypeConfig === 'undefined') || (typeof window.swiftypeConfig[option] === 'undefined') || window.swiftypeConfig[option] === null) {
@@ -46,9 +50,7 @@
     };
 
     var swiftypeOptions = {
-      onComplete: function(dataItem, prefix) {
-        Swiftype.pingAutoSelection(Swiftype.key, dataItem['id'], prefix, function() { window.location = dataItem['url']; });
-      },
+      onComplete: (window.swiftypeConfig && window.swiftypeConfig["onComplete"]) || defaultOnComplete,
       documentTypes: ['posts'],
       engineKey: Swiftype.key,
       filters: SwiftypeConfigManager.getFilters(),
