@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 4.2
-Stable tag: 1.1.47
+Stable tag: 1.1.48
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Read our [WordPress search customization tutorial](https://swiftype.com/document
 
 == Installation ==
 
-1. Go to [http://swiftype.com](http://swiftype.com) and sign up for a free Swiftype account. (Be sure to validate your account via the confirmation email we send.)
+1. Go to [http://swiftype.com](http://swiftype.com) and sign up for an account. (Be sure to validate your account via the confirmation email we send.)
 2. After logging in to Swiftype, go to the Account Settings screen and get your API key.
 3. Install the Swiftype Search Wordpress plugin in your Wordpress dashboard.
 4. Activate the plugin through the 'Plugins' menu in WordPress.
@@ -60,7 +60,7 @@ _If your questions are not answered here, check our [Q&A forum](https://swiftype
 
 = Where do I sign up for a Swiftype search account? =
 
-Sign up for a free account at [http://swiftype.com](http://swiftype.com)
+Sign up for an account at [http://swiftype.com](http://swiftype.com).  Plans start at $299.
 
 = Why don't search results in the Swiftype Dashboard match what's displayed on my site? =
 
