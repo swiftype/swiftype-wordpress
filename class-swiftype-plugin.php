@@ -25,8 +25,6 @@
 		private $engine_initialized = false;
 
 		private $post_ids = NULL;
-		private $total_result_count = 0;
-		private $num_pages = 0;
 		private $per_page = 0;
 		private $search_successful = false;
 		private $error = NULL;
@@ -34,6 +32,9 @@
 
 		private $max_retries = 5;
 		private $retry_delay = 2;
+
+    public $total_result_count = 0;
+    public $num_pages = 0;
 
 		public function __construct() {
 			$this->api_authorized = get_option( 'swiftype_api_authorized' );
