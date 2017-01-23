@@ -191,7 +191,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 	* @return array An array of true/false elements indicated success or failure of the creation or update of each individual document
 	*/
 	public function create_or_update_documents( $engine_id, $document_type_id, $documents ) {
-		$url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '/documents/bulk_create_or_update';
+		$url = $this->endpoint . 'engines/' . $engine_id . '/document_types/' . $document_type_id . '/documents/bulk_create_or_update_verbose';
 		$params = array( 'documents' => $documents );
 		$response = $this->call_api( 'POST', $url, $params );
 		return json_decode( $response['body'], true );
