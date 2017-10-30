@@ -263,7 +263,7 @@ public function delete_documents( $engine_id, $document_type_id, $document_ids )
 			$args['body'] = array();
 		} else if( $method == 'POST' ) {
 			$args['method'] = $method;
-			$args['body'] = json_encode( $params );
+			$args['body'] = wp_json_encode( $params );
 		}
 
 		$response = wp_remote_request( $url, $args );
