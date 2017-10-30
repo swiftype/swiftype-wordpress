@@ -68,7 +68,7 @@ class Swiftype_Search_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$new_instance = wp_parse_args( (array) $new_instance, array( 'title' => '', 'category' => 0 ) );
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 		$instance['category'] = intval( $new_instance['category'] );
 		return $instance;
 	}
