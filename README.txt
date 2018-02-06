@@ -3,8 +3,8 @@ Contributors: matthewtyriley, qhoxie
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
-Tested up to: 4.2
-Stable tag: 1.1.48
+Tested up to: 4.9
+Stable tag: 1.1.49
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,7 +60,7 @@ _If your questions are not answered here, check our [Q&A forum](https://swiftype
 
 = Where do I sign up for a Swiftype search account? =
 
-Sign up for an account at [http://swiftype.com](http://swiftype.com).  Plans start at $299.
+Sign up for an account at [http://swiftype.com](http://swiftype.com).  Plans start at $79 with a Free Trial.
 
 = Why don't search results in the Swiftype Dashboard match what's displayed on my site? =
 
@@ -76,6 +76,9 @@ You can install the plugin for each site with its own search engine, but we don'
 2. The Swiftype search result controls dashboard.  Here you can customize any aspect of your results.  You can drag and drop to reoder search results, remove results you don't want to show up in the search, and even add results that don't show up automatically.
 
 == Changelog ==
+
+= 1.1.49 =
+* Leverage geo-distributed edge network for faster searches.
 
 = 1.1.46 =
 * Export JS changes to min files.

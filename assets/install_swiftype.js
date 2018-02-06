@@ -9837,7 +9837,7 @@ window['$stjq'] = jQuery.noConflict(true);
   var ident = 0;
 
   window.Swiftype = window.Swiftype || {};
-  Swiftype.root_url = Swiftype.root_url || 'https://api.swiftype.com';
+  Swiftype.root_url = Swiftype.root_url || 'https://search-api.swiftype.com';
   Swiftype.pingUrl = function(endpoint, callback) {
     var to = setTimeout(callback, 350);
     var img = new Image();
