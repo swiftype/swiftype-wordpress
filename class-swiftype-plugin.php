@@ -497,7 +497,6 @@
 
 			$offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
 			$batch_size = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
-			$total_posts = 0;
 
 			try {
 				$total_posts = $this->delete_batch_of_trashed_posts( $offset, $batch_size );
