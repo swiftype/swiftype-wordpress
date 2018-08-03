@@ -426,7 +426,6 @@
 				print( "Error in Create or Update Documents. " );
 				print( "Offset: " . $offset . " " );
 				print( "Batch Size: " . $batch_size . " " );
-				print( "Retries: " . $retries . " " );
 				print_r( $e );
 				die();
 			}
