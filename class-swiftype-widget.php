@@ -75,4 +75,6 @@ class Swiftype_Search_Widget extends WP_Widget {
 
 }
 
-add_action( 'widgets_init', create_function( '', 'register_widget( "swiftype_search_widget" );' ) );
+
+add_action( 'widgets_init', function() { register_widget( "swiftype_search_widget" ); } );
+
