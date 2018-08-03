@@ -398,7 +398,7 @@
 			$this->num_indexed_documents = $document_type['document_count'];
 			update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
 			header( 'Content-Type: application/json' );
-			print( json_encode( array( 'num_indexed_documents' => $this->num_indexed_documents ) ) );
+			print( wp_json_encode( array( 'num_indexed_documents' => $this->num_indexed_documents ) ) );
 			die();
 		}
 
@@ -418,7 +418,7 @@
 				list( $num_written, $total_posts ) = $this->index_batch_of_posts( $offset, $batch_size );
 
 				header( 'Content-Type: application/json' );
-				print( json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
+				print( wp_json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
 				die();
 
 			} catch ( SwiftypeError $e ) {
@@ -509,7 +509,7 @@
 			}
 
 			header( "Content-Type: application/json" );
-			print( json_encode( array( 'total' => $total_posts ) ) );
+			print( wp_json_encode( array( 'total' => $total_posts ) ) );
 			die();
 		}
 
