@@ -77,6 +77,10 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
+= 1.1.50 =
+* Bugfix for Issue #34: Removed undefined variable `$retries`.
+* Bugfix for Issue #35: Removed use of deprecated `create_function` method.
+
 = 1.1.46 =
 * Export JS changes to min files.
 
