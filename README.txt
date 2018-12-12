@@ -18,9 +18,6 @@ The base ranking algorithm is based on industry best-practices for search and pr
 
 Do you have a mobile app displaying content from your WordPress site? Swiftype’s [mobile SDKs](https://swiftype.com/mobile) make it simple to add powerful search to your mobile apps.  Combine our WordPress plugin with our mobile SDKs to create the same search experience on your site and in your app.
 
-
-[youtube="http://www.youtube.com/watch?v=rukXYKEpvS4"]
-
 ## Features
 
 * Search runs on our powerful servers - it doesn't bog down your site, even if you have **hundreds of thousands of posts**.
