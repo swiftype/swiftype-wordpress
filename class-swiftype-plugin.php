@@ -66,8 +66,7 @@
 			$this->engine_slug = get_option( 'swiftype_engine_slug' );
 			$this->engine_key = get_option( 'swiftype_engine_key' );
 
-			$this->client = new SwiftypeClient();
-			$this->client->set_api_key( $this->api_key );
+			$this->client = \Swiftype\SiteSearch\ClientBuilder::create($this->api_key)->build();
 		}
 
 		/**
@@ -224,7 +223,7 @@
 		public function search_swiftype( $query_string, $params ) {
 			try {
 				$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
-			} catch( SwiftypeError $e ) {
+			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				$this->results = NULL;
 				$this->search_successful = false;
 			}
@@ -237,16 +236,20 @@
 		* @return null
 		*/
 		public function check_api_authorized() {
-			if( ! is_admin() )
+			if( !is_admin() )
 				return;
-			if( $this->api_authorized )
-				return;
+
+			if($this->api_authorized) {
+			    return $this->api_authorized;
+			}
+
+			$this->api_authorized = true;
 
 			// If we have the key, try to ask API client for authorization
 			if( $this->api_key && strlen( $this->api_key ) > 0 ) {
 				try {
-					$this->api_authorized = $this->client->authorized();
-				} catch( SwiftypeError $e ) {
+				    $this->client->listEngines();
+				} catch( \Swiftype\Exception\SwiftypeException $e ) {
 					$this->api_authorized = false;
 				}
 			} else {
@@ -280,7 +283,7 @@
 
 			try {
 				$this->initialize_engine( $engine_name );
-			} catch ( SwiftypeError $e ) {
+			} catch ( \Swiftype\Exception\SwiftypeException $e ) {
 				$error_message = json_decode( $e->getMessage() );
 				return "<b>There was an error creating your search engine on the Swiftype servers.</b> There error message was: " . $error_message->error;
 			}
@@ -290,13 +293,13 @@
 		* Initialize the search engine for this WordPress installation.
 		*/
 		public function initialize_engine( $engine_name ) {
-			$engine = $this->client->create_engine( array( 'name' => $engine_name ) );
+			$engine = $this->client->createEngine($engine_name);
 
 			$this->engine_slug = $engine['slug'];
 			$this->engine_name = $engine['name'];
 			$this->engine_key = $engine['key'];
 
-			$document_type = $this->client->create_document_type( $this->engine_slug, $this->document_type_slug );
+			$document_type = $this->client->createDocumentType( $this->engine_slug, $this->document_type_slug );
 
 			if( $document_type ) {
 				$this->engine_initialized = true;
@@ -390,8 +393,8 @@
 			$this->engine_name = get_option( 'swiftype_engine_name' );
 			$this->engine_key = get_option( 'swiftype_engine_key' );
 			try {
-				$document_type = $this->client->find_document_type( $this->engine_slug, $this->document_type_slug );
-			} catch( SwiftypeError $e ) {
+				$document_type = $this->client->getDocumentType( $this->engine_slug, $this->document_type_slug );
+			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				header('HTTP/1.1 500 Internal Server Error');
 				die();
 			}
@@ -418,10 +421,10 @@
 				list( $num_written, $total_posts ) = $this->index_batch_of_posts( $offset, $batch_size );
 
 				header( 'Content-Type: application/json' );
-				print( wp_json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ) ) );
+				echo wp_json_encode( array( 'num_written' => $num_written, 'total' => $total_posts ));
 				die();
 
-			} catch ( SwiftypeError $e ) {
+			} catch ( \Swiftype\Exception\SwiftypeException $e ) {
 				header( 'HTTP/1.1 500 Internal Server Error' );
 				print( "Error in Create or Update Documents. " );
 				print( "Offset: " . $offset . " " );
@@ -462,8 +465,8 @@
 				if( count( $documents ) > 0 ) {
 					while( is_null( $resp ) ) {
 						try {
-							$resp = $this->client->create_or_update_documents( $this->engine_slug, $this->document_type_slug, $documents );
-						} catch( SwiftypeError $e ) {
+							$resp = $this->client->bulkCreateOrUpdateDocuments($this->engine_slug, $this->document_type_slug, $documents);
+						} catch( \Swiftype\Exception\SwiftypeException $e ) {
 							if( $retries >= $this->max_retries ) {
 								throw $e;
 							} else {
@@ -499,7 +502,7 @@
 
 			try {
 				$total_posts = $this->delete_batch_of_trashed_posts( $offset, $batch_size );
-			} catch ( SwiftypeError $e ) {
+			} catch ( \Swiftype\Exception\SwiftypeException $e ) {
 				header( 'HTTP/1.1 500 Internal Server Error' );
 				print( 'Error in Delete all Trashed Posts.' );
 				print_r( $e );
@@ -535,11 +538,12 @@
 					$document_ids[] = $post_id;
 				}
 			}
+
 			if( count( $document_ids ) > 0 ) {
 				while( is_null( $resp ) ) {
 					try {
-						$resp = $this->client->delete_documents( $this->engine_slug, $this->document_type_slug, $document_ids );
-					} catch( SwiftypeError $e ) {
+						$resp = $this->client->bulkDeleteDocuments($this->engine_slug, $this->document_type_slug, $document_ids );
+					} catch( \Swiftype\Exception\SwiftypeException $e ) {
 						if( $retries >= $this->max_retries ) {
 							throw $e;
 						} else {
@@ -603,10 +607,10 @@
 
 			$document = $this->convert_post_to_document( $post );
 			try {
-				$this->client->create_or_update_document( $this->engine_slug, $this->document_type_slug, $document );
+			    $this->client->createOrUpdateDocument($this->engine_slug, $this->document_type_slug, $document['external_id'], $document['fields']);
 				$this->num_indexed_documents += 1;
 				update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
-			} catch( SwiftypeError $e ) {
+			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				return;
 			}
 		}
@@ -618,10 +622,10 @@
 		*/
 		public function delete_post( $post_id ){
 			try {
-				$this->client->delete_document( $this->engine_slug, $this->document_type_slug, $post_id );
+				$this->client->deleteDocument( $this->engine_slug, $this->document_type_slug, $post_id );
 				$this->num_indexed_documents -= 1;
 				update_option( 'swiftype_num_indexed_documents', $this->num_indexed_documents );
-			} catch( SwiftypeError $e ) {
+			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				return;
 			}
 		}
@@ -674,6 +678,10 @@
 			} else {
 				$document['fields'][] = array( 'name' => 'image', 'type' => 'enum', 'value' => NULL );
 			}
+
+			$document['fields'] = array_values(array_filter($document['fields'], function($field) {
+			    return !empty($field['value']);
+			}));
 
 			$document = apply_filters( "swiftype_document_builder", $document, $post );
 

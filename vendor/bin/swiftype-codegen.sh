@@ -1,0 +1,1 @@
+../swiftype/swiftype-common-php/resources/dev/swiftype-codegen.sh

@@ -32,7 +32,7 @@ class Swiftype_Command extends WP_CLI_Command {
 
 		try {
 			$swiftype_plugin->initialize_engine( $engine_name );
-		} catch ( SwiftypeError $e ) {
+		} catch ( \Swiftype\Exception\SwiftypeException $e ) {
 			WP_CLI::log( $e );
 			WP_CLI::error( "Could not set up search engine. You may be over your engine limit or trying to use a name that is already taken." );
 		}
@@ -76,8 +76,8 @@ class Swiftype_Command extends WP_CLI_Command {
 			WP_CLI::log("Deleting existing documents...");
 
 			try {
-				$swiftype_plugin->client()->delete_document_type( $engine_slug, 'posts' );
-			} catch( SwiftypeError $e ) {
+				$swiftype_plugin->client()->deleteDocumentType( $engine_slug, 'posts' );
+			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				if ( $e->getCode() == 404 ) {
 					WP_CLI::warning( "No 'posts' DocumentType, ignoring." );
 				} else {
@@ -88,8 +88,8 @@ class Swiftype_Command extends WP_CLI_Command {
 
 			while ( true ) {
 				try {
-					$swiftype_plugin->client()->find_document_type( $engine_slug, 'posts' );
-				} catch( SwiftypeError $e ) {
+					$swiftype_plugin->client()->getDocumentType( $engine_slug, 'posts' );
+				} catch( \Swiftype\Exception\SwiftypeException $e ) {
 					// DocumentType is gone now.
 					break;
 				}
@@ -102,8 +102,8 @@ class Swiftype_Command extends WP_CLI_Command {
 
 			while ( is_null( $response ) ) {
 				try {
-					$response = $swiftype_plugin->client()->create_document_type( $engine_slug, 'posts' );
-				} catch ( SwiftypeError $e ) {
+					$response = $swiftype_plugin->client()->createDocumentType( $engine_slug, 'posts' );
+				} catch ( \Swiftype\Exception\SwiftypeException $e ) {
 					if ( $retries >= $max_retries ) {
 						WP_CLI::log( $e );
 						WP_CLI::error( "Could not create 'posts' DocumentType, aborting. Re-create your search engine to continue." );
