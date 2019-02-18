@@ -222,7 +222,8 @@
 		**/
 		public function search_swiftype( $query_string, $params ) {
 			try {
-				$this->results = $this->client->search( $this->engine_slug, $this->document_type_slug, $query_string, $params );
+			    $params = array_merge($params,['document_types' => [$this->document_type_slug]]);
+				$this->results = $this->client->search( $this->engine_slug, $query_string, $params );
 			} catch( \Swiftype\Exception\SwiftypeException $e ) {
 				$this->results = NULL;
 				$this->search_successful = false;
@@ -465,7 +466,7 @@
 				if( count( $documents ) > 0 ) {
 					while( is_null( $resp ) ) {
 						try {
-							$resp = $this->client->bulkCreateOrUpdateDocuments($this->engine_slug, $this->document_type_slug, $documents);
+							$resp = $this->client->createOrUpdateDocuments($this->engine_slug, $this->document_type_slug, $documents);
 						} catch( \Swiftype\Exception\SwiftypeException $e ) {
 							if( $retries >= $this->max_retries ) {
 								throw $e;
@@ -542,7 +543,7 @@
 			if( count( $document_ids ) > 0 ) {
 				while( is_null( $resp ) ) {
 					try {
-						$resp = $this->client->bulkDeleteDocuments($this->engine_slug, $this->document_type_slug, $document_ids );
+						$resp = $this->client->deleteDocuments($this->engine_slug, $this->document_type_slug, $document_ids );
 					} catch( \Swiftype\Exception\SwiftypeException $e ) {
 						if( $retries >= $this->max_retries ) {
 							throw $e;

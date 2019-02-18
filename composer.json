@@ -10,18 +10,11 @@
   ],
   "license" : "Apache-2.0",
   "type" : "library",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/swiftype/swiftype-site-search-php"
-    }
-  ],
   "require" : {
-    "swiftype/swiftype-site-search-php" : "dev-master@dev",
+    "swiftype/swiftype-site-search-php" :"^1.0.0@beta",
     "react/promise": "^2.7"
   },
   "autoload": {
     "psr-4": {"Swiftype\\SiteSearch\\Wordpress\\": "./"} 
-  },
-  "minimum-stability": "dev" 
+  }
 }
