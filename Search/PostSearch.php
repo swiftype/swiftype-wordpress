@@ -5,6 +5,11 @@ namespace Swiftype\SiteSearch\Wordpress\Search;
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 use Swiftype\Exception\SwiftypeException;
 
+/**
+ * Use Site Search as the main search engine of WP.
+ *
+ * @author Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>, Aurelien Foucret <aurelien.foucret@elastic.co>
+ */
 class PostSearch extends AbstractSwiftypeComponent
 {
     /**
@@ -12,21 +17,36 @@ class PostSearch extends AbstractSwiftypeComponent
      */
     private $searchResult = null;
 
+    /**
+     * Constructor.
+     *
+     * Install hooks only if not in admin and the search engine is successfully loaded.
+     */
     public function __construct()
     {
         parent::__construct();
 
         if (!is_admin()) {
-            add_action('swiftype_engine_loaded', [$this, 'onEngineLoaded']);
+            add_action('swiftype_engine_loaded', [$this, 'initHooks']);
         }
     }
 
-    public function onEngineLoaded($engine)
+    /**
+     * Install hooks.
+     *
+     * @param array $engine Engine data
+     */
+    public function initHooks($engine)
     {
         add_action('wp_enqueue_scripts', function() use($engine) {return $this->enqueueSwiftypeAssets($engine);});
         add_action('pre_get_posts', [$this, 'getPostsFromSwiftype'], 11);
     }
 
+    /**
+     * Add Site Search assets.
+     *
+     * @param array $engine
+     */
     public function enqueueSwiftypeAssets($engine)
     {
         $rootDir = __DIR__ . '/../swiftype.php';
@@ -35,9 +55,16 @@ class PostSearch extends AbstractSwiftypeComponent
         \wp_localize_script('swiftype', 'swiftypeParams', ['engineKey' => $engine['key']]);
     }
 
+    /**
+     * Run the search query using Site Search and save the search results.
+     *
+     * If the search result is successfull we replace the search text by a filter on the matched product ids.
+     *
+     * @param \WP_Query $wpQuery
+     */
     public function getPostsFromSwiftype($wpQuery)
     {
-        if( $this->canSearch($wpQuery)) {
+        if ($this->canSearch($wpQuery)) {
             // Get query string from 's' url parameter.
             $queryString = $this->getQueryString();
 
@@ -61,6 +88,13 @@ class PostSearch extends AbstractSwiftypeComponent
         }
     }
 
+    /**
+     * Remove the fulltext search from the query when the search result is sucessfull.
+     *
+     * @param string $search
+     *
+     * @return string
+     */
     public function clearSqlSearchClause($search)
     {
         if ($this->searchResult !== null) {
@@ -70,7 +104,14 @@ class PostSearch extends AbstractSwiftypeComponent
         return $search;
     }
 
-    public function setSqlLimit( $limit )
+    /**
+     * Remove the limit clause from the query when the search result is sucessfull.
+     *
+     * @param string $limit
+     *
+     * @return string
+     */
+    public function setSqlLimit($limit )
     {
         if ($this->searchResult !== null) {
             $limit = '';
@@ -79,6 +120,13 @@ class PostSearch extends AbstractSwiftypeComponent
         return $limit;
     }
 
+    /**
+     * Reorder the post list using the document order contained in the saved search result.
+     *
+     * @param \WP_Post[] $posts
+     *
+     * @return \WP_Post[][]
+     */
     public function getSearchResultPosts($posts)
     {
         if ($this->searchResult !== null) {
@@ -111,6 +159,10 @@ class PostSearch extends AbstractSwiftypeComponent
 
     /**
      * Add a Swiftype-specific post class to the list of post classes.
+     *
+     * @param array $classes
+     *
+     * @return array
      */
     public function swiftypePostClass($classes)
     {
@@ -121,6 +173,11 @@ class PostSearch extends AbstractSwiftypeComponent
         return $classes;
     }
 
+    /**
+     * Extract the list of matching post ids from the search result.
+     *
+     * @return int[]
+     */
     private function extractPostIds()
     {
         $postIds = [];
@@ -175,6 +232,13 @@ class PostSearch extends AbstractSwiftypeComponent
         return $params;
     }
 
+    /**
+     * Indicate if we can search using Site Search.
+     *
+     * @param \WP_Query $wpQuery
+     *
+     * @return boolean
+     */
     private function canSearch($wpQuery)
     {
         $isMainQuery   = function_exists('is_main_query') && $wpQuery->is_main_query();
