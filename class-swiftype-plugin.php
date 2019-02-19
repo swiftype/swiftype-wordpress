@@ -2,6 +2,7 @@
 
 use Swiftype\SiteSearch\Wordpress\Document\Indexer;
 use Swiftype\SiteSearch\Wordpress\Config\Config;
+use Swiftype\SiteSearch\Wordpress\Search\PostSearch;
 
 /**
  * The Swiftype Search Wordpress Plugin
@@ -24,6 +25,7 @@ class SwiftypePlugin
 
         if ($client !== null) {
             new Indexer($client, $config);
+            new PostSearch($client, $config);
         }
 
         new \Swiftype\SiteSearch\Wordpress\Admin\Page($client, $config);
