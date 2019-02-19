@@ -23,6 +23,7 @@ class SwiftypePlugin
     private $components = [
         \Swiftype\SiteSearch\Wordpress\Engine\Manager::class,
         \Swiftype\SiteSearch\Wordpress\Search\PostSearch::class,
+        \Swiftype\SiteSearch\Wordpress\Search\Widget::class,
         \Swiftype\SiteSearch\Wordpress\Document\Indexer::class,
         \Swiftype\SiteSearch\Wordpress\Admin\Action::class,
         \Swiftype\SiteSearch\Wordpress\Admin\Page::class,
