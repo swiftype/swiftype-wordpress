@@ -2,11 +2,26 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Config;
 
+/**
+ * Configuration loading and management.
+ *
+ * @author Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>, Aurelien Foucret <aurelien.foucret@elastic.co>
+ */
 class Loader
 {
+    /**
+     * @var Config
+     */
     private $config;
 
-    public static function create(callable $callback = null)
+    /**
+     * Load configuration.
+     *
+     * @param callable $callback Optional function to be called when the configuration is loaded.
+     *
+     * @return \Swiftype\SiteSearch\Wordpress\Config\Loader
+     */
+    public static function loadConfig(callable $callback = null)
     {
         if ($callback !== null) {
             \add_action('swiftype_config_loaded', $callback);
@@ -15,13 +30,22 @@ class Loader
         return (new static());
     }
 
+    /**
+     * Constructor.
+     * Use loadConfig method instead.
+     */
     private function __construct()
     {
         $this->config = new Config();
-        \add_action('init', function() {$this->loadConfig();});
+        \add_action('init', function() {$this->applyUpdates();});
     }
 
-    private function loadConfig()
+    /**
+     * Load the config from admin post data.
+     *
+     * If you want to be notified when the config is ready you should use the swiftype_config_loaded hook.
+     */
+    private function applyUpdates()
     {
         if (\is_admin() && \current_user_can('manage_options') && isset($_POST['action'])) {
             switch ($_POST['action']) {

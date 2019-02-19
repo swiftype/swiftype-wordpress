@@ -4,24 +4,32 @@ namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 
+/**
+ * Implementation of the admin async actions for the Site Search Wordpress plugin:
+ * - index_batch_of_posts
+ * - delete_batch_of_trashed_posts
+ *
+ * @author Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>, Aurelien Foucret <aurelien.foucret@elastic.co>
+ */
 class Action extends AbstractSwiftypeComponent
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
-        \add_action('wp_ajax_get_indexed_documents_count', [$this, 'asyncGetIndexedDocumentsCount']);
         \add_action('wp_ajax_index_batch_of_posts', [$this, 'asyncIndexBatchOfPosts']);
         \add_action('wp_ajax_delete_batch_of_trashed_posts', [$this, 'asyncDeleteBatchOfTrashedPosts']);
     }
 
-    public function asyncGetIndexedDocumentsCount()
-    {
-        \check_ajax_referer('swiftype-ajax-nonce');
-        header('Content-Type: application/json');
-        echo wp_json_encode(['num_indexed_documents' => $this->getDocumentTypeInfo()['document_count']]);
-        die;
-    }
-
+    /**
+     * Index a batch of posts
+     *
+     * Sends a batch of posts to the Swiftype API via the client in order to index them in the server-side search engine.
+     * This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
+     * on the plugin Admin page.
+     */
     public function asyncIndexBatchOfPosts()
     {
         \check_ajax_referer('swiftype-ajax-nonce');
@@ -39,8 +47,17 @@ class Action extends AbstractSwiftypeComponent
         });
 
         \do_action('swiftype_batch_post_index', $posts);
+
+        /* TODO : Better error management */
     }
 
+    /**
+     * Delete all posts from the index that shouldn't be indexed in the search engine
+     *
+     * Sends a request to the Swiftype API to remove from the server-side search engine any posts that are not 'published'.
+     * This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
+     * on the plugin Admin page.
+     */
     public function asyncDeleteBatchOfTrashedPosts() {
         \check_ajax_referer('swiftype-ajax-nonce');
         $offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
@@ -56,8 +73,21 @@ class Action extends AbstractSwiftypeComponent
         header( "Content-Type: application/json" );
         echo wp_json_encode(['total' => $totalPosts]);
         die();
+
+        /* TODO : Better error management */
     }
 
+    /**
+     * Retrieve a list of post filtered on a status or a status list.
+     *
+     * Only posts that are meant to be indexed are retrieved (see Config::allowedPostTypes).
+     *
+     * @param int          $offset
+     * @param int          $batchSize
+     * @param string|array $status
+     *
+     * @return array
+     */
     private function getPosts($offset, $batchSize, $status) {
         $query = [
             'numberposts' => $batchSize,
@@ -69,13 +99,5 @@ class Action extends AbstractSwiftypeComponent
         ];
 
         return \get_posts($query);
-    }
-
-    private function getDocumentTypeInfo()
-    {
-        $engineSlug   = $this->getConfig()->getEngineSlug();
-        $documentType = $this->getConfig()->getDocumentType();
-
-        return $this->getClient()->getDocumentType($engineSlug, $documentType);
     }
 }

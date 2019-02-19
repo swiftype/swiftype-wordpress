@@ -2,8 +2,20 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Document;
 
+/**
+ * Provides a consistent way to transform a post into a searchable document.
+ *
+ * @author Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>, Aurelien Foucret <aurelien.foucret@elastic.co>
+ */
 class Mapper
 {
+    /**
+     * Convert the post into an indexable document.
+     *
+     * @param object $post
+     *
+     * @return array
+     */
     public function convertToDocument($post)
     {
         $document = ['external_id' => $post->ID, 'fields' => $this->mapFields($post)];
@@ -11,6 +23,13 @@ class Mapper
         return apply_filters("swiftype_document_builder", $document, $post);
     }
 
+    /**
+     * Map post data into document fields.
+     *
+     * @param object $post
+     *
+     * @return array
+     */
     private function mapFields($post)
     {
         $fields = [];
@@ -46,11 +65,26 @@ class Mapper
         return $fields;
     }
 
+    /**
+     * Return the post URL.
+     *
+     * @param int $postId
+     *
+     * @return string|false
+     */
     private function getPostUrl($postId)
     {
         return get_permalink($postId);
     }
 
+    /**
+     * Retrieve text value from a post field and prepare it to be indexed.
+     *
+     * @param object $post
+     * @param string $field
+     *
+     * @return string
+     */
     private function getSanitizedText($post, $field)
     {
         $content = $post->$field;
@@ -65,6 +99,13 @@ class Mapper
         return html_entity_decode(wp_strip_all_tags($content), ENT_QUOTES, "UTF-8");
     }
 
+    /**
+     * Retrieve tags from a post.
+     *
+     * @param object $post
+     *
+     * @return string[]
+     */
     private function getTags($post)
     {
         # TODO: post commit ?
@@ -77,6 +118,13 @@ class Mapper
         return $tags;
     }
 
+    /**
+     * Retrieve image URL from a post.
+     *
+     * @param object $post
+     *
+     * @return string|false
+     */
     private function getImageUrl($post)
     {
         $imageUrl = false;
@@ -89,6 +137,13 @@ class Mapper
         return $imageUrl;
     }
 
+    /**
+     * Retrieve author meta from a post.
+     *
+     * @param object $post
+     *
+     * @return string[]
+     */
     private function getAuthorMeta($post)
     {
         $authorMeta = [];

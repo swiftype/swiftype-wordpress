@@ -8,7 +8,7 @@ use Swiftype\SiteSearch\ClientBuilder;
 use Swiftype\Exception\SwiftypeException;
 
 /**
- * The Swiftype Search Wordpress Plugin
+ * The Site Search Wordpress Plugin
  *
  * This class encapsulates all of the Swiftype Search plugin's functionality.
  *
@@ -34,7 +34,7 @@ class SwiftypePlugin
     public function __construct()
     {
         $this->registerComponents();
-        ConfigLoader::create([$this, 'initClient']);
+        ConfigLoader::loadConfig([$this, 'initClient']);
     }
 
     /**

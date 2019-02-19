@@ -4,12 +4,31 @@ namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 
+/**
+ * Implementation of the admin page for the Site Search Wordpress plugin.
+ *
+ * @author Matt Riley <mriley@swiftype.com>, Quin Hoxie <qhoxie@swiftype.com>, Aurelien Foucret <aurelien.foucret@elastic.co>
+ */
 class Page extends AbstractSwiftypeComponent
 {
-    const MENU_TITLE = 'Swiftype Search';
-    const MENU_SLUG  = 'swiftype';
+    /**
+     * @var string
+     */
+    const MENU_TITLE = 'Site Search';
+
+    /**
+     * @var string
+     */
+    const MENU_SLUG  = 'site-search';
+
+    /**
+     * @var string
+     */
     const MENU_ICON  = 'assets/swiftype_logo_menu.png';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -17,42 +36,82 @@ class Page extends AbstractSwiftypeComponent
         \add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
     }
 
+    /**
+     * Display admin page content.
+     */
     public function getContent()
     {
         $isAuth = $this->getConfig()->getApiKey() && $this->getClient() !== null;
 
         if (!$isAuth) {
-            include(__DIR__ . '/../swiftype-authorize.php');
+            $this->renderTemplate('authorize.php');
         } else if (!$this->getConfig()->getEngineSlug()) {
-            include(__DIR__ . '/../swiftype-choose-engine.php');
+            $this->renderTemplate('choose-engine.php');
         } else {
-            include(__DIR__ . '/../swiftype-controls.php');
+            $this->renderTemplate('controls.php');
         }
     }
 
+    /**
+     * Add the Site Search entry to the admin menu.
+     */
     public function addMenu()
     {
-        if (\is_admin() && \current_user_can('manage_options')) {
-            \add_menu_page(self::MENU_TITLE, SELF::MENU_TITLE, 'manage_options', SELF::MENU_SLUG, [$this, 'getContent'], $this->getIconUrl());
-        }
+        \add_menu_page(self::MENU_TITLE, SELF::MENU_TITLE, 'manage_options', SELF::MENU_SLUG, [$this, 'getContent'], $this->getIconUrl());
     }
 
+    /**
+     * Add Site Search CSS styles to the assets.
+     */
     public function enqueueAdminAssets($hook)
     {
-        if ('toplevel_page_swiftype' == $hook && \is_admin() && \current_user_can('manage_options')) {
+        if ('toplevel_page_site-search' == $hook && \is_admin()) {
             \wp_enqueue_style('admin_styles', \plugins_url('assets/admin_styles.css', __DIR__ . '/../swiftype.php'));
         }
     }
 
+    /**
+     * Return the number of currently indexed documents.
+     *
+     * @return int
+     */
     public function getIndexedDocumentsCount()
     {
-        $documentTypeInfo = $this->getClient()->getDocumentType($this->getConfig()->getEngineSlug(), $this->getConfig()->getDocumentType());
+        $engine = $this->getConfig()->getEngineSlug();
+        $docType = $this->getConfig()->getDocumentType();
+
+        $documentTypeInfo = $this->getClient()->getDocumentType($engine, $docType);
 
         return $documentTypeInfo['document_count'];
     }
 
+    /**
+     * Return menu icon URL.
+     *
+     * @return string
+     */
     private function getIconUrl()
     {
         return \plugins_url(self::MENU_ICON, __DIR__ . '/../swiftype.php');
+    }
+
+    /**
+     * Locate and render a template.
+     *
+     * @param string $templateFile
+     */
+    private function renderTemplate($templateFile)
+    {
+        include(sprintf("%s/%s", $this->getTemplateDir(), $templateFile));
+    }
+
+    /**
+     * Get the template directory.
+     *
+     * @return string
+     */
+    private function getTemplateDir()
+    {
+        return sprintf("%s/../templates/admin", __DIR__);
     }
 }
