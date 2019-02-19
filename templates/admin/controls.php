@@ -73,7 +73,7 @@ foreach( $allowedPostTypes as $type ) {
 
     <div id="synchronize_error" style="display: none; color: red;">
         <b>There was an error during synchronization.</b><br/>
-        If this problem persists, please email support@swiftype.com and include any error message shown in the text box below, as well as the information listed in the Swiftype Search Plugin Settings box above.</b><br/>
+        If this problem persists, please email support@swiftype.com and include any error message shown in the text box below, as well as the information listed in the Swiftype Search Plugin Settings box above.<br/>
         <textarea id="error_text" style="width: 500px; height: 200px; margin-top: 20px;"></textarea>
     </div>
 
