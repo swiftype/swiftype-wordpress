@@ -2,28 +2,26 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Document;
 
-use Swiftype\SiteSearch\Client;
-use Swiftype\SiteSearch\Wordpress\Config\Config;
+use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 
-class Indexer
+class Indexer extends AbstractSwiftypeComponent
 {
     private $documentMapper;
 
-    private $client;
-
-    private $config;
-
-
-    public function __construct(Client $client, Config $config)
+    public function __construct()
     {
+        parent::__construct();
         $this->documentMapper = new Mapper();
-        $this->client         = $client;
-        $this->config         = $config;
+        add_action('swiftype_engine_loaded', [$this, 'installHooks']);
+    }
 
+    public function installHooks()
+    {
         add_action('future_to_publish', [$this, 'handleFutureToPublish']);
         add_action('save_post', [$this, 'handleSavePost'], 99, 1);
         add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
         add_action('trashed_post', [$this, 'handleTrashedPost']);
+
 
         add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
         add_action('swiftype_batch_post_delete', [$this, 'handlePostBatchDelete']);
@@ -64,10 +62,10 @@ class Indexer
         $stats = ['errors' => 0, 'success' => 0];
 
         if (!empty($documents)) {
-            $engineSlug = $this->config->getEngineSlug();
-            $documentType = $this->config->getDocumentType();
+            $engineSlug = $this->getConfig()->getEngineSlug();
+            $documentType = $this->getConfig()->getDocumentType();
 
-            $indexingResponse = $this->client->createOrUpdateDocuments($engineSlug, $documentType, $documents);
+            $indexingResponse = $this->getClient()->createOrUpdateDocuments($engineSlug, $documentType, $documents);
 
             foreach ($indexingResponse as $currentDocIndexing) {
                 if ($currentDocIndexing === true) {
@@ -86,10 +84,10 @@ class Indexer
         $deleted = 0;
 
         if (!empty($postIds)) {
-            $engineSlug = $this->config->getEngineSlug();
-            $documentType = $this->config->getDocumentType();
+            $engineSlug = $this->getConfig()->getEngineSlug();
+            $documentType = $this->getConfig()->getDocumentType();
 
-            $deleteResponse = $this->client->deleteDocuments($engineSlug, $documentType, $postIds);
+            $deleteResponse = $this->getClient()->deleteDocuments($engineSlug, $documentType, $postIds);
 
             foreach ($deleteResponse as $currentDocIndexing) {
                 if ($currentDocIndexing === true) {
@@ -107,10 +105,10 @@ class Indexer
 
         if ($this->shouldIndexPost($post)) {
             $document     = $this->documentMapper->convertToDocument($post);
-            $engine       = $this->config->getEngineSlug();
-            $documentType = $this->config->getDocumentType();
+            $engine       = $this->getConfig()->getEngineSlug();
+            $documentType = $this->getConfig()->getDocumentType();
             try {
-                $this->client->createOrUpdateDocument($engine, $documentType, $document['external_id'], $document['fields']);
+                $this->getClient()->createOrUpdateDocument($engine, $documentType, $document['external_id'], $document['fields']);
             } catch(\Swiftype\Exception\SwiftypeException $e) {
                 # TODO : report error.
                 return;
@@ -121,7 +119,7 @@ class Indexer
     private function deletePost($postId)
     {
         try {
-            $this->client->deleteDocument($this->config->getEngineSlug(), $this->config->getDocumentType(), $postId);
+            $this->getClient()->deleteDocument($this->getConfig()->getEngineSlug(), $this->getConfig()->getDocumentType(), $postId);
         } catch(\Swiftype\Exception\SwiftypeException $e) {
             # TODO : report error.
             return;
@@ -130,6 +128,6 @@ class Indexer
 
     private function shouldIndexPost($post)
     {
-        return in_array($post->post_type, $this->config->allowedPostTypes()) && !empty($post->post_title );
+        return in_array($post->post_type, $this->getConfig()->allowedPostTypes()) && !empty($post->post_title);
     }
 }

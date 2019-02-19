@@ -6,7 +6,7 @@
 
 $nonce = \wp_create_nonce('swiftype-ajax-nonce');
 $indexedDocumentCount = $this->getIndexedDocumentsCount();
-$allowedPostTypes = $this->config->allowedPostTypes();
+$allowedPostTypes = $this->getConfig()->allowedPostTypes();
 
 $total_posts = 0;
 $total_posts_in_trash = 0;
@@ -37,11 +37,11 @@ foreach( $allowedPostTypes as $type ) {
         <tbody>
             <tr>
                 <td>API Key:</td>
-                <td><?= $this->config->getApiKey(); ?></td>
+                <td><?= $this->getConfig()->getApiKey(); ?></td>
             </tr>
             <tr>
                 <td>Search Engine:</td>
-                <td><?= $this->config->getEngineSlug(); ?></td>
+                <td><?= $this->getConfig()->getEngineSlug(); ?></td>
             </tr>
         </tbody>
     </table>

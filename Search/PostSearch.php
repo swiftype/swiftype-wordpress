@@ -2,53 +2,42 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Search;
 
-use Swiftype\SiteSearch\Wordpress\Config\Config;
-use Swiftype\SiteSearch\Client;
-use Swiftype\Exception\NotFoundException;
+use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 use Swiftype\Exception\SwiftypeException;
 
-class PostSearch
+class PostSearch extends AbstractSwiftypeComponent
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
     /**
      * @var array
      */
     private $searchResult = null;
 
-    public function __construct(Client $client, Config $config)
+    public function __construct()
     {
-        $this->client = $client;
-        $this->config = $config;
+        parent::__construct();
 
         if (!is_admin()) {
-            add_action('wp_enqueue_scripts', [$this, 'enqueueSwiftypeAssets']);
-            add_action('pre_get_posts', [$this, 'getPostsFromSwiftype'], 11);
-            add_filter('posts_search', [$this, 'clearSqlSearchClause']);
-            add_filter('post_limits', [$this, 'setSqlLimit']);
-            add_filter('the_posts', [$this, 'getSearchResultPosts']);
+            add_action('swiftype_engine_loaded', [$this, 'onEngineLoaded']);
         }
     }
 
-    public function enqueueSwiftypeAssets()
+    public function onEngineLoaded($engine)
+    {
+        add_action('wp_enqueue_scripts', function() use($engine) {return $this->enqueueSwiftypeAssets($engine);});
+        add_action('pre_get_posts', [$this, 'getPostsFromSwiftype'], 11);
+    }
+
+    public function enqueueSwiftypeAssets($engine)
     {
         $rootDir = __DIR__ . '/../swiftype.php';
         \wp_enqueue_style('swiftype', \plugins_url('assets/autocomplete.css', $rootDir));
         \wp_enqueue_script('swiftype', \plugins_url('assets/install_swiftype.min.js', $rootDir));
-        \wp_localize_script('swiftype', 'swiftypeParams', ['engineKey' => $this->getEngineKey()]);
+        \wp_localize_script('swiftype', 'swiftypeParams', ['engineKey' => $engine['key']]);
     }
 
     public function getPostsFromSwiftype($wpQuery)
     {
-        if( $this->canWeSearch($wpQuery)) {
+        if( $this->canSearch($wpQuery)) {
             // Get query string from 's' url parameter.
             $queryString = $this->getQueryString();
 
@@ -56,9 +45,14 @@ class PostSearch
             $queryParams = $this->getQueryParams();
 
             try {
-                $this->searchResult = $this->client->search($this->config->getEngineSlug(), $queryString, $queryParams);
+                $this->searchResult = $this->getClient()->search($this->getConfig()->getEngineSlug(), $queryString, $queryParams);
                 set_query_var('post__in', $this->extractPostIds());
+
                 add_filter('post_class', [$this, 'swiftypePostClass']);
+                add_filter('posts_search', [$this, 'clearSqlSearchClause']);
+                add_filter('post_limits', [$this, 'setSqlLimit']);
+                add_filter('the_posts', [$this, 'getSearchResultPosts']);
+
                 do_action('swiftype_search_result', $this->searchResult);
 
             } catch (SwiftypeException $e) {
@@ -88,7 +82,7 @@ class PostSearch
     public function getSearchResultPosts($posts)
     {
         if ($this->searchResult !== null) {
-            $resultInfo = $this->searchResult['info'][$this->config->getDocumentType()];
+            $resultInfo = $this->searchResult['info'][$this->getConfig()->getDocumentType()];
 
             global $wp_query;
             $wp_query->max_num_pages = $resultInfo['num_pages'];
@@ -130,7 +124,7 @@ class PostSearch
     private function extractPostIds()
     {
         $postIds = [];
-        $documentType = $this->config->getDocumentType();
+        $documentType = $this->getConfig()->getDocumentType();
 
         if ($this->searchResult !== null && isset($this->searchResult['records'][$documentType])) {
             foreach ($this->searchResult['records'][$documentType] as $hit) {
@@ -162,10 +156,10 @@ class PostSearch
      **/
     private function getQueryParams()
     {
-        $documentType = $this->config->getDocumentType();
+        $documentType = $this->getConfig()->getDocumentType();
         $params = [
             'page' => get_query_var('paged') ? get_query_var('paged') : 1,
-            'document_types' => [$this->config->getDocumentType()],
+            'document_types' => [$this->getConfig()->getDocumentType()],
         ] ;
 
         if ( isset( $_GET['st-cat'] ) && ! empty($_GET['st-cat'])) {
@@ -176,36 +170,16 @@ class PostSearch
             $params['filters'][$documentType][$_GET['st-facet-field']] = sanitize_text_field($_GET['st-facet-term']);
         }
 
-        $params['facets'] = ['posts' => ['category', 'tags']];
-
         $params = apply_filters('swiftype_search_params', $params);
 
         return $params;
     }
 
-    private function getEngineKey()
+    private function canSearch($wpQuery)
     {
-        $engine = $this->client->getEngine($this->config->getEngineSlug());
-
-        return $engine['key'];
-    }
-
-    private function canWeSearch($wp_query)
-    {
-        $isMainQuery   = function_exists('is_main_query') && $wp_query->is_main_query();
+        $isMainQuery   = function_exists('is_main_query') && $wpQuery->is_main_query();
         $isSearch      = \is_search();
-        $hasEngineSlug = !empty($this->config->getEngineSlug());
 
-        $canSearch = $isMainQuery && $isSearch && $hasEngineSlug;
-
-        if ($canSearch) {
-            try {
-                $this->client->getEngine($this->config->getEngineSlug());
-            } catch (NotFoundException $e) {
-                    $canSearch = false;
-            }
-        }
-
-        return $canSearch;
+        return $isMainQuery && $isSearch;;
     }
 }

@@ -6,11 +6,6 @@ class Config
 {
     const DEFAULT_DOCUMENT_TYPE = 'posts';
 
-    public function __construct()
-    {
-        $this->processConfigUpdate();
-    }
-
     public function getApiKey()
     {
         return \get_option('swiftype_api_key');
@@ -53,22 +48,5 @@ class Config
         }
 
         return $allowedPostTypes;
-    }
-
-    public function processConfigUpdate()
-    {
-        if (\is_admin() && \current_user_can('manage_options') && isset($_POST['action'])) {
-            switch ($_POST['action']) {
-                case 'swiftype_set_api_key':
-                    $this->setApiKey($_POST['api_key']);
-                    break;
-                case 'swiftype_create_engine':
-                    $this->setEngineSlug($_POST['engine_name']);
-                    break;
-                case 'swiftype_clear_config':
-                    $this->reset();
-                    break;
-            }
-        }
     }
 }
