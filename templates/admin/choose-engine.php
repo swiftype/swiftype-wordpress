@@ -1,46 +1,38 @@
 <div class="wrap">
-    <h2 class="swiftype-header">Swiftype Search Plugin</h2><br/>
 
-    <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
-        <?php wp_nonce_field('swiftype-nonce'); ?>
-        <input type="hidden" name="action" value="swiftype_create_engine">
-        <table class="widefat" style="width: 650px;">
-            <thead>
-                <tr>
-                    <th class="row-title">Configure your Search Engine</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <br/>
-                        Please name the search engine the plugin will use:<br/>
-                        <ul>
-                            <li>
-                                <label>Engine name:</label>
-                                <input type="text" name="engine_name" class="regular-text" placeholder="engine name" />
-                                <span class="description">e.g. Wordpress Site Search</span>
-                                <br/>
-                                <input type="submit" name="Submit" value="Create Engine"  class="button-primary" id="create_engine"/>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-    <br/>
+    <?php include('common/header.php'); ?>
 
-    <hr/>
-    <p>
-        If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine,<br/>
-        you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter<br/>
-        a new API key and create a new search engine.
-    </p>
-    <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <div class="swiftype-admin">
+        <div class="main-content">
+            <h3><?= __('Let\'s create an engine !'); ?></h3>
+            <div class="card">
+                <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+                    <?php wp_nonce_field('swiftype-nonce'); ?>
+                    <input type="hidden" name="action" value="swiftype_create_engine">
+                    <ul>
+                        <li>
+                            <label>
+                                <span class="title"><?= __("Please name the search engine the plugin will use in the field bellow:"); ?></span>
+                                <input type="text" name="engine_name" class="regular-text" placeholder="e.g. Wordpress Site Search" />
+                             </label>
+                        </li>
+                    </ul>
+                    <div class="controls">
+                        <div class="controls-left">
+                            <a href="#" onclick="jQuery('form[name=swiftype_reset]').submit();"><?= __('Back to authentication'); ?></a>
+                        </div>
+                        <div class="controls-right">
+                            <input type="submit" name="Submit" value="Create Engine" class="button-primary" id="create_engine"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <form name="swiftype_reset" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
         <?php wp_nonce_field('swiftype-nonce'); ?>
         <input type="hidden" name="action" value="swiftype_clear_config">
-        <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
     </form>
 
 </div>

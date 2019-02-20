@@ -24,72 +24,140 @@ foreach( $allowedPostTypes as $type ) {
 
 <div class="wrap">
 
-    <h2 class="swiftype-header">Swiftype Search Plugin</h2>
+    <?php include('common/header.php'); ?>
 
-    <p><b>To administer your Swiftype Search Engine, visit the <a href="http://swiftype.com/users/sign_in" target="_new">Swiftype Dashboard</a></b>.</p>
+    <div class="swiftype-admin">
+        <div class="main-content">
+            <p><b>To administer your Swiftype Search Engine, visit the <a href="http://swiftype.com/users/sign_in" target="_new">Swiftype Dashboard</a></b>.</p>
 
-    <table class="widefat" style="width: 650px;">
-        <thead>
-            <tr>
-                <th class="row-title" colspan="2">Swiftype Search Plugin Settings</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>API Key:</td>
-                <td><?= $this->getConfig()->getApiKey(); ?></td>
-            </tr>
-            <tr>
-                <td>Search Engine:</td>
-                <td><?= $this->getConfig()->getEngineSlug(); ?></td>
-            </tr>
-        </tbody>
-    </table>
-    <br/>
+            <div class="card">
+                <h3><?= __('Synchronize posts'); ?></h3>
+                <?php if ($indexedDocumentCount == 0) : ?>
+                    <p>
+                        <b><?= __('Important'); ?>:</b> <?= __("Before your site is searchable, you need to synchronize your posts. Click the 'synchronize' button below to begin the process."); ?>
+                    </p>
+                <?php else : ?>
+                    <p>
+                        <i>
+                        <?= __("Synchronizing your posts with Swiftype ensures that your search engine has indexed all the content you have published."); ?> <br/>
+                        <?= __("It shouldn't be necessary to synchronize posts regularly (the update process is automated after your initial setup), but you may use this feature any time you suspect your search index is out of date."); ?>
+                        </i>
+                    </p>
+                <?php endif; ?>
 
-    <?php if ($indexedDocumentCount == 0) : ?>
-        <p>
-            <b>Important:</b> Before your site is searchable, you need to synchronize your posts. Click the 'synchronize' button below to begin the process.
-        </p>
-    <?php endif; ?>
+                <div class="controls">
+                    <div class="controls-left">
+                        <div id="synchronizing">
+                            <div class="swiftype" id="progress_bar" style="display: none;">
+                                <div class="progress">
+                                    <div class="bar" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="controls-right">
+                        <a href="#" id="index_posts_button" class="button-primary"><?= __('Synchronize'); ?></a>
+                    </div>
+                </div>
 
-    <div id="synchronizing">
-        <a href="#" id="index_posts_button" class="gray-button">synchronize with swiftype</a>
-        <div class="swiftype" id="progress_bar" style="display: none;">
-            <div class="progress">
-                <div class="bar" style="display: none;"></div>
+                <div id="synchronize_error" style="display: none; color: red;">
+                    <b><?= __("There was an error during synchronization."); ?></b><br/>
+                    <?= __("If this problem persists, please email support@swiftype.com and include any error message shown in the text box below, as well as the information listed in the Swiftype Search Plugin Settings box above."); ?><br/>
+                    <textarea id="error_text" style="width: 500px; height: 200px; margin-top: 20px;"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><?= __('Customize search'); ?></h3>
+                <table class="widefat">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p><strong><?= __('Weights') ?></strong></p>
+                            </td>
+                            <td>
+                                <p><em><?= __("Your search relevance function determines the order of your search results."); ?></em></p>
+                            </td>
+                            <td>
+                                <a href="https://app.swiftype.com/engines/<?= $this->getConfig()->getEngineSlug(); ?>/document_types/<?= $this->getConfig()->getDocumentType(); ?>/custom_queries/" class="button-primary" target="_new">
+                                    <?= __("Manage Weights"); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong><?= __('Result rankings') ?></strong>
+                            </td>
+                            <td>
+                                <p><em><?= __("Search your engine and re-order the results to your liking."); ?></em></p>
+                            </td>
+                            <td>
+                                <a href="https://app.swiftype.com/engines/<?= $this->getConfig()->getEngineSlug(); ?>/document_types/<?= $this->getConfig()->getDocumentType(); ?>/search/" class="button-primary" target="_new">
+                                    <?= __("Manage Rankings"); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong><?= __('Synonyms') ?></strong>
+                            </td>
+                            <td>
+                                <p><em><?= __("Synonyms are groups of terms that will be treated as equivalent for the purposes of search."); ?></em></p>
+                            </td>
+                            <td>
+                                <a href="https://app.swiftype.com/engines/<?= $this->getConfig()->getEngineSlug(); ?>/synonyms" class="button-primary" target="_new">
+                                    <?= __("Manage Synonyms"); ?>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card danger">
+                <h3><?= __('Dangerous settings'); ?></h3>
+                <table class="widefat">
+                <tbody>
+                    <tr>
+                        <td>
+                            <?= __("If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine, you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter a new API key and create a new search engine."); ?>
+                        </td>
+                        <td>
+                        <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+                            <?php wp_nonce_field('swiftype-nonce'); ?>
+                            <input type="hidden" name="action" value="swiftype_clear_config">
+                            <input type="submit" name="Submit" value="Reset Configuration"  class="button-primary" />
+                        </form>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
             </div>
         </div>
-        <?php if ($indexedDocumentCount > 0) : ?>
-            <p>
-                <i>
-                Synchronizing your posts with Swiftype ensures that your search engine has indexed all the content you have published.<br/>
-                It shouldn't be necessary to synchronize posts regularly (the update process is automated after your initial setup), but<br/>
-                you may use this feature any time you suspect your search index is out of date.
-                </i>
-            </p>
-        <?php endif; ?>
+
+        <div class="sidebar">
+
+            <table class="widefat">
+                <thead>
+                    <tr>
+                        <th class="row-title" colspan="2"><?= __('Plugin Settings'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= __('API Key:'); ?></td>
+                        <td><?= $this->getConfig()->getApiKey(); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?= __('Search Engine:'); ?></td>
+                        <td><?= $this->getConfig()->getEngineSlug(); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
     </div>
-
-    <div id="synchronize_error" style="display: none; color: red;">
-        <b>There was an error during synchronization.</b><br/>
-        If this problem persists, please email support@swiftype.com and include any error message shown in the text box below, as well as the information listed in the Swiftype Search Plugin Settings box above.<br/>
-        <textarea id="error_text" style="width: 500px; height: 200px; margin-top: 20px;"></textarea>
-    </div>
-
-    <br/>
-    <hr/>
-    <p>
-        If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine,<br/>
-        you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter<br/>
-        a new API key and create a new search engine.
-    </p>
-    <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
-        <?php wp_nonce_field('swiftype-nonce'); ?>
-        <input type="hidden" name="action" value="swiftype_clear_config">
-        <input type="submit" name="Submit" value="Clear Swiftype Configuration"  class="button-primary" />
-    </form>
-
 </div>
 
 <script>
@@ -190,11 +258,11 @@ foreach( $allowedPostTypes as $type ) {
         jQuery('#num_indexed_documents').html(total_posts_written);
         jQuery('#progress_bar').find('div.bar').show().width(progress_width);
         if(progress >= total_ops) {
-            jQuery('#index_posts_button').html('Indexing Complete!');
+            jQuery('#index_posts_button').html('<?= __("Indexing Complete!"); ?>');
             jQuery('#progress_bar').fadeOut();
             jQuery('#index_posts_button').unbind();
         } else {
-            jQuery('#index_posts_button').html('Indexing progress... ' + Math.round(progress / total_ops * 100) + '%');
+            jQuery('#index_posts_button').html('<?= __("Indexing progress..."); ?>' + Math.round(progress / total_ops * 100) + '%');
         }
     }
 

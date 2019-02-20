@@ -1,69 +1,169 @@
-h2.swiftype-header {
-	background: transparent url(swiftype_logo.jpg) no-repeat 0 7px;
-	padding-left: 35px;
+.wrap>h2.swiftype-header:first-child {
+  padding : 1px 0 6px 40px;
+  background: transparent url(swiftype_logo.png) no-repeat;
+  margin: 25px 16px 20px;
+}
+
+.swiftype-admin {
+  height: 100%;
+}
+
+.swiftype-admin .main-content {
+  margin: 0 8px 16px;
+  width: 63.5%;
+  width: calc(66% - 16px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.swiftype-admin .sidebar {
+  margin: 0 8px 16px;
+  width: 31.5%;
+  width: calc(33% - 16px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.swiftype-admin .sidebar dt {
+  font-weight: bold;
+  border-bottom: 1px solid #999;
+  color: #666;
+}
+
+.swiftype-admin .sidebar dd {
+  color: #666;
+  margin: 5px 10px 20px;
+}
+
+.swiftype-admin .card {
+  float: left;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0 0 20px;
+}
+
+.swiftype-admin .main-content .card h3 {
+  margin: 1em 0;
+}
+
+.swiftype-admin .card.danger {
+  border-color: #FFAAAA;
+}
+
+.swiftype-admin .card.danger .button-primary {
+  background-color: #DD3333;
+  border-color: #DD3333;
+  text-shadow: none;
+  box-shadow: 0 1px 0 #DD3333;
+}
+
+.swiftype-admin .card .widefat td {
+  vertical-align: middle;
+}
+
+.swiftype-admin .card.danger h3 {
+  color: #DD3333;
+}
+
+.swiftype-admin form span.no-display {
+  display: none;
+}
+
+.swiftype-admin form span.title {
+  line-height: 20px;
+}
+
+.swiftype-admin .errors {
+  background: #fff;
+  border-left: 4px solid #dc3232;
+  margin: 5px 25px 0px;
+  padding: 1px 12px;
+}
+
+.swiftype-admin .main-content h3 {
+  margin: 1em 7px;
+}
+
+.swiftype-admin .controls {
+  display: flex;
+  height: 30px;
+}
+
+.swiftype-admin .controls .controls-right, 
+.swiftype-admin .controls .controls-left {
+  width: 100%;
+  height: 100%;
+  vertical-align: bottom;
+}
+
+.swiftype-admin .controls .controls-right {
+   text-align: right;
 }
 
 .swiftype .progress .bar {
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	cursor: pointer;
-	display: block;
-	width: 245px;
-	height: 10px;
-	background-color: blue;
-	background: -moz-linear-gradient(top, #00BBF8 0%, #0089F4);
-	background: -webkit-gradient(linear, left top, left bottom, from(#00BBF8), to(#0089F4));
-	border: 1px solid #3F6F99;
-	-moz-box-shadow: inset 0px 1px 0px #00dbfc;
-	-webkit-box-shadow: inset 0px 1px 0px #00dbfc;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 10px;
+  background-color: blue;
+  background: -moz-linear-gradient(top, #00BBF8 0%, #0089F4);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00BBF8), to(#0089F4));
+  border: 1px solid #3F6F99;
+  -moz-box-shadow: inset 0px 1px 0px #00dbfc;
+  -webkit-box-shadow: inset 0px 1px 0px #00dbfc;
 }
 
 .swiftype .progress {
-	margin-top: 10px;
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	cursor: pointer;
-	display: block;
-	width: 245px;
-	height: 12px;
-	background-color: #e1e1e1;
-	-moz-box-shadow: inset 0px 1px 1px #666;
-	-webkit-box-shadow: inset 0px 1px 1px #666;
+  margin-top: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 12px;
+  background-color: #e1e1e1;
+  -moz-box-shadow: inset 0px 1px 1px #666;
+  -webkit-box-shadow: inset 0px 1px 1px #666;
 }
 
 a.gray-button {
-	font-weight: normal;
-	white-space: nowrap;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	vertical-align: top;
-	color: #fff;
-	padding: 9px 22px 5px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	cursor: pointer;
-	display: inline-block;
-	height: 20px;
-	text-align: center;
-	background-color: blue;
-	margin-top: 3px;
-	background: -moz-linear-gradient(top, #99a9b1 0%, #647084);
-	background: -webkit-gradient(linear, left top, left bottom, from(#99a9b1), to(#647084));
-	border: 1px solid #5b6474;
-	-moz-box-shadow: inset 0px 1px 0px #c2d3dc;
-	-webkit-box-shadow: inset 0px 1px 0px #c2d3dc;
-	text-shadow: 0px -1px 0px rgba(0,0,0,0.4);
+  font-weight: normal;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  vertical-align: top;
+  color: #fff;
+  padding: 9px 22px 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  text-align: center;
+  background-color: blue;
+  margin-top: 3px;
+  background: -moz-linear-gradient(top, #99a9b1 0%, #647084);
+  background: -webkit-gradient(linear, left top, left bottom, from(#99a9b1), to(#647084));
+  border: 1px solid #5b6474;
+  -moz-box-shadow: inset 0px 1px 0px #c2d3dc;
+  -webkit-box-shadow: inset 0px 1px 0px #c2d3dc;
+  text-shadow: 0px -1px 0px rgba(0,0,0,0.4);
 }
 
 a.gray-button:hover {
-		color: #fff;
-		-moz-box-shadow: inset 0px 1px 0px #96a4ac;
-		-webkit-box-shadow: inset 0px 1px 0px #96a4ac;
-		background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
-		background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
+    color: #fff;
+    -moz-box-shadow: inset 0px 1px 0px #96a4ac;
+    -webkit-box-shadow: inset 0px 1px 0px #96a4ac;
+    background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
+    background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
 }
