@@ -14,9 +14,9 @@ class Widget extends \WP_Widget
 {
     function __construct()
     {
-        add_action('widgets_init', function() { register_widget($this); });
         $widget_ops = ['classname' => 'swiftype_search_widget', 'description' => __('Search content in a specific category')];
         parent::__construct('swiftype_search_widget', __('Category Filtered Search'), $widget_ops);
+        add_action('widgets_init', function() { register_widget($this); });
     }
 
     function widget($args, $instance)

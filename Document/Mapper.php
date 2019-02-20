@@ -110,9 +110,11 @@ class Mapper
     {
         # TODO: post commit ?
         $tags = [];
-
-        foreach (get_the_tags($post->ID) as $tag) {
-            $tags[] = $tag->name;
+        $tagObjects = get_the_tags($post->ID);
+        if ($tagObjects) {
+            foreach ($tagObjects as $tag) {
+                $tags[] = $tag->name;
+            }
         }
 
         return $tags;
@@ -129,9 +131,9 @@ class Mapper
     {
         $imageUrl = false;
 
-        if ( current_theme_supports('post-thumbnails') && has_post_thumbnail($post->ID)) {
+        if (current_theme_supports('post-thumbnails') && has_post_thumbnail($post->ID)) {
             // NOTE: returns false on failure
-            $imageUrl = wp_get_attachment_url( get_post_thumbnail_id($post->ID ));
+            $imageUrl = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
         }
 
         return $imageUrl;
@@ -153,8 +155,8 @@ class Mapper
             $authorMeta[] = $nickname;
         }
 
-        $firstName = get_the_author_meta( 'first_name', $post->post_author );
-        $lastName = get_the_author_meta( 'last_name', $post->post_author );
+        $firstName = get_the_author_meta('first_name', $post->post_author);
+        $lastName = get_the_author_meta('last_name', $post->post_author);
         $authorName = trim($firstName . " " . $lastName);
 
         if (!empty($authorName)) {

@@ -33,6 +33,7 @@ class Manager extends AbstractSwiftypeComponent
         if ($engineSlug) {
             try {
                 $engine = $this->getClient()->getEngine($engineSlug);
+                $this->getConfig()->setEngineSlug($engine['slug']);
             } catch(NotFoundException $e) {
                 $engine = $this->getClient()->createEngine($engineSlug);
             }

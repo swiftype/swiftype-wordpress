@@ -85,7 +85,7 @@ class Config
             $allowedPostTypes = array_merge(
                 \get_post_types(['exclude_from_search' => '0']),
                 \get_post_types(['exclude_from_search' => false])
-           );
+            );
         }
 
         return $allowedPostTypes;

@@ -111,7 +111,7 @@ class PostSearch extends AbstractSwiftypeComponent
      *
      * @return string
      */
-    public function setSqlLimit($limit )
+    public function setSqlLimit($limit)
     {
         if ($this->searchResult !== null) {
             $limit = '';
@@ -219,11 +219,11 @@ class PostSearch extends AbstractSwiftypeComponent
             'document_types' => [$this->getConfig()->getDocumentType()],
         ] ;
 
-        if ( isset( $_GET['st-cat'] ) && ! empty($_GET['st-cat'])) {
+        if (isset($_GET['st-cat']) && ! empty($_GET['st-cat'])) {
             $params['filters'][$documentType]['category'] = sanitize_text_field($_GET['st-cat']);
         }
 
-        if ( isset( $_GET['st-facet-field'] ) && isset( $_GET['st-facet-term'])) {
+        if (isset($_GET['st-facet-field']) && isset($_GET['st-facet-term'])) {
             $params['filters'][$documentType][$_GET['st-facet-field']] = sanitize_text_field($_GET['st-facet-term']);
         }
 

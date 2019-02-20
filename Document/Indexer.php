@@ -50,7 +50,7 @@ class Indexer extends AbstractSwiftypeComponent
     {
         $post = get_post($postId);
 
-        if ("publish" == $post->post_status ) {
+        if ("publish" == $post->post_status) {
             $this->indexPost($postId);
         }
     }

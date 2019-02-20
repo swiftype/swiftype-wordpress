@@ -34,8 +34,8 @@ class Action extends AbstractSwiftypeComponent
     {
         \check_ajax_referer('swiftype-ajax-nonce');
 
-        $offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
-        $batchSize = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
+        $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
+        $batchSize = isset($_POST['batch_size']) ? intval($_POST['batch_size']) : 10;
 
         $posts = $this->getPosts($offset, $batchSize, 'publish');
         $totalPosts = count($posts);
@@ -60,8 +60,8 @@ class Action extends AbstractSwiftypeComponent
      */
     public function asyncDeleteBatchOfTrashedPosts() {
         \check_ajax_referer('swiftype-ajax-nonce');
-        $offset = isset( $_POST['offset'] ) ? intval( $_POST['offset'] ) : 0;
-        $batchSize = isset( $_POST['batch_size'] ) ? intval( $_POST['batch_size'] ) : 10;
+        $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
+        $batchSize = isset($_POST['batch_size']) ? intval($_POST['batch_size']) : 10;
 
         $posts = $this->getPosts($offset, $batchSize, array_diff(get_post_stati(), ['publish']));
         $totalPosts = count($posts);
@@ -70,7 +70,7 @@ class Action extends AbstractSwiftypeComponent
 
         \do_action('swiftype_batch_post_delete', $postIds);
 
-        header( "Content-Type: application/json" );
+        header("Content-Type: application/json");
         echo wp_json_encode(['total' => $totalPosts]);
         die();
 
