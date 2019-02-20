@@ -1,0 +1,14 @@
+{{>readme_title}}
+{{>readme_content}}
+{{>readme_install}}
+{{>readme_usage}}
+### Clients methods
+
+Method      | Description | Documentation
+------------|-------------|--------------
+{{#apiInfo}}{{#apis}}{{#operations}}{{#operation}}**`{{operationId}}`**| {{#summary}}{{.}}{{/summary}}{{#allParams.0}}<br/> <br/> **Parameters :** <br />{{#allParams}}  - `${{paramName}}`{{#required}} (required) {{/required}}{{#hasMore}}<br /> {{/hasMore}}{{/allParams}}{{/allParams.0}}<br/>{{#externalDocs}}|[Endpoint Documentation]({{url}}){{/externalDocs}}
+{{/operation}}{{/operations}}{{/apis}}{{/apiInfo}}
+{{>readme_dev}}
+{{>readme_faq}}
+{{>readme_contrib}}
+{{>readme_licence}}
