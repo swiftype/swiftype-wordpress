@@ -4,7 +4,6 @@ namespace Swiftype\SiteSearch\Wordpress\Engine;
 
 use Swiftype\Exception\NotFoundException;
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
-use Swiftype\Exception\BadRequestException;
 
 /**
  * Check the engine exists and create it if needed.
@@ -49,6 +48,15 @@ class Manager extends AbstractSwiftypeComponent
         }
     }
 
+    /**
+     * Try to load the engine by name.
+     *
+     * If the name is not a valid slug, iterate over the list until we found the engine.
+     *
+     * @param string $engineName
+
+     * @return array
+     */
     private function getEngineUsingListing($engineName)
     {
         try {
