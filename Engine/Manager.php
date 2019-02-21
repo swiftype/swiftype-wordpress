@@ -52,6 +52,8 @@ class Manager extends AbstractSwiftypeComponent
 
     public function asyncCheckEngineExists()
     {
+        \check_ajax_referer('swiftype-ajax-nonce');
+
         $engine = null;
         $engineName = isset($_POST['engine_name']) ? $_POST['engine_name'] : false;
 

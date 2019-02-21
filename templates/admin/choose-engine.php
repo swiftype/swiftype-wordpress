@@ -94,7 +94,7 @@
             jQuery('#engine-chooser-form input[type=submit]').prop('disabled', true);
 
             if (engineName) {
-                var data = { action: 'check_engine_exists', 'engine_name': engineName};
+                var data = { action: 'check_engine_exists', 'engine_name': engineName, _ajax_nonce: '<?php echo \wp_create_nonce('swiftype-ajax-nonce'); ?>' };
                 jQuery('#engine-chooser-form input[type=submit]').prop('value', "<?=__('Check Engine ...'); ?>");
                 jQuery.ajax({
                     url: ajaxurl,
