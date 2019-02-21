@@ -1,0 +1,10 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+    - image: circleci/php:5.6-browsers
+    working_directory: ~/repo
+    steps:
+    - checkout
+    - run: ls
