@@ -5,18 +5,19 @@ jobs:
     docker:
     - image: circleci/php:5.6-browsers
     environment:
-      WP_VERSION: 5.0-branch
+      WP_VERSION: "5.0"
     working_directory: ~/repo
     steps:
     - run:
         name: Downloading WP
-        command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/WordPress/tarball//$WP_VERSION
+        command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/wordpress-develop/tarball/$WP_VERSION
     - run:
         name: Creating WP directory
         command: mkdir wordpress
     - run:
         name: Extracting WP from tarball
         command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C wordpress
+    - run: ls wordpress
     - checkout:
-        path: wordpress/wp-content/plugins/swiftype-search
-    - run: ls wordpress/wp-content/plugins/swiftype-search
+        path: wordpress/src/wp-content/plugins/swiftype-search
+    - run: ls wordpress && ls wordpress/src/wp-content/plugins/swiftype-search
