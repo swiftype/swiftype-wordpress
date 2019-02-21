@@ -54,7 +54,8 @@ class Loader
                     $this->config->setApiKey($_POST['api_key']);
                     break;
                 case 'swiftype_create_engine':
-                    $this->config->setEngineSlug($_POST['engine_name']);
+                    $this->config->setLanguage(isset($_POST['language']) ? $_POST['language'] : null);
+                    $this->config->setEngineSlug(trim($_POST['engine_name']));
                     break;
                 case 'swiftype_clear_config':
                     $this->config->reset();

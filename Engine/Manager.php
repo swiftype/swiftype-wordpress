@@ -20,6 +20,7 @@ class Manager extends AbstractSwiftypeComponent
         parent::__construct();
 
         \add_action('swiftype_client_loaded', [$this, 'initEngine']);
+        \add_action('wp_ajax_check_engine_exists', [$this, 'asyncCheckEngineExists']);
     }
 
     /**
@@ -35,7 +36,8 @@ class Manager extends AbstractSwiftypeComponent
                 $engine = $this->getEngineUsingListing($engineSlug);
                 $this->getConfig()->setEngineSlug($engine['slug']);
             } catch(NotFoundException $e) {
-                $engine = $this->getClient()->createEngine($engineSlug);
+                $language = $this->getConfig()->getLanguage();
+                $engine = $this->getClient()->createEngine($engineSlug, $language);
                 $this->getConfig()->setEngineSlug($engine['slug']);
             }
             try {
@@ -46,6 +48,24 @@ class Manager extends AbstractSwiftypeComponent
 
             \do_action('swiftype_engine_loaded', $engine);
         }
+    }
+
+    public function asyncCheckEngineExists()
+    {
+        $engine = null;
+        $engineName = isset($_POST['engine_name']) ? $_POST['engine_name'] : false;
+
+        if (!empty($engineName)) {
+            try {
+                $engine = $this->getEngineUsingListing($engineName);
+            } catch (NotFoundException $e) {
+                $engine = null;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo \wp_json_encode($engine);
+        die;
     }
 
     /**

@@ -44,6 +44,21 @@ class Config
     }
 
     /**
+     * Retrieve the configured language.
+     *
+     * @return string|NULL
+     */
+    public function getLanguage() {
+        $language = \get_option('swiftype_language');
+
+        if (empty($language)) {
+            $language = null;
+        }
+
+        return $language;
+    }
+
+    /**
      * Update the API Key into the configuration.
      *
      * @param string $apiKey
@@ -56,11 +71,25 @@ class Config
     /**
      * Update the Engine Slug into the configuration.
      *
-     * @param string $apiKey
+     * @param string $engineSlug
      */
     public function setEngineSlug($engineSlug)
     {
         \update_option('swiftype_engine_slug', $engineSlug);
+    }
+
+    /**
+     * Update the langugage into the configuration.
+     *
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        if (empty(trim($language))) {
+            \delete_option('swiftype_language');
+        } else {
+            \update_option('swiftype_language', $language);
+        }
     }
 
     /**
@@ -70,6 +99,7 @@ class Config
     {
         \delete_option('swiftype_api_key');
         \delete_option('swiftype_engine_slug');
+        \delete_option('swiftype_language');
     }
 
     /**
