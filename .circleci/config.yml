@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-    - image: circleci/php:5.6-browsers
+    - image: circleci/php:7.1-browsers
     - image: mysql:5.7
       environment:
         MYSQL_DATABASE: wptest
@@ -11,7 +11,7 @@ jobs:
         MYSQL_PASSWORD: wptest
         MYSQL_RANDOM_ROOT_PASSWORD: "true"
     environment:
-      WP_VERSION: "5.0"
+      WP_VERSION: "5.1"
       MYSQL_DATABASE: wptest
       MYSQL_USER: wptest
       MYSQL_PASSWORD: wptest
@@ -36,4 +36,14 @@ jobs:
           sed "s/yourusernamehere/$MYSQL_USER/" |
           sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
           sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
-    - run: cat wordpress/wp-tests-config.php
+    - restore_cache:
+        keys:
+        - v1-dependencies
+    - run:
+        name: Installing PHP Unit
+        command: composer global require phpunit/phpunit:^7.0
+    - save_cache:
+        paths:
+        - ~/.composer/cache/
+        key: v1-dependencies
+    - run: cd wordpress && php -d display_errors=on ~/.composer/vendor/bin/phpunit -c "phpunit.xml.dist"
