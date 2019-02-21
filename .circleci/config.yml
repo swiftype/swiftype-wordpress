@@ -28,5 +28,12 @@ jobs:
         command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C wordpress
     - checkout:
         path: wordpress/src/wp-content/plugins/swiftype-search
-    - run: env
-    - run: mysql  -h localhost -u $MYSQL_USER -p $MYSQL_PASSWORD -e "SHOW DATABASES"
+    - run:
+        name: Updating wp-test-config.php
+        command: |
+          cat wordpress/wp-tests-config-sample.php |
+          sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
+          sed "s/yourusernamehere/$MYSQL_USER/" |
+          sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
+          sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
+    - run: cat wordpress/wp-tests-config.php
