@@ -27,6 +27,11 @@ class Page extends AbstractSwiftypeComponent
     const MENU_ICON  = 'assets/swiftype_logo_menu.png';
 
     /**
+     * @var array
+     */
+    private $documentTypeInfo;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -71,18 +76,51 @@ class Page extends AbstractSwiftypeComponent
     }
 
     /**
-     * Return the number of currently indexed documents.
+     * Load document type data.
      *
-     * @return int
+     * @return array
      */
-    public function getIndexedDocumentsCount()
+    public function getDocumentTypeInfo()
     {
-        $engine = $this->getConfig()->getEngineSlug();
-        $docType = $this->getConfig()->getDocumentType();
+        if ($this->documentTypeInfo === null) {
+            $engine = $this->getConfig()->getEngineSlug();
+            $docType = $this->getConfig()->getDocumentType();
+            $this->documentTypeInfo = $this->getClient()->getDocumentType($engine, $docType);
+        }
 
-        $documentTypeInfo = $this->getClient()->getDocumentType($engine, $docType);
+        return $this->documentTypeInfo;
+    }
 
-        return $documentTypeInfo['document_count'];
+    /**
+     * Check if indexing have been run at least once.
+     *
+     * Previous version where using doc counts but because indexing is async it is not reliable.
+     * We now check if some fields are present into the mapping.
+     *
+     * @return boolean
+     */
+    public function hasBeenIndexed()
+    {
+        $documentTypeInfo = $this->getDocumentTypeInfo();
+
+        return !empty($documentTypeInfo['field_mapping']);
+    }
+
+    /**
+     * Retrieve a list of field that can be used has facets from the mapping.
+     *
+     * @return array
+     */
+    public function getFacetFieldsFromMapping()
+    {
+        $allowedFieldTypes = ['string', 'enum', 'integer', 'float', 'date'];
+        $forbiddenFields   = ['external_id', 'timestamp', 'title', 'updated_at'];
+
+        $fields = array_filter($this->getDocumentTypeInfo()['field_mapping'], function ($fieldType) use ($allowedFieldTypes) {
+            return in_array($fieldType, $allowedFieldTypes);
+        });
+
+        return array_diff(array_keys($fields), $forbiddenFields);
     }
 
     /**

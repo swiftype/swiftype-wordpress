@@ -5,7 +5,6 @@
  */
 
 $nonce = \wp_create_nonce('swiftype-ajax-nonce');
-$indexedDocumentCount = $this->getIndexedDocumentsCount();
 $allowedPostTypes = $this->getConfig()->allowedPostTypes();
 
 $total_posts = 0;
@@ -32,7 +31,7 @@ foreach( $allowedPostTypes as $type ) {
 
             <div class="card">
                 <h3><?= __('Synchronize posts'); ?></h3>
-                <?php if ($indexedDocumentCount == 0) : ?>
+                <?php if ($this->hasBeenIndexed() == false) : ?>
                     <p>
                         <b><?= __('Important'); ?>:</b> <?= __("Before your site is searchable, you need to synchronize your posts. Click the 'synchronize' button below to begin the process."); ?>
                     </p>
