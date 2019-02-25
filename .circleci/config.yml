@@ -19,8 +19,6 @@ jobs:
     - restore_cache:
         keys:
         - v1-node-dependencies
-    - checkout:
-        path: src/wp-content/plugins/swiftype-search
     - run:
         name: Installing Grunt
         command: sudo npm install -g grunt
@@ -34,6 +32,8 @@ jobs:
         paths:
         - ./node_modules/
         key: v1-node-dependencies
+    - checkout:
+        path: build/wp-content/plugins/swiftype-search
     - run:
         name: Updating wp-test-config.php
         command: |
@@ -67,7 +67,7 @@ jobs:
         command: composer global require phpunit/phpunit:^6.0
     - run:
         name: Running unit tests
-        command: ~/.composer/vendor/bin/phpunit
+        command: ~/.composer/vendor/bin/phpunit -c  build/wp-content/plugins/swiftype-search/Tests/phpunit.xml
     - save_cache:
         paths:
         - ~/.composer/cache/
@@ -81,51 +81,3 @@ workflows:
       - test:
           requires:
             - build
-
-# jobs:
-#   build:
-#     docker:
-#     - image: circleci/php:7.1-browsers
-#     - image: mysql:5.7
-#       environment:
-#         MYSQL_DATABASE: wptest
-#         MYSQL_USER: wptest
-#         MYSQL_PASSWORD: wptest
-#         MYSQL_RANDOM_ROOT_PASSWORD: "true"
-#     environment:
-#       WP_VERSION: "5.1"
-#       MYSQL_DATABASE: wptest
-#       MYSQL_USER: wptest
-#       MYSQL_PASSWORD: wptest
-#     working_directory: ~/repo
-#     steps:
-#     - run:
-#         name: Downloading WP
-#         command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/wordpress-develop/tarball/$WP_VERSION
-#     - run:
-#         name: Creating WP directory
-#         command: mkdir wordpress
-#     - run:
-#         name: Extracting WP from tarball
-#         command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C wordpress
-#     - checkout:
-#         path: wordpress/src/wp-content/plugins/swiftype-search
-#     - run:
-#         name: Updating wp-test-config.php
-#         command: |
-#           cat wordpress/wp-tests-config-sample.php |
-#           sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
-#           sed "s/yourusernamehere/$MYSQL_USER/" |
-#           sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
-#           sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
-#     - restore_cache:
-#         keys:
-#         - v1-dependencies
-#     - run:
-#         name: Installing PHP Unit
-#         command: composer global require phpunit/phpunit:^7.0
-#     - save_cache:
-#         paths:
-#         - ~/.composer/cache/
-#         key: v1-dependencies
-#     - run: cd wordpress && php -d display_errors=on ~/.composer/vendor/bin/phpunit -c "phpunit.xml.dist"
