@@ -3,19 +3,12 @@ version: 2
 jobs:
   build:
     docker:
-    - image: circleci/php:7.1-browsers
-    - image: mysql:5.7
-      environment:
-        MYSQL_DATABASE: wptest
-        MYSQL_USER: wptest
-        MYSQL_PASSWORD: wptest
-        MYSQL_RANDOM_ROOT_PASSWORD: "true"
+    - image: circleci/node:10.15-browsers-legacy
     environment:
-      WP_VERSION: "5.1"
+      WP_VERSION: "5.0"
       MYSQL_DATABASE: wptest
       MYSQL_USER: wptest
       MYSQL_PASSWORD: wptest
-    working_directory: ~/repo
     steps:
     - run:
         name: Downloading WP
@@ -29,21 +22,59 @@ jobs:
     - checkout:
         path: wordpress/src/wp-content/plugins/swiftype-search
     - run:
-        name: Updating wp-test-config.php
-        command: |
-          cat wordpress/wp-tests-config-sample.php |
-          sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
-          sed "s/yourusernamehere/$MYSQL_USER/" |
-          sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
-          sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
-    - restore_cache:
-        keys:
-        - v1-dependencies
+        name: Installing Grunt
+        command: sudo npm install -g grunt
     - run:
-        name: Installing PHP Unit
-        command: composer global require phpunit/phpunit:^7.0
-    - save_cache:
-        paths:
-        - ~/.composer/cache/
-        key: v1-dependencies
-    - run: cd wordpress && php -d display_errors=on ~/.composer/vendor/bin/phpunit -c "phpunit.xml.dist"
+        name: Installing dependencies
+        command: npm install -f
+    - run:
+        name: Building project
+        command: grunt build -f
+
+# jobs:
+#   build:
+#     docker:
+#     - image: circleci/php:7.1-browsers
+#     - image: mysql:5.7
+#       environment:
+#         MYSQL_DATABASE: wptest
+#         MYSQL_USER: wptest
+#         MYSQL_PASSWORD: wptest
+#         MYSQL_RANDOM_ROOT_PASSWORD: "true"
+#     environment:
+#       WP_VERSION: "5.1"
+#       MYSQL_DATABASE: wptest
+#       MYSQL_USER: wptest
+#       MYSQL_PASSWORD: wptest
+#     working_directory: ~/repo
+#     steps:
+#     - run:
+#         name: Downloading WP
+#         command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/wordpress-develop/tarball/$WP_VERSION
+#     - run:
+#         name: Creating WP directory
+#         command: mkdir wordpress
+#     - run:
+#         name: Extracting WP from tarball
+#         command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C wordpress
+#     - checkout:
+#         path: wordpress/src/wp-content/plugins/swiftype-search
+#     - run:
+#         name: Updating wp-test-config.php
+#         command: |
+#           cat wordpress/wp-tests-config-sample.php |
+#           sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
+#           sed "s/yourusernamehere/$MYSQL_USER/" |
+#           sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
+#           sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
+#     - restore_cache:
+#         keys:
+#         - v1-dependencies
+#     - run:
+#         name: Installing PHP Unit
+#         command: composer global require phpunit/phpunit:^7.0
+#     - save_cache:
+#         paths:
+#         - ~/.composer/cache/
+#         key: v1-dependencies
+#     - run: cd wordpress && php -d display_errors=on ~/.composer/vendor/bin/phpunit -c "phpunit.xml.dist"
