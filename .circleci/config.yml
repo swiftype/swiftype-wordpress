@@ -41,7 +41,7 @@ job-references:
             composer global require "phpunit/phpunit=5.7.*"
             rm -rf $WP_TESTS_DIR $WP_CORE_DIR
             bash scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.0
-            phpunit -c phpunit.xml.dist
+            ST_ENGINE_NAME="wp-test-$CIRCLE_BUILD_NUM" phpunit -c phpunit.xml.dist
 
 jobs:
   php56-build:

@@ -6,14 +6,25 @@ use Swiftype\SiteSearch\Wordpress\Config\Config;
 
 class AbstractTestCase extends \WP_UnitTestCase
 {
-    public function getValidApiKey()
+    public function setUp()
+    {
+        parent::setUp();
+        $this->resetConfig();
+    }
+
+    public function getTestApiKey()
     {
         return getenv('ST_API_KEY');
     }
 
-    public function resetSettings()
+    public function getTestEngineName()
+    {
+        return getenv('ST_ENGINE_NAME');
+    }
+
+    public function resetConfig()
     {
         $config = new Config();
-        $config->resetSettings();
+        $config->reset();
     }
 }
