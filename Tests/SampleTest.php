@@ -5,7 +5,7 @@ namespace Swiftype\SiteSearch\Wordpress\Tests;
 /**
  * Sample test case.
  */
-class SampleTest extends WP_UnitTestCase {
+class SampleTest extends AbstractTestCase {
 
 	/**
 	 * A single example test.
