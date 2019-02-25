@@ -1,28 +1,31 @@
 <?php
+/**
+ * PHPUnit bootstrap file
+ *
+ * @package Swiftype_Search
+ */
 
-// Make sure we have tests directory in our environment.
-$wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit';
+$_tests_dir = getenv( 'WP_TESTS_DIR' );
 
-// Make sure the plugin is enabled.
-$GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.php']];
-
-// Define out test suite root directory
-define('SWIFTYPE_PLUGIN_DIR', dirname( __FILE__ ) . '/..');
-
-// Bootstrap wordpress testing framework
-require "$wpTestsDir/includes/bootstrap.php";
-
-error_reporting(E_ALL);
-
-set_error_handler("test_error_handler", E_ALL);
-
-$wp_test_errors = array();
-function test_error_handler($errno, $errstr, $errfile) {
-  global $wp_test_errors;
-
-  array_push($wp_test_errors, $errstr . " in " . $errfile);
-  return NULL; // execute default error handler
+if ( ! $_tests_dir ) {
+	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
-// Load our testcase base class
-require dirname( __FILE__ ) . '/swiftype-testcase.php';
+if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
+	echo "Could not find $_tests_dir/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // WPCS: XSS ok.
+	exit( 1 );
+}
+
+// Give access to tests_add_filter() function.
+require_once $_tests_dir . '/includes/functions.php';
+
+/**
+ * Manually load the plugin being tested.
+ */
+function _manually_load_plugin() {
+	require dirname( dirname( __FILE__ ) ) . '/swiftype-search.php';
+}
+tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+
+// Start up the WP testing environment.
+require $_tests_dir . '/includes/bootstrap.php';

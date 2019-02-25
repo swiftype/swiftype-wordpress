@@ -1,83 +1,96 @@
-version: 2
-
-jobs:
-  build:
-    docker:
-    - image: circleci/node:10.15-browsers-legacy
-    environment:
-      WP_VERSION: "5.0"
-      MYSQL_DATABASE: wptest
-      MYSQL_USER: wptest
-      MYSQL_PASSWORD: wptest
-    steps:
-    - run:
-        name: Downloading WP
-        command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/wordpress-develop/tarball/$WP_VERSION
-    - run:
-        name: Extracting WP from tarball
-        command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C .
-    - restore_cache:
-        keys:
-        - v1-node-dependencies
-    - run:
-        name: Installing Grunt
-        command: sudo npm install -g grunt
-    - run:
-        name: Installing dependencies
-        command: npm install -f
-    - run:
-        name: Build project
-        command: grunt -f
-    - save_cache:
-        paths:
-        - ./node_modules/
-        key: v1-node-dependencies
-    - checkout:
-        path: build/wp-content/plugins/swiftype-search
-    - run:
-        name: Updating wp-test-config.php
-        command: |
-          cat wp-tests-config-sample.php |
-          sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
-          sed "s/yourusernamehere/$MYSQL_USER/" |
-          sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
-          sed "s/localhost/127.0.0.1/" > wp-tests-config.php
-    - persist_to_workspace:
-        root: .
-        paths:
-        - .
-
-  test:
-    docker:
-    - image: circleci/php:7.1-browsers
-    - image: mysql:5.7
-      environment:
-        MYSQL_DATABASE: wptest
-        MYSQL_USER: wptest
-        MYSQL_PASSWORD: wptest
-        MYSQL_RANDOM_ROOT_PASSWORD: "true"
-    steps:
-    - attach_workspace:
-        at: .
-    - restore_cache:
-        keys:
-        - v1-composer-dependencies
-    - run:
-        name: Installing PHP Unit
-        command: composer global require phpunit/phpunit:^6.0
-    - run:
-        name: Running unit tests
-        command: ~/.composer/vendor/bin/phpunit -c  build/wp-content/plugins/swiftype-search/Tests/phpunit.xml
-    - save_cache:
-        paths:
-        - ~/.composer/cache/
-        key: v1-composer-dependencies
-
 workflows:
   version: 2
-  build_and_test:
+  main:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - php56-build
+      - php70-build
+      - php71-build
+      - php72-build
+
+version: 2
+
+job-references:
+  mysql_image: &mysql_image
+    circleci/mysql:5.6
+
+  setup_environment: &setup_environment
+    name: "Setup Environment Variables"
+    command: |
+      echo "export PATH=$HOME/.composer/vendor/bin:$PATH" >> $BASH_ENV
+      source /home/circleci/.bashrc
+
+  install_dependencies: &install_dependencies
+    name: "Install Dependencies"
+    command: |
+      sudo apt-get update && sudo apt-get install subversion
+      sudo -E docker-php-ext-install mysqli
+      sudo sh -c "printf '\ndeb http://ftp.us.debian.org/debian sid main\n' >> /etc/apt/sources.list"
+      sudo apt-get update && sudo apt-get install mysql-client-5.7
+
+  php_job: &php_job
+    environment:
+      - WP_TESTS_DIR: "/tmp/wordpress-tests-lib"
+      - WP_CORE_DIR: "/tmp/wordpress/"
+    steps:
+      - checkout
+      - run: *setup_environment
+      - run: *install_dependencies
+      - run:
+          name: "Run Tests"
+          command: |
+            composer global require "phpunit/phpunit=5.7.*"
+            composer global require wp-coding-standards/wpcs
+            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
+            phpunit
+            WP_MULTISITE=1 phpunit
+
+jobs:
+  php56-build:
+    <<: *php_job
+    docker:
+      - image: circleci/php:5.6
+      - image: *mysql_image
+    steps:
+      - checkout
+      - run: *setup_environment
+      - run: *install_dependencies
+      - run:
+          name: "Run Tests"
+          command: |
+            composer global require "phpunit/phpunit=5.7.*"
+            composer global require wp-coding-standards/wpcs
+            SKIP_DB_CREATE=false
+            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 3.3 $SKIP_DB_CREATE
+            phpunit
+            WP_MULTISITE=1 phpunit
+            SKIP_DB_CREATE=true
+            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest $SKIP_DB_CREATE
+            phpunit
+            WP_MULTISITE=1 phpunit
+            SKIP_DB_CREATE=true
+            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 trunk $SKIP_DB_CREATE
+            phpunit
+            WP_MULTISITE=1 phpunit
+            SKIP_DB_CREATE=true
+
+  php70-build:
+    <<: *php_job
+    docker:
+      - image: circleci/php:7.0
+      - image: *mysql_image
+
+  php71-build:
+    <<: *php_job
+    docker:
+      - image: circleci/php:7.1
+      - image: *mysql_image
+
+  php72-build:
+    <<: *php_job
+    docker:
+      - image: circleci/php:7.2
+      - image: *mysql_image
