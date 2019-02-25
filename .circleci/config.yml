@@ -16,6 +16,9 @@ jobs:
     - run:
         name: Extracting WP from tarball
         command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C .
+    - restore_cache:
+        keys:
+        - v1-node-dependencies
     - checkout:
         path: src/wp-content/plugins/swiftype-search
     - run:
@@ -25,10 +28,20 @@ jobs:
         name: Installing dependencies
         command: npm install -f
     - run:
-        name: Installing dependencies
-        command: npm install -f
-
-
+        name: Build project
+        command: grunt -f
+    - save_cache:
+        paths:
+        - ./node_modules/
+        key: v1-dependencies
+    - run:
+        name: Updating wp-test-config.php
+        command: |
+          cat wordpress/wp-tests-config-sample.php |
+          sed "s/youremptytestdbnamehere/$MYSQL_DATABASE/" |
+          sed "s/yourusernamehere/$MYSQL_USER/" |
+          sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
+          sed "s/localhost/127.0.0.1/" > wordpress/wp-tests-config.php
 
 # jobs:
 #   build:
