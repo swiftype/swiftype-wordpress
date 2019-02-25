@@ -14,13 +14,10 @@ jobs:
         name: Downloading WP
         command: wget -nv -O /tmp/wordpress.tar.gz https://github.com/WordPress/wordpress-develop/tarball/$WP_VERSION
     - run:
-        name: Creating WP directory
-        command: mkdir wordpress
-    - run:
         name: Extracting WP from tarball
-        command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C wordpress
+        command: tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C .
     - checkout:
-        path: wordpress/src/wp-content/plugins/swiftype-search
+        path: src/wp-content/plugins/swiftype-search
     - run:
         name: Installing Grunt
         command: sudo npm install -g grunt
@@ -28,8 +25,10 @@ jobs:
         name: Installing dependencies
         command: npm install -f
     - run:
-        name: Building project
-        command: grunt build -f
+        name: Installing dependencies
+        command: npm install -f
+
+
 
 # jobs:
 #   build:
