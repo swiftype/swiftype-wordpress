@@ -62,6 +62,18 @@ class AbstractTestCase extends \WP_UnitTestCase
     }
 
     /**
+     * Load default test configuration.
+     */
+    protected function loadDefaultConfig()
+    {
+        $config = new Config();
+        $config->setApiKey($this->getTestApiKey());
+        $config->setEngineSlug($this->getTestEngineName());
+
+        \do_action('swiftype_config_loaded', $config);
+    }
+
+    /**
      * Reset the config
      */
     protected function resetConfig()

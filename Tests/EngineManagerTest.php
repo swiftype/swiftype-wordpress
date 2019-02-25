@@ -11,18 +11,18 @@ class EngineManagerTest extends AbstractTestCase
 {
     /**
      * Test an engine is created when the engine is fully configured.
+     *
+     * @testWith [null]
+     *           ["en"]
      */
     public function testEngineInstalled($language = null)
     {
-        $config = new Config();
-        $config->setApiKey($this->getTestApiKey());
-        $config->setEngineSlug($this->getTestEngineName());
-
         if ($language != null) {
+            $config = new Config();
             $config->setLanguage($language);
         }
 
-        \do_action('swiftype_config_loaded', $config);
+        $this->loadDefaultConfig();
 
         $engine = $this->client->getEngine($this->getTestEngineName());
 
