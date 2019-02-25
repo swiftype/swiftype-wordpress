@@ -1,9 +1,6 @@
 <?php
-/**
- * Class SampleTest
- *
- * @package Swiftype_Search
- */
+
+namespace Swiftype\SiteSearch\Wordpress\Tests;
 
 /**
  * Sample test case.
