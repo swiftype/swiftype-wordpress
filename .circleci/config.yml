@@ -43,9 +43,9 @@ jobs:
           sed "s/yourpasswordhere/$MYSQL_PASSWORD/" |
           sed "s/localhost/127.0.0.1/" > wp-tests-config.php
     - persist_to_workspace:
-      root: .
-      paths:
-      - .
+        root: .
+        paths:
+        - .
 
   test:
     docker:
