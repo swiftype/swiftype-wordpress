@@ -14,7 +14,9 @@ class Loader
      */
     private $config;
 
-
+    /**
+     * @var Loader
+     */
     private static $instance;
 
     /**
