@@ -3,28 +3,81 @@
 namespace Swiftype\SiteSearch\Wordpress\Tests;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config;
+use Swiftype\SiteSearch\ClientBuilder;
 
 class AbstractTestCase extends \WP_UnitTestCase
 {
+    /**
+     * @var \Swiftype\SiteSearch\Client
+     */
+    protected $client;
+
+    /**
+     * Reset the config and register a method to retrieve the client locally when configuration is loaded.
+     */
     public function setUp()
     {
         parent::setUp();
+
         $this->resetConfig();
+
+        \add_action('swiftype_client_loaded', function($client) {
+            $this->client = $client;
+        });
     }
 
-    public function getTestApiKey()
+    /**
+     * Delete the engine created for the test if it exists.
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+        $client = ClientBuilder::create($this->getTestApiKey())->build();
+
+        try {
+            $client->getEngine($this->getTestEngineName());
+            $client->deleteEngine($this->getTestEngineName());
+        } catch (\Swiftype\Exception\NotFoundException $e) {
+            ;
+        }
+    }
+
+    /**
+     * Read the API key used in test from env variable ST_API_KEY.
+     *
+     * @return string
+     */
+    protected function getTestApiKey()
     {
         return getenv('ST_API_KEY');
     }
 
-    public function getTestEngineName()
+    /**
+     * Read the engine name used in test from env variable ST_ENGINE_NAME.
+     * @return string
+     */
+    protected function getTestEngineName()
     {
         return getenv('ST_ENGINE_NAME');
     }
 
-    public function resetConfig()
+    /**
+     * Reset the config
+     */
+    protected function resetConfig()
     {
         $config = new Config();
         $config->reset();
+    }
+
+    /**
+     * Assert a filter have a registred function.
+     *
+     * @param string       $tag
+     * @param array|string $function
+     */
+    protected function assertHasFilter($tag, $function)
+    {
+        $this->assertGreaterThan(0, has_filter($tag, $function));
     }
 }
