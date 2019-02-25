@@ -7,13 +7,13 @@ $wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit/tests';
 $GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.php']];
 
 // Load wordpress testing code.
-require_once "$wpTestsDir/includes/functions.php";
+require_once "$wpTestsDir/functions.php";
 
 // Define out test suite root directory
 define('SWIFTYPE_PLUGIN_DIR', dirname( __FILE__ ) . '/..');
 
 // Bootstrap wordpress testing framework
-require "$wpTestsDir/includes/bootstrap.php";
+require "$wpTestsDir/bootstrap.php";
 
 error_reporting(E_ALL);
 
