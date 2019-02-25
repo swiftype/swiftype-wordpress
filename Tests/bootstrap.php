@@ -6,9 +6,6 @@ $wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit/tests';
 // Make sure the plugin is enabled.
 $GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.php']];
 
-// Load wordpress testing code.
-require_once "$wpTestsDir/functions.php";
-
 // Define out test suite root directory
 define('SWIFTYPE_PLUGIN_DIR', dirname( __FILE__ ) . '/..');
 
