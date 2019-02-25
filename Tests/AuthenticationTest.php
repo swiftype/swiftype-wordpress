@@ -18,6 +18,7 @@ class AuthenticationTest extends AbstractTestCase
         $config->setApiKey($this->getTestApiKey());
 
         \add_action('swiftype_client_loaded', function($loadedClient) use (&$client) {
+            var_dump($loadedClient);
             $client = $loadedClient;
         });
 
