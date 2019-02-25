@@ -14,6 +14,9 @@ class Loader
      */
     private $config;
 
+
+    private static $instance;
+
     /**
      * Load configuration.
      *
@@ -23,11 +26,15 @@ class Loader
      */
     public static function loadConfig(callable $callback = null)
     {
+        if (self::$instance ==null) {
+            self::$instance = (new static());
+        }
+
         if ($callback !== null) {
             \add_action('swiftype_config_loaded', $callback);
         }
 
-        return (new static());
+        return self::$instance;
     }
 
     /**
