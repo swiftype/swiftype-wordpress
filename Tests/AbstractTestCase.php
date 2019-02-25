@@ -69,15 +69,4 @@ class AbstractTestCase extends \WP_UnitTestCase
         $config = new Config();
         $config->reset();
     }
-
-    /**
-     * Assert a filter have a registred function.
-     *
-     * @param string       $tag
-     * @param array|string $function
-     */
-    protected function assertHasFilter($tag, $function)
-    {
-        $this->assertGreaterThan(0, has_filter($tag, $function));
-    }
 }
