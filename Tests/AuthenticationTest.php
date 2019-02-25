@@ -3,10 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress\Tests;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config;
-use Swiftype\SiteSearch\Wordpress\Config\Loader as ConfigLoader;
 
 /**
- * Test authication using API key read from config.
+ * Test authentication using API key read from config.
  */
 class AuthenticationTest extends AbstractTestCase
 {
@@ -18,11 +17,10 @@ class AuthenticationTest extends AbstractTestCase
         $config->setApiKey($this->getTestApiKey());
 
         \add_action('swiftype_client_loaded', function($loadedClient) use (&$client) {
-            var_dump($loadedClient);
             $client = $loadedClient;
         });
 
-        ConfigLoader::loadConfig();
+        \do_action('swiftype_config_loaded', $config);
 
         $this->assertNotNull($client);
     }
@@ -35,7 +33,7 @@ class AuthenticationTest extends AbstractTestCase
             $client = $loadedClient;
         });
 
-        ConfigLoader::loadConfig();
+        \do_action('swiftype_config_loaded', new Config());
 
         $this->assertNull($client);
     }
@@ -51,7 +49,7 @@ class AuthenticationTest extends AbstractTestCase
             $client = $loadedClient;
         });
 
-        ConfigLoader::loadConfig();
+        \do_action('swiftype_config_loaded', $config);
 
         $this->assertNull($client);
     }
