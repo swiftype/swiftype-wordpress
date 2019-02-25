@@ -1,7 +1,7 @@
 <?php
 
 // Make sure we have tests directory in our environment.
-$wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit/tests';
+$wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit';
 
 // Make sure the plugin is enabled.
 $GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.php']];
@@ -10,7 +10,7 @@ $GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.p
 define('SWIFTYPE_PLUGIN_DIR', dirname( __FILE__ ) . '/..');
 
 // Bootstrap wordpress testing framework
-require "$wpTestsDir/bootstrap.php";
+require "$wpTestsDir/includes/bootstrap.php";
 
 error_reporting(E_ALL);
 
