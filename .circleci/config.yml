@@ -33,7 +33,7 @@ jobs:
     - save_cache:
         paths:
         - ./node_modules/
-        key: v1-dependencies
+        key: v1-node-dependencies
     - run:
         name: Updating wp-test-config.php
         command: |
@@ -59,7 +59,19 @@ jobs:
     steps:
     - attach_workspace:
         at: .
-    - run: ls
+    - restore_cache:
+        keys:
+        - v1-composer-dependencies
+    - run:
+        name: Installing PHP Unit
+        command: composer global require phpunit/phpunit:^6.0
+    - run:
+        name: Running unit tests
+        command: ~/.composer/vendor/bin/phpunit
+    - save_cache:
+        paths:
+        - ~/.composer/cache/
+        key: v1-composer-dependencies
 
 workflows:
   version: 2
