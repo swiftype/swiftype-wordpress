@@ -1,0 +1,2 @@
+Site Search Wordpress Client
+Copyright 2012-2019 Elasticsearch B.V.
