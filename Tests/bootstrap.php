@@ -1,7 +1,7 @@
 <?php
 
 // Make sure we have tests directory in our environment.
-$wpTestsDir =  __DIR__ . '../../../../../tests/phpunit/tests';
+$wpTestsDir =  __DIR__ . '/../../../../../tests/phpunit/tests';
 
 // Make sure the plugin is enabled.
 $GLOBALS['wp_tests_options'] = ['active_plugins' => ['swiftype-search/swiftype.php']];
