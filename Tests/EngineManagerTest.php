@@ -5,7 +5,7 @@ namespace Swiftype\SiteSearch\Wordpress\Tests;
 use Swiftype\SiteSearch\Wordpress\Config\Config;
 
 /**
- * Test authentication using API key read from config.
+ * Test engine management.
  */
 class EngineManagerTest extends AbstractTestCase
 {
@@ -35,13 +35,25 @@ class EngineManagerTest extends AbstractTestCase
         $this->assertEquals($language, $engine['language']);
     }
 
+    /**
+     * Test indexing hooks are not installed if the engine is not configured.
+     */
     public function testIndexingHooksNotInstalled()
     {
+        foreach($this->indexingFilters as $filter) {
+            remove_all_actions($filter);
+        }
+
+        \do_action('swiftype_config_loaded', new Config());
+
         foreach($this->indexingFilters as $filter) {
             $this->assertFalse(has_filter($filter));
         }
     }
 
+    /**
+     * Test indexing hooks are not installed if the engine configuration is OK.
+     */
     public function testIndexingHooksInstalled()
     {
         foreach($this->indexingFilters as $filter) {
@@ -53,6 +65,5 @@ class EngineManagerTest extends AbstractTestCase
         foreach($this->indexingFilters as $filter) {
             $this->assertTrue(has_filter($filter));
         }
-
     }
 }
