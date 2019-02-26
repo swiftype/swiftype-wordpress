@@ -11,7 +11,6 @@
         <table width="100%">
             <thead>
                 <tr>
-                    <th> </th>
                     <th><?php echo __('Facet title'); ?></th>
                     <th><?php echo __('Facet field'); ?></th>
                     <th><?php echo __('Facet sort order'); ?></th>
@@ -21,7 +20,7 @@
             </thead>
             <tbody class="ui-sortable list">
                 <tr>
-                    <td colspan="6" class="no-facets-msg"><?php echo __('You have no facet configured yet. Start adding your first facet using the button bellow.');?></td>
+                    <td colspan="5" class="no-facets-msg"><?php echo __('You have no facet configured yet. Start adding your first facet using the button bellow.');?></td>
                 </tr>
             </tbody>
         </table>
@@ -55,7 +54,6 @@
       function renderFacet(facet) {
           var rootNode = jQuery("#facets-config .ui-sortable").append(`
               <tr class="facet-config view-mode">
-                <td class="handle"></td>
                 <td class="facet-title">
                   <div class="view-mode">${facet.title}</div>
                   <div class="edit-mode"><input required type="text" value="${facet.title}" name="title" /></div>
@@ -153,7 +151,7 @@
               renderFacet(facets[i]);
           }
 
-          jQuery('#facets-config .ui-sortable').sortable({"handle": ".handle"});
+          //jQuery('#facets-config .ui-sortable').sortable({"handle": ".handle"});
           displayEmptyFacetMessage();
       }
 
