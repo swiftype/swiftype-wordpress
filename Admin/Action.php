@@ -19,8 +19,10 @@ class Action extends AbstractSwiftypeComponent
     public function __construct()
     {
         parent::__construct();
+
         \add_action('wp_ajax_index_batch_of_posts', [$this, 'asyncIndexBatchOfPosts']);
         \add_action('wp_ajax_delete_batch_of_trashed_posts', [$this, 'asyncDeleteBatchOfTrashedPosts']);
+        \add_action('wp_ajax_update_facet_config', [$this, 'asyncUpdateFacetConfig']);
     }
 
     /**
@@ -58,7 +60,8 @@ class Action extends AbstractSwiftypeComponent
      * This method is called asynchronously via client-side Ajax when an admin clicks the "synchronize with swiftype" button
      * on the plugin Admin page.
      */
-    public function asyncDeleteBatchOfTrashedPosts() {
+    public function asyncDeleteBatchOfTrashedPosts()
+    {
         \check_ajax_referer('swiftype-ajax-nonce');
         $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
         $batchSize = isset($_POST['batch_size']) ? intval($_POST['batch_size']) : 10;
@@ -75,6 +78,21 @@ class Action extends AbstractSwiftypeComponent
         die();
 
         /* TODO : Better error management */
+    }
+
+    /**
+     * Persist facet configuration into the config.
+     */
+    public function asyncUpdateFacetConfig()
+    {
+        \check_ajax_referer('swiftype-ajax-nonce');
+        header("Content-Type: application/json");
+
+        $facetConfig = isset($_POST['facet_config']) ? $_POST['facet_config'] : '[]';
+        $this->getConfig()->setFacetConfig($facetConfig);
+
+        echo wp_json_encode(['success' => true]);
+        die();
     }
 
     /**

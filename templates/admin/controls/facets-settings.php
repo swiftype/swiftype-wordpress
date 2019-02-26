@@ -36,10 +36,7 @@
 <script type="text/javascript">
   jQuery(document).ready(function() {
 
-      var facets = [
-//           {"title": "Category", "field": "category", "size": 10, "sortOrder": "count"},
-//           {"title": "Tags", "field": "tags", "size": 10, "sortOrder": "text"}
-      ];
+      var facets = <?php echo json_encode($this->getConfig()->getFacetConfig());?> ;
 
       function getSortOrderOptionsHtml() {
         sortOptions = [
@@ -169,7 +166,8 @@
       }
 
       function saveFacets() {
-          console.log(facets);
+          var data = { action: 'update_facet_config', facet_config: facets, _ajax_nonce: '<?php echo \wp_create_nonce('swiftype-ajax-nonce'); ?>' };
+          jQuery.ajax({url: ajaxurl, data: data, dataType: 'json', type: 'POST'});
           displayEmptyFacetMessage();
       }
 

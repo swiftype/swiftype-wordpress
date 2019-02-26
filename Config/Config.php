@@ -58,6 +58,17 @@ class Config
         return $language;
     }
 
+    public function getFacetConfig()
+    {
+        $facetConfig = \get_option('swiftype_facet_config');
+
+        if (!$facetConfig) {
+            $facetConfig = json_encode([]);
+        }
+
+        return json_decode($facetConfig);
+    }
+
     /**
      * Update the API Key into the configuration.
      *
@@ -90,6 +101,20 @@ class Config
         } else {
             \update_option('swiftype_language', $language);
         }
+    }
+
+    /**
+     * Update the facet configuration.
+     *
+     * @param string $facetConfig
+     */
+    public function setFacetConfig($facetConfig)
+    {
+        if (!is_string($facetConfig)) {
+            $facetConfig = json_encode($facetConfig);
+        }
+
+        \update_option('swiftype_facet_config', $facetConfig);
     }
 
     /**
