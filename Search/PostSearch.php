@@ -229,6 +229,12 @@ class PostSearch extends AbstractSwiftypeComponent
 
         $params = apply_filters('swiftype_search_params', $params);
 
+        $facetsFields = $this->getFacetFields();
+        if (!empty($facetsFields)) {
+            $facetsFields = array_merge($facetsFields, !empty($params['facets'][$documentType]) ? $params['facets'][$documentType] : []);
+            $params['facets'][$documentType] = array_unique($facetsFields);
+        }
+
         return $params;
     }
 
@@ -245,5 +251,21 @@ class PostSearch extends AbstractSwiftypeComponent
         $isSearch      = \is_search();
 
         return $isMainQuery && $isSearch;;
+    }
+
+    /**
+     * List of fields to be added to the query as facet field.
+     *
+     * @return string[]
+     */
+    private function getFacetFields()
+    {
+        $fields = [];
+
+        foreach ($this->getConfig()->getFacetConfig() as $facet) {
+            $fields[] = $facet['field'];
+        }
+
+        return array_unique($fields);
     }
 }

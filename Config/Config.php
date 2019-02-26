@@ -66,7 +66,7 @@ class Config
             $facetConfig = json_encode([]);
         }
 
-        return json_decode($facetConfig);
+        return json_decode($facetConfig, true);
     }
 
     /**

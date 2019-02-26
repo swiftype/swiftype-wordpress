@@ -166,7 +166,11 @@
       }
 
       function saveFacets() {
-          var data = { action: 'update_facet_config', facet_config: facets, _ajax_nonce: '<?php echo \wp_create_nonce('swiftype-ajax-nonce'); ?>' };
+          var savedFacets = facets.filter(function (facet) {
+              return !(facet.title == "" || facet.title == null || facet.field == null || facet.sortOrder == null);
+          });
+
+          var data = { action: 'update_facet_config', facet_config: savedFacets, _ajax_nonce: '<?php echo \wp_create_nonce('swiftype-ajax-nonce'); ?>' };
           jQuery.ajax({url: ajaxurl, data: data, dataType: 'json', type: 'POST'});
           displayEmptyFacetMessage();
       }
