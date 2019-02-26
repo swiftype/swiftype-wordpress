@@ -217,22 +217,20 @@ class PostSearch extends AbstractSwiftypeComponent
         $params = [
             'page' => get_query_var('paged') ? get_query_var('paged') : 1,
             'document_types' => [$this->getConfig()->getDocumentType()],
-        ] ;
-
-        if (isset($_GET['st-cat']) && ! empty($_GET['st-cat'])) {
-            $params['filters'][$documentType]['category'] = sanitize_text_field($_GET['st-cat']);
-        }
-
-        if (isset($_GET['st-facet-field']) && isset($_GET['st-facet-term'])) {
-            $params['filters'][$documentType][$_GET['st-facet-field']] = sanitize_text_field($_GET['st-facet-term']);
-        }
+        ];
 
         $params = apply_filters('swiftype_search_params', $params);
 
         $facetsFields = $this->getFacetFields();
+
         if (!empty($facetsFields)) {
             $facetsFields = array_merge($facetsFields, !empty($params['facets'][$documentType]) ? $params['facets'][$documentType] : []);
             $params['facets'][$documentType] = array_unique($facetsFields);
+            foreach ($facetsFields as $field) {
+                if (!empty($_GET['st-filter-' . $field])) {
+                    $params['filters'][$documentType][$field] = sanitize_text_field($_GET['st-filter-' . $field]);
+                }
+            }
         }
 
         return $params;

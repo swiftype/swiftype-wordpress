@@ -41,7 +41,7 @@
       function getSortOrderOptionsHtml() {
         sortOptions = [
             '<option value="count"><?php echo __('Count values'); ?></option>',
-            '<option value="text"><?php echo __('Alphanumeric'); ?></option>'
+            '<option value="text"><?php echo __('Alphabetic'); ?></option>'
         ];
         return sortOptions.join("");
       }

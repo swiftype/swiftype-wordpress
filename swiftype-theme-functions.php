@@ -42,66 +42,49 @@ function swiftype_total_result_count()
  *
  * Facets are rendered inside a <div> with class st-facets.
  *
- * @param String $term_order Optional. Sort order for faceted terms. Default
- *                                     is 'count'; if 'alphabetical' faceted
- *                                     terms will be sorted alphabetically.
- *
  * @return void
  */
-function swiftype_render_facets($term_order = 'count') {
+function swiftype_render_facets() {
     global $swiftypeTheme;
     $facets = $swiftypeTheme->getFacets();
+    $appliedFilters = $swiftypeTheme->getAppliedFilters();
+    $html = '';
 
-    if (empty($facets)) {
-    return '';
-    }
+    if (!empty($appliedFilters)) {
+        $html .= '<div class="st-current-filters">';
+        $html .= '<h4>' . __('Applied filters:') . '</h4>';
+        $html .= '<ul>';
 
-    $html = '<div class="st-facets">';
-
-    foreach ($facets as $facet_field => $facet_values) {
-    if (empty($facet_values)) {
-        continue;
-    }
-
-    $html .= '<h4 class="st-facet-field st-facet-field-' . sanitize_title_with_dashes($facet_field) . '">' . esc_html($facet_field) . '</h4>';
-    $html .= '<ul>';
-
-    $term_counts = array();
-
-    foreach ($facet_values as $facet_term => $facet_count) {
-        if (trim($facet_term) === '') {
-        continue;
+        foreach ($appliedFilters as $filter) {
+            $html .= "<li>";
+            $html .= "<strong>" . esc_html($filter['title']). ": </strong>";
+            $html .= '<span>'. esc_html($filter['value']) .'</span>';
+            $html .= '<a href="' . esc_attr($filter['remove_url']) . '">' . __('Remove filter') . '</a>';
+            $html .= "</li>";
         }
 
-        $facet_display = $facet_term;
+        $html .= '</ul>';
+        $html .= '</div>';
+    }
 
-        // special case for category since it's stored as an ID
-        if ($facet_field == 'category') {
-        $facet_display = get_cat_name($facet_term);
-        if ($facet_display === '') {
-            continue;
+    if (!empty($facets)) {
+        $html .= '<div class="st-facets">';
+        $html .= '<h4>' . __('Filter by:') . '</h4>';
+        foreach ($facets as $facet) {
+            $facetTitle = $facet['title'];
+            $html .= '<h5 class="st-facet-field st-facet-field-' . sanitize_title_with_dashes($facetTitle) . '">' . esc_html($facetTitle) . '</h5>';
+            $html .= '<ul>';
+            foreach ($facet['values'] as $currentValue) {
+                $escapedValue = str_replace('&', '%26', $currentValue['value']);
+                $facetDisplay = $escapedValue;
+
+                $html .= "<li><a href=\"" . esc_attr($currentValue['url']) . "\">" . esc_html($facetDisplay) . "</a> (" . esc_html($currentValue['count']) . ")</li>";
+            }
+            $html .= '</ul>';
         }
-        }
 
-        $term_counts[$facet_display] = array('term' => $facet_term, 'count' => $facet_count);
+        $html .= '</div>';
     }
-
-    if ($term_order == 'alphabetical') {
-        ksort($term_counts, SORT_FLAG_CASE | SORT_NATURAL);
-    }
-
-    foreach ($term_counts as $facet_display => $facet_details) {
-        // apparently WordPress's add_query_arg does not properly handle & in a value; escape it with %26 beforehand.
-        $escaped_facet_term = str_replace('&', '%26', $facet_details['term']);
-        $url = add_query_arg(array('st-facet-field' => $facet_field, 'st-facet-term' => $escaped_facet_term), get_search_link());
-        $html .= "<li><a href=\"" . esc_attr($url) . "\">" . esc_html($facet_display) . "</a> (" . esc_html($facet_details['count']) . ")</li>";
-    }
-
-    $html .= '</ul>';
-
-    }
-
-    $html .= '</div>';
 
     echo $html;
 }

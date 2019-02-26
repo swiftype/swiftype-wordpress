@@ -44,6 +44,7 @@ class Mapper
 
         $categories = wp_get_post_categories($post->ID);
         if (!empty($categories)) {
+            $categories = array_map('\strval', $categories);
             $fields[] = ['name' => 'category', 'type' => 'enum', 'value' => $categories];
         }
 
