@@ -49,6 +49,59 @@
   margin: 1em 0;
 }
 
+.swiftype-admin .main-content .card .widget-title h3 {
+  margin: 0;
+}
+
+#facets-config {
+  padding: 8px 8px;
+  margin: 0 9px;
+  min-height: 123px;
+}
+
+#facets-config .handle:before {
+  content: "\f545";
+  font-family: dashicons;
+  cursor: move;
+  color: #AAA;
+} 
+
+#facets-config td.actions {
+  font-size: 150%;
+}
+
+#facets-config .inline-edit-link:before {
+  content: "\f464";
+  font-family: dashicons;
+  color: #006799;
+}
+
+#facets-config .inline-delete-link:before {
+  content: "\f182";
+  font-family: dashicons;
+  color: #DD3333;
+}
+
+#facets-config .facet-config.view-mode .view-mode {
+  display: block;
+}
+
+#facets-config .facet-config.view-mode .edit-mode {
+  display: none;
+}
+
+#facets-config .facet-config.edit-mode .view-mode {
+  display: none;
+}
+
+#facets-config .facet-config.edit-mode .edit-mode {
+  display:block;
+}
+
+#facets-config .facet-config input:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
 .swiftype-admin .card.danger {
   border-color: #FFAAAA;
 }

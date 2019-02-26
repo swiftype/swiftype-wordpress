@@ -4,8 +4,6 @@
  */
 ?>
 
-
-
  <table class="widefat">
     <thead>
         <tr>

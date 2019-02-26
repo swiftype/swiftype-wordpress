@@ -72,6 +72,9 @@ class Page extends AbstractSwiftypeComponent
     {
         if ('toplevel_page_site-search' == $hook && \is_admin()) {
             \wp_enqueue_style('admin_styles', \plugins_url('assets/admin_styles.css', __DIR__ . '/../swiftype.php'));
+            wp_enqueue_style('dashicons');
+            wp_enqueue_script('jquery-ui-core');
+            wp_enqueue_script('jquery-ui-sortable');
         }
     }
 
@@ -114,13 +117,13 @@ class Page extends AbstractSwiftypeComponent
     public function getFacetFieldsFromMapping()
     {
         $allowedFieldTypes = ['string', 'enum', 'integer', 'float', 'date'];
-        $forbiddenFields   = ['external_id', 'timestamp', 'title', 'updated_at'];
+        $forbiddenFields   = ['external_id', 'timestamp', 'title', 'updated_at', 'url'];
 
         $fields = array_filter($this->getDocumentTypeInfo()['field_mapping'], function ($fieldType) use ($allowedFieldTypes) {
             return in_array($fieldType, $allowedFieldTypes);
         });
 
-        return array_diff(array_keys($fields), $forbiddenFields);
+        return array_values(array_diff(array_keys($fields), $forbiddenFields));
     }
 
     /**
