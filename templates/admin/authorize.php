@@ -45,7 +45,7 @@
               <dt><?= __("New to Site Search ?");?></dt>
               <dd><?= __("If you don't have an API Key, you can get one by signing up for a free account at"); ?> <a href="http://swiftype.com/users/sign_up" target="_new">swiftype.com</a>.</dd>
               <dt><?= __("Existing Site Search user ?");?></dt>
-              <dd><?= __("You will find your API Key at the top of the Swiftype <b>Account Settings</b> screen."); ?></dd>
+              <dd><?= __('You will find your API Key at the top of the Swiftype <b><a href="https://app.swiftype.com/settings/account">Account Settings</b></a> screen.'); ?></dd>
             </dl>
         </div>
     </div>
