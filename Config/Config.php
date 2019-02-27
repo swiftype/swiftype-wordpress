@@ -125,6 +125,7 @@ class Config
         \delete_option('swiftype_api_key');
         \delete_option('swiftype_engine_slug');
         \delete_option('swiftype_language');
+        \delete_option('swiftype_facet_config');
     }
 
     /**
