@@ -37,7 +37,6 @@ $searchSettingsRows = [
             <tr>
                 <td><strong><?php echo $row['title']; ?></strong></td>
                 <td><p><em><?php echo $row['description']; ?></em></p></td>
-                <td><p><em><?php echo $row['description']; ?></em></p></td>
                 <td><a href="<?php echo $row['url']; ?>" class="button-primary" target="_new"><?php echo $row['button_title']?></a></td>
             </tr>
             <?php endforeach; ?>
