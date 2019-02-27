@@ -11,6 +11,7 @@
         <table width="100%">
             <thead>
                 <tr>
+                    <th></th>
                     <th><?php echo __('Facet title'); ?></th>
                     <th><?php echo __('Facet field'); ?></th>
                     <th><?php echo __('Facet sort order'); ?></th>
@@ -54,6 +55,7 @@
       function renderFacet(facet) {
           var rootNode = jQuery("#facets-config .ui-sortable").append(`
               <tr class="facet-config view-mode">
+                <td class="handle"></td>
                 <td class="facet-title">
                   <div class="view-mode">${facet.title}</div>
                   <div class="edit-mode"><input required type="text" value="${facet.title}" name="title" /></div>
@@ -144,6 +146,16 @@
               rowNode.removeClass('edit-mode');
               rowNode.addClass('view-mode');
           });
+
+          rowNode.on("facet:sort", function() {
+              facets.splice(facets.indexOf(facet), 1);
+              facets.splice(rowNode.index() - 1, 0, facet);
+              saveFacets();
+          })
+      }
+
+      function onSort(ev, ui) {
+          ui.item.trigger("facet:sort");
       }
 
       function renderFacets() {
@@ -151,7 +163,7 @@
               renderFacet(facets[i]);
           }
 
-          //jQuery('#facets-config .ui-sortable').sortable({"handle": ".handle"});
+          jQuery('#facets-config .ui-sortable').sortable({"handle": ".handle", "stop": onSort});
           displayEmptyFacetMessage();
       }
 
