@@ -14,10 +14,9 @@
 
 ## Getting started 🐣
 
+It is recommended that you install the plugin from the Wordpress Plugin Management screen of your Wordpress install (**Plugins -> Add New**);
 
-It is recommended that you install the plugin from the Wordpress Plugin Management screen of your Wordpress install (`Plugins -> Add New`);
-
-Once the plugin is installed and enabled, you will see a new `Site Search` entry in the admin menu. Go to this entry to configure the Site Search plugins :
+Once the plugin is installed and enabled, you will see a new **Site Search** entry in the admin menu. Go to this entry to configure the Site Search plugins :
 
   1. Enter your Swiftype API key on the first screen.
   3. Name your search engine and optionnaly choose a language.
@@ -41,7 +40,9 @@ If something is not working as expected, please open an [issue](https://github.c
 
 ### Where else can I go to get help?
 
-You can checkout the [Elastic community discuss forums](https://discuss.elastic.co/c/site-search). You can contact our support by sending an email to support@swiftype.com
+You can checkout the [Elastic community discuss forums](https://wordpress.org/support/plugin/swiftype-search/).
+
+You can contact our support by sending an email to support@swiftype.com.
 
 ## Contribute 🚀
 
