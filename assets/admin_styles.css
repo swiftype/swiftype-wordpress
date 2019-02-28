@@ -53,10 +53,44 @@
   margin: 0;
 }
 
-#facets-config {
-  padding: 8px 8px;
-  margin: 0 9px;
-  min-height: 123px;
+.swiftype-admin .card .tooltip-title:before {
+  content: "\f223";
+  font-family: dashicons;
+  float: right;
+  color: #0073aa;
+  font-size: 2em;
+  margin: 0.6em 0.5em;
+}
+
+.swiftype-admin .card .tooltip-title .content {
+  display: none;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content {
+  display: block;
+  position: absolute;
+  right: 30px;
+  width: 50%;
+  min-width: 300px; 
+  background: #FFF;
+  top: 3.5em;
+  padding: 15px;
+  border: 1px solid #AAA;
+  box-shadow: 0 3px 3px rgba(0,0,0,.04);
+}
+
+.swiftype-admin .card .tooltip-title:hover .content p {
+  padding: 0px 10px;
+  border-left: 3px solid #DDD;
+  margin: 7px 2px;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content h4 {
+  margin: 30px 0 0;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content h4:first-child {
+  margin: 0;
 }
 
 #facets-config .handle:before {
@@ -214,9 +248,9 @@ a.gray-button {
 }
 
 a.gray-button:hover {
-    color: #fff;
-    -moz-box-shadow: inset 0px 1px 0px #96a4ac;
-    -webkit-box-shadow: inset 0px 1px 0px #96a4ac;
-    background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
-    background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
+  color: #fff;
+  -moz-box-shadow: inset 0px 1px 0px #96a4ac;
+  -webkit-box-shadow: inset 0px 1px 0px #96a4ac;
+  background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
+  background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
 }
