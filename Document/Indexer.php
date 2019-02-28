@@ -32,7 +32,13 @@ class Indexer extends AbstractSwiftypeComponent
     public function installHooks()
     {
         add_action('future_to_publish', [$this, 'handleFutureToPublish']);
+
+        foreach ($this->getConfig()->allowedPostTypes() as $postType) {
+            add_action("rest_after_insert_{$postType}", [$this, 'handleRestUpdatePost']);
+        }
+
         add_action('save_post', [$this, 'handleSavePost'], 99, 1);
+
         add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
         add_action('trashed_post', [$this, 'handleTrashedPost']);
 
@@ -48,10 +54,21 @@ class Indexer extends AbstractSwiftypeComponent
      */
     public function handleSavePost($postId)
     {
-        $post = get_post($postId);
+        if (!defined('REST_REQUEST') || REST_REQUEST != true) {
+            $post = get_post($postId);
+            $this->handleRestUpdatePost($post);
+        }
+    }
 
+    /**
+     * Handle post indexing when the post is saved.
+     *
+     * @param \WP_Post $post
+     */
+    public function handleRestUpdatePost($post)
+    {
         if ("publish" == $post->post_status) {
-            $this->indexPost($postId);
+            $this->indexPost($post->ID);
         }
     }
 
