@@ -40,7 +40,7 @@ If something is not working as expected, please open an [issue](https://github.c
 
 ### Where else can I go to get help?
 
-You can checkout the [Elastic community discuss forums](https://wordpress.org/support/plugin/swiftype-search/).
+You can checkout the [Site Search Plugin discuss forum](https://wordpress.org/support/plugin/swiftype-search/).
 
 You can contact our support by sending an email to support@swiftype.com.
 
