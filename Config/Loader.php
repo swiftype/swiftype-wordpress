@@ -60,7 +60,7 @@ class Loader
             switch ($_POST['action']) {
                 case 'swiftype_set_api_key':
                     $this->config->reset();
-                    $this->config->setApiKey($_POST['api_key']);
+                    $this->config->setApiKey(trim($_POST['api_key']));
                     break;
                 case 'swiftype_create_engine':
                     $this->config->setLanguage(isset($_POST['language']) ? $_POST['language'] : null);
