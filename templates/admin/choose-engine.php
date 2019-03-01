@@ -16,8 +16,11 @@
                                 <th><label for="engine_name"><?= __("Engine name:"); ?></label></th>
                                 <td>
                                     <input type="text" name="engine_name" class="regular-text" placeholder="e.g. Wordpress Site Search" />
-                                     <p class="existing-engine" style="no-display">
+                                    <p class="existing-engine" style="no-display">
                                         <em><?= __('An engine already exists with the name "<strong class="engine-name"></strong>".') ?></em>
+                                    </p>
+                                    <p class="existing-engine" style="no-display">
+                                        <em><?= __('The existing engine will be deleted and all data it contains will be lost.') ?></em>
                                     </p>
                                 </td>
                             </tr>
@@ -41,9 +44,6 @@
                                         <option value="es">Spanish</option>
                                         <option value="th">Thai</option>
                                     </select>
-                                    <p class="existing-engine" style="no-display">
-                                        <em><?= __('Language can not be changed on existing engine.') ?></em>
-                                    </p>
                                 </td>
                             </tr>
                         </tbody>
@@ -66,30 +66,42 @@
         <input type="hidden" name="action" value="swiftype_clear_config">
     </form>
 
-    <script type="text/javascript">
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+
+        var engineExists = false;
+
         jQuery('#back-authorization-link').click(function() {
             jQuery('form[name=swiftype_reset]').submit();
         });
 
         jQuery('#engine-chooser-form .existing-engine').hide();
 
+        function onExistingEngine(engine) {
+            jQuery('#engine-chooser-form .engine-name').html(engine.name);
+            jQuery('#engine-chooser-form .existing-engine').fadeIn();
+            jQuery('#engine-chooser-form input[type=submit]').prop('value', "<?=__('Use Engine'); ?>");
+            engineExists = true;
+        };
+
+        function onNewEngine(engine) {
+            jQuery('#engine-chooser-form input[type=submit]').prop('value', "<?=__('Create Engine'); ?>");
+            jQuery('#engine-chooser-form .existing-engine').fadeOut();
+            engineExists = false;
+        }
+
+        jQuery('#engine-chooser-form').on("submit", function (ev) {
+            if (engineExists && !confirm('<?=__('All data in the existing engine will be lost. Are you sure you want to continue?'); ?>')) {
+                ev.preventDefault();
+            }
+        });
+
         jQuery('#engine-chooser-form input[name=engine_name]').change(function() {
 
             var engineName = jQuery.trim(this.value);
-            var engine     = null;
-
-            function onExistingEngine(engine) {
-                jQuery('#engine-chooser-form select[name=language]').prop('disabled', true);
-                jQuery('#engine-chooser-form .engine-name').html(engine.name);
-                jQuery('#engine-chooser-form .existing-engine').fadeIn();
-                jQuery('#engine-chooser-form input[type=submit]').prop('value', "<?=__('Use Engine'); ?>");
-            };
-
-            function onNewEngine(engine) {
-                jQuery('#engine-chooser-form input[type=submit]').prop('value', "<?=__('Create Engine'); ?>");
-                jQuery('#engine-chooser-form select[name=language]').prop('disabled', false);
-                jQuery('#engine-chooser-form .existing-engine').fadeOut();
-            }
 
             jQuery('#engine-chooser-form input[type=submit]').prop('disabled', true);
 
@@ -114,6 +126,5 @@
                 onNewEngine();
             }
         });
-    </script>
-
-</div>
+    });
+</script>

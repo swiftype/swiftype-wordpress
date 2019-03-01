@@ -35,11 +35,16 @@ class Manager extends AbstractSwiftypeComponent
             try {
                 $engine = $this->getEngineUsingListing($engineSlug);
                 $this->getConfig()->setEngineSlug($engine['slug']);
+                if (!empty($_POST['action']) && $_POST['action'] == 'swiftype_create_engine') {
+                    $this->getClient()->deleteEngine($engine['slug']);
+                    throw new NotFoundException();
+                }
             } catch(NotFoundException $e) {
                 $language = $this->getConfig()->getLanguage();
                 $engine = $this->getClient()->createEngine($engineSlug, $language);
                 $this->getConfig()->setEngineSlug($engine['slug']);
             }
+
             try {
                 $this->getClient()->getDocumentType($engine['slug'], $docType);
             } catch(NotFoundException $e) {
