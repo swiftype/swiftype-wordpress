@@ -3,6 +3,7 @@
 namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
+use Swiftype\Exception\SwiftypeException;
 
 /**
  * Implementation of the admin page for the Site Search Wordpress plugin.
@@ -32,6 +33,11 @@ class Page extends AbstractSwiftypeComponent
     private $documentTypeInfo;
 
     /**
+     * @var \Exception
+     */
+    private $error;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -39,6 +45,7 @@ class Page extends AbstractSwiftypeComponent
         parent::__construct();
         \add_action('admin_menu', [$this, 'addMenu']);
         \add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
+        \add_action('swiftype_admin_error', [$this, 'setError']);
     }
 
     /**
@@ -48,13 +55,24 @@ class Page extends AbstractSwiftypeComponent
     {
         $isAuth = $this->getConfig()->getApiKey() && $this->getClient() !== null;
 
-        if (!$isAuth) {
+        if($this->error) {
+            $this->renderTemplate('error.php');
+        } else if (!$isAuth) {
             $this->renderTemplate('authorize.php');
         } else if (!$this->getConfig()->getEngineSlug()) {
             $this->renderTemplate('choose-engine.php');
         } else {
             $this->renderTemplate('controls.php');
         }
+    }
+
+    /**
+     * Hook called when a connection error is thrown during client init.
+     *
+     * @param SwiftypeException $e
+     */
+    public function setError(SwiftypeException $e) {
+        $this->error = $e;
     }
 
     /**

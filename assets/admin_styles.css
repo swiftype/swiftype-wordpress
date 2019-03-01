@@ -93,6 +93,37 @@
   margin: 0;
 }
 
+.swiftype-admin .connection-error {
+    min-width: 400px;
+    max-width: 700px;
+    width: 60%;
+    margin: 100px auto;
+    
+}
+
+.swiftype-admin .connection-error:before {
+  content: "\f117";
+  font-family: dashicons;
+  color: #CCC;
+  font-size: 60px;
+  float: left;
+  padding: 20px; 
+}
+
+.swiftype-admin .connection-error p, h3 {
+  margin: 0 0 0 100px;
+}
+
+.swiftype-admin .connection-error p {
+  margin-top: 10px;
+  color: #777;
+  font-weight: normal;
+}
+
+.swiftype-admin .connection-error .controls {
+  margin: 20px;
+}
+
 #facets-config .handle:before {
   content: "\f545";
   font-family: dashicons;

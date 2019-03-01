@@ -6,6 +6,8 @@ use Swiftype\SiteSearch\Wordpress\Config\Config as PluginConfig;
 use Swiftype\SiteSearch\Wordpress\Config\Loader as ConfigLoader;
 use Swiftype\SiteSearch\ClientBuilder;
 use Swiftype\Exception\SwiftypeException;
+use Swiftype\Exception\AuthenticationException;
+use Swiftype\Exception\CouldNotConnectToHostException;
 
 /**
  * The Site Search Wordpress Plugin
@@ -66,8 +68,11 @@ class SwiftypePlugin
             try {
                 $client->listEngines();
                 \do_action('swiftype_client_loaded', $client);
+            } catch (AuthenticationException $e) {
+                $client = null;
             } catch (SwiftypeException $e) {
                 $client = null;
+                \do_action('swiftype_admin_error', $e);
             }
         }
 
