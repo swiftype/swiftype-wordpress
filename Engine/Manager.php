@@ -44,6 +44,8 @@ class Manager extends AbstractSwiftypeComponent
         $engine = $this->getClient()->createEngine($engineSlug, $language);
         $this->getConfig()->setEngineSlug($engine['slug']);
         $this->getClient()->createDocumentType($engine['slug'], $docType);
+
+        \do_action('swiftype_engine_loaded', $engine);
     }
 
     /**
@@ -56,7 +58,6 @@ class Manager extends AbstractSwiftypeComponent
         if ($engineSlug) {
             try {
                 $engine = $this->getEngineUsingListing($engineSlug);
-                $this->getConfig()->setEngineSlug($engine['slug']);
                 \do_action('swiftype_engine_loaded', $engine);
             } catch(NotFoundException $e) {
                 ;

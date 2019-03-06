@@ -17,7 +17,7 @@ class SearchTest extends AbstractTestCase
     /**
      * Test search hooks are not installed if the engine is not configured.
      */
-    public function testIndexingHooksNotInstalled()
+    public function testSearchHooksNotInstalled()
     {
         foreach($this->hooks as $filter) {
             \remove_all_actions($filter);
@@ -33,13 +33,14 @@ class SearchTest extends AbstractTestCase
     /**
      * Test search hooks are not installed if the engine configuration is OK.
      */
-    public function testIndexingHooksInstalled()
+    public function testSearchHooksInstalled()
     {
         foreach($this->hooks as $filter) {
             \remove_all_actions($filter);
         }
 
         $this->loadDefaultConfig();
+        $this->createDefaultEngine();
 
         foreach($this->hooks as $filter) {
             $this->assertTrue(has_filter($filter));

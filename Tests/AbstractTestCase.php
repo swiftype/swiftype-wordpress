@@ -74,6 +74,14 @@ class AbstractTestCase extends \WP_UnitTestCase
     }
 
     /**
+     * Create the default engine.
+     */
+    protected function createDefaultEngine()
+    {
+        \do_action('swiftype_create_engine');
+    }
+
+    /**
      * Reset the config
      */
     protected function resetConfig()

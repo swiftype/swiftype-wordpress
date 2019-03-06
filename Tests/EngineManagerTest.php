@@ -28,6 +28,7 @@ class EngineManagerTest extends AbstractTestCase
         }
 
         $this->loadDefaultConfig();
+        $this->createDefaultEngine();
 
         $engine = $this->client->getEngine($this->getTestEngineName());
 
@@ -61,6 +62,7 @@ class EngineManagerTest extends AbstractTestCase
         }
 
         $this->loadDefaultConfig();
+        $this->createDefaultEngine();
 
         foreach($this->indexingFilters as $filter) {
             $this->assertTrue(has_filter($filter));
