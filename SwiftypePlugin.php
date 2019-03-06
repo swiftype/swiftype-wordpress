@@ -3,11 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config as PluginConfig;
-use Swiftype\SiteSearch\Wordpress\Config\Loader as ConfigLoader;
 use Swiftype\SiteSearch\ClientBuilder;
 use Swiftype\Exception\SwiftypeException;
 use Swiftype\Exception\AuthenticationException;
-use Swiftype\Exception\CouldNotConnectToHostException;
 
 /**
  * The Site Search Wordpress Plugin
@@ -37,7 +35,9 @@ class SwiftypePlugin
     public function __construct()
     {
         $this->registerComponents();
-        ConfigLoader::loadConfig([$this, 'initClient']);
+
+        \add_action('swiftype_config_loaded', [$this, 'initClient']);
+        \add_action('init', [$this, 'initConfig']);
     }
 
     /**
@@ -52,11 +52,17 @@ class SwiftypePlugin
     }
 
     /**
+     * Instantiate plugin config.
+     */
+    public function initConfig()
+    {
+        \do_action('swiftype_config_loaded', new PluginConfig());
+    }
+
+    /**
      * Build a new client from the config.
      *
      * @param PluginConfig $config Configuration.
-     *
-     * @return NULL|\Swiftype\SiteSearch\Client
      */
     public function initClient(PluginConfig $config)
     {
@@ -75,7 +81,5 @@ class SwiftypePlugin
                 \do_action('swiftype_admin_error', $e);
             }
         }
-
-        return $client;
     }
 }

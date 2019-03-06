@@ -6,9 +6,17 @@
         <div class="main-content">
             <h3><?= __('Let\'s create an engine !'); ?></h3>
             <div class="card">
-                <form name="swiftype_settings" id="engine-chooser-form" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+                <form name="swiftype_settings" id="engine-chooser-form" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
                     <?php wp_nonce_field('swiftype-nonce'); ?>
                     <input type="hidden" name="action" value="swiftype_create_engine">
+                    <?php if (isset($_REQUEST['error'])): ?>
+                    <div class="errors">
+                       <p>
+                           <strong><?= __('An error occcured while creating the engine') ?></strong> <br/>
+                           <em><?= __('If this problem persists, please email support@swiftype.com') ?></em>
+                       </p>
+                    </div>
+                    <?php endif; ?>
                     <table class="form-table">
                         <colgroup><col witdh="25%"></col><col width="75%"></col></colgroup>
                         <tbody>
@@ -61,7 +69,7 @@
         </div>
     </div>
 
-    <form name="swiftype_reset" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <form name="swiftype_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
         <?php wp_nonce_field('swiftype-nonce'); ?>
         <input type="hidden" name="action" value="swiftype_clear_config">
     </form>

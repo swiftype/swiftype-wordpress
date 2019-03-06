@@ -3,6 +3,7 @@
 namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
+use Swiftype\Exception\SwiftypeException;
 
 /**
  * Implementation of the admin async actions for the Site Search Wordpress plugin:
@@ -23,6 +24,9 @@ class Action extends AbstractSwiftypeComponent
         \add_action('wp_ajax_index_batch_of_posts', [$this, 'asyncIndexBatchOfPosts']);
         \add_action('wp_ajax_delete_batch_of_trashed_posts', [$this, 'asyncDeleteBatchOfTrashedPosts']);
         \add_action('wp_ajax_update_facet_config', [$this, 'asyncUpdateFacetConfig']);
+        \add_action('admin_action_swiftype_set_api_key', [$this, 'setApiKey']);
+        \add_action('admin_action_swiftype_create_engine', [$this, 'createEngine']);
+        \add_action('admin_action_swiftype_clear_config', [$this, 'clearConfig']);
     }
 
     /**
@@ -93,6 +97,62 @@ class Action extends AbstractSwiftypeComponent
 
         echo wp_json_encode(['success' => true]);
         die();
+    }
+
+    /**
+     * Admin action used to configure API Key.
+     */
+    public function setApiKey()
+    {
+        $this->getConfig()->reset();
+        $this->getConfig()->setApiKey(trim($_POST['api_key']));
+
+        $redirectParams = [];
+
+        \do_action('loadConfig', $this->getConfig());
+
+        if (null === $this->getClient()) {
+            $redirectParams['error'] = true;
+        }
+
+        $this->redirect($redirectParams);
+    }
+
+    /**
+     * Admin action used to create the new engine.
+     */
+    public function createEngine()
+    {
+        $this->getConfig()->setLanguage(isset($_POST['language']) ? $_POST['language'] : null);
+        $this->getConfig()->setEngineSlug(trim($_POST['engine_name']));
+
+        try {
+            \do_action('swiftype_create_engine');
+            $this->redirect();
+        } catch (SwiftypeException $e) {
+            $this->redirect(['error' => true]);
+        }
+    }
+
+    /**
+     * Admin action used to reset the config.
+     */
+    public function clearConfig()
+    {
+        $this->getConfig()->reset();
+        $this->redirect();
+    }
+
+    /**
+     * Redirect to Swiftype Admin homepage.
+     *
+     * @param array $params
+     */
+    private function redirect($params = [])
+    {
+        $params['page'] = Page::MENU_SLUG;
+        $redirectUrl = \add_query_arg($params, \admin_url());
+        \wp_redirect($redirectUrl);
     }
 
     /**

@@ -19,42 +19,54 @@ class Manager extends AbstractSwiftypeComponent
     {
         parent::__construct();
 
-        \add_action('swiftype_client_loaded', [$this, 'initEngine']);
+        \add_action('swiftype_create_engine', [$this, 'createEngine']);
+        \add_action('swiftype_client_loaded', [$this, 'loadEngine']);
         \add_action('wp_ajax_check_engine_exists', [$this, 'asyncCheckEngineExists']);
     }
 
     /**
-     * Check the engine exists and create it if needed.
+     * Create an engine using name from the config.
+     * If the engine exists it will be deleted and recreated.
      */
-    public function initEngine()
+    public function createEngine()
     {
         $engineSlug = $this->getConfig()->getEngineSlug();
         $docType    = $this->getConfig()->getDocumentType();
+
+        try {
+            $engine = $this->getEngineUsingListing($engineSlug);
+            $this->getClient()->deleteEngine($engine['slug']);
+        } catch (NotFoundException $e) {
+            ;
+        }
+
+        $language = $this->getConfig()->getLanguage();
+        $engine = $this->getClient()->createEngine($engineSlug, $language);
+        $this->getConfig()->setEngineSlug($engine['slug']);
+        $this->getClient()->createDocumentType($engine['slug'], $docType);
+    }
+
+    /**
+     * Load the configured engine.
+     */
+    public function loadEngine()
+    {
+        $engineSlug = $this->getConfig()->getEngineSlug();
 
         if ($engineSlug) {
             try {
                 $engine = $this->getEngineUsingListing($engineSlug);
                 $this->getConfig()->setEngineSlug($engine['slug']);
-                if (!empty($_POST['action']) && $_POST['action'] == 'swiftype_create_engine') {
-                    $this->getClient()->deleteEngine($engine['slug']);
-                    throw new NotFoundException();
-                }
+                \do_action('swiftype_engine_loaded', $engine);
             } catch(NotFoundException $e) {
-                $language = $this->getConfig()->getLanguage();
-                $engine = $this->getClient()->createEngine($engineSlug, $language);
-                $this->getConfig()->setEngineSlug($engine['slug']);
+                ;
             }
-
-            try {
-                $this->getClient()->getDocumentType($engine['slug'], $docType);
-            } catch(NotFoundException $e) {
-                $this->getClient()->createDocumentType($engine['slug'], $docType);
-            }
-
-            \do_action('swiftype_engine_loaded', $engine);
         }
     }
 
+    /**
+     * Admin AJAX action used to check if an engine exists.
+     */
     public function asyncCheckEngineExists()
     {
         \check_ajax_referer('swiftype-ajax-nonce');

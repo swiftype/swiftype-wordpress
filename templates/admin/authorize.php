@@ -15,7 +15,7 @@
             <h3><?= __('Thanks for installing the Site Search Plugin for Wordpress !'); ?></h3>
             <div class="card">
                 <p><?= __("Please enter your Site Search API key in the field below and click 'Authorize' to get started."); ?></p>
-                <form name="swiftype_settings" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+                <form name="swiftype_settings" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
                     <?php wp_nonce_field('swiftype-nonce'); ?>
                     <input type="hidden" name="action" value="swiftype_set_api_key">
                     <ul>
@@ -28,7 +28,7 @@
                         </li>
                     </ul>
                 </form>
-                <?php if ($this->getConfig() && $this->getConfig()->getApiKey() && isset($_POST['api_key'])): ?>
+                <?php if ($this->getConfig() && $this->getConfig()->getApiKey() && isset($_REQUEST['error'])): ?>
                     <div class="errors">
                        <p>
                            <strong><?= __('Authentication has failed') ?></strong> <br/>

@@ -7,7 +7,7 @@
                 <?php echo __("If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine, you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter a new API key and create a new search engine."); ?>
             </td>
             <td>
-            <form name="swiftype_settings_reset" method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+            <form name="swiftype_settings_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
                 <?php wp_nonce_field('swiftype-nonce'); ?>
                 <input type="hidden" name="action" value="swiftype_clear_config">
                 <input type="submit" name="Submit" value="Reset Configuration"  class="button-primary" />
