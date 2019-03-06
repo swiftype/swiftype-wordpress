@@ -90,9 +90,9 @@ class Page extends AbstractSwiftypeComponent
     {
         if ('toplevel_page_site-search' == $hook && \is_admin()) {
             \wp_enqueue_style('admin_styles', \plugins_url('assets/admin_styles.css', __DIR__ . '/../swiftype.php'));
-            wp_enqueue_style('dashicons');
-            wp_enqueue_script('jquery-ui-core');
-            wp_enqueue_script('jquery-ui-sortable');
+            \wp_enqueue_style('dashicons');
+            \wp_enqueue_script('jquery-ui-core');
+            \wp_enqueue_script('jquery-ui-sortable');
         }
     }
 

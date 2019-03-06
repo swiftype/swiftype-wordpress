@@ -78,7 +78,7 @@ class Action extends AbstractSwiftypeComponent
         \do_action('swiftype_batch_post_delete', $postIds);
 
         header("Content-Type: application/json");
-        echo wp_json_encode(['total' => $totalPosts]);
+        echo \wp_json_encode(['total' => $totalPosts]);
         die();
 
         /* TODO : Better error management */
@@ -95,7 +95,7 @@ class Action extends AbstractSwiftypeComponent
         $facetConfig = isset($_POST['facet_config']) ? $_POST['facet_config'] : '[]';
         $this->getConfig()->setFacetConfig($facetConfig);
 
-        echo wp_json_encode(['success' => true]);
+        echo \wp_json_encode(['success' => true]);
         die();
     }
 

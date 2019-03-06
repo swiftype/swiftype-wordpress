@@ -41,7 +41,7 @@ class EngineManagerTest extends AbstractTestCase
     public function testIndexingHooksNotInstalled()
     {
         foreach($this->indexingFilters as $filter) {
-            remove_all_actions($filter);
+            \remove_all_actions($filter);
         }
 
         \do_action('swiftype_config_loaded', new Config());
@@ -57,7 +57,7 @@ class EngineManagerTest extends AbstractTestCase
     public function testIndexingHooksInstalled()
     {
         foreach($this->indexingFilters as $filter) {
-            remove_all_actions($filter);
+            \remove_all_actions($filter);
         }
 
         $this->loadDefaultConfig();

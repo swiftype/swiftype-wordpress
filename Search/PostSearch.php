@@ -26,8 +26,8 @@ class PostSearch extends AbstractSwiftypeComponent
     {
         parent::__construct();
 
-        if (!is_admin()) {
-            add_action('swiftype_engine_loaded', [$this, 'initHooks']);
+        if (!\is_admin()) {
+            \add_action('swiftype_engine_loaded', [$this, 'initHooks']);
         }
     }
 
@@ -38,8 +38,8 @@ class PostSearch extends AbstractSwiftypeComponent
      */
     public function initHooks($engine)
     {
-        add_action('wp_enqueue_scripts', function() use($engine) {return $this->enqueueSwiftypeAssets($engine);});
-        add_action('pre_get_posts', [$this, 'getPostsFromSwiftype'], 11);
+        \add_action('wp_enqueue_scripts', function() use($engine) {return $this->enqueueSwiftypeAssets($engine);});
+        \add_action('pre_get_posts', [$this, 'getPostsFromSwiftype'], 11);
     }
 
     /**
@@ -73,14 +73,14 @@ class PostSearch extends AbstractSwiftypeComponent
 
             try {
                 $this->searchResult = $this->getClient()->search($this->getConfig()->getEngineSlug(), $queryString, $queryParams);
-                set_query_var('post__in', $this->extractPostIds());
+                \set_query_var('post__in', $this->extractPostIds());
 
-                add_filter('post_class', [$this, 'swiftypePostClass']);
-                add_filter('posts_search', [$this, 'clearSqlSearchClause']);
-                add_filter('post_limits', [$this, 'setSqlLimit']);
-                add_filter('the_posts', [$this, 'getSearchResultPosts']);
+                \add_filter('post_class', [$this, 'swiftypePostClass']);
+                \add_filter('posts_search', [$this, 'clearSqlSearchClause']);
+                \add_filter('post_limits', [$this, 'setSqlLimit']);
+                \add_filter('the_posts', [$this, 'getSearchResultPosts']);
 
-                do_action('swiftype_search_result', $this->searchResult);
+                \do_action('swiftype_search_result', $this->searchResult);
 
             } catch (SwiftypeException $e) {
                 $this->searchResult = null;
@@ -203,7 +203,7 @@ class PostSearch extends AbstractSwiftypeComponent
      */
     private function getQueryString()
     {
-        return apply_filters('swiftype_search_query_string', stripslashes(get_search_query(false)));;
+        return \apply_filters('swiftype_search_query_string', stripslashes(\get_search_query(false)));;
     }
 
     /**
@@ -215,7 +215,7 @@ class PostSearch extends AbstractSwiftypeComponent
     {
         $documentType = $this->getConfig()->getDocumentType();
         $params = [
-            'page' => get_query_var('paged') ? get_query_var('paged') : 1,
+            'page' => \get_query_var('paged') ? \get_query_var('paged') : 1,
             'document_types' => [$this->getConfig()->getDocumentType()],
         ];
 
@@ -228,7 +228,7 @@ class PostSearch extends AbstractSwiftypeComponent
             $params['facets'][$documentType] = array_unique($facetsFields);
             foreach ($facetsFields as $field) {
                 if (!empty($_GET['st-filter-' . $field])) {
-                    $params['filters'][$documentType][$field] = sanitize_text_field($_GET['st-filter-' . $field]);
+                    $params['filters'][$documentType][$field] = \sanitize_text_field($_GET['st-filter-' . $field]);
                 }
             }
         }

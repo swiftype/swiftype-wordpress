@@ -20,7 +20,7 @@ class Mapper
     {
         $document = ['external_id' => $post->ID, 'fields' => $this->mapFields($post)];
 
-        return apply_filters("swiftype_document_builder", $document, $post);
+        return \apply_filters("swiftype_document_builder", $document, $post);
     }
 
     /**
@@ -42,7 +42,7 @@ class Mapper
         $fields[] = ['name' => 'excerpt', 'type' => 'text', 'value' => $this->getSanitizedText($post, 'post_excerpt')];
 
 
-        $categories = wp_get_post_categories($post->ID);
+        $categories = \wp_get_post_categories($post->ID);
         if (!empty($categories)) {
             $categories = array_map('\strval', $categories);
             $fields[] = ['name' => 'category', 'type' => 'enum', 'value' => $categories];
@@ -75,7 +75,7 @@ class Mapper
      */
     private function getPostUrl($postId)
     {
-        return get_permalink($postId);
+        return \get_permalink($postId);
     }
 
     /**
@@ -93,11 +93,11 @@ class Mapper
 
         if (!empty($shortcode_tags) && is_array($shortcode_tags)) {
             # Replace the short code with its content (the 5th capture group) surrounded by spaces
-            $pattern = get_shortcode_regex();
+            $pattern = \get_shortcode_regex();
             $content = preg_replace("/$pattern/s", ' $5 ', $content);
         }
 
-        return html_entity_decode(wp_strip_all_tags($content), ENT_QUOTES, "UTF-8");
+        return html_entity_decode(\wp_strip_all_tags($content), ENT_QUOTES, "UTF-8");
     }
 
     /**
@@ -111,7 +111,7 @@ class Mapper
     {
         # TODO: post commit ?
         $tags = [];
-        $tagObjects = get_the_tags($post->ID);
+        $tagObjects = \get_the_tags($post->ID);
         if ($tagObjects) {
             foreach ($tagObjects as $tag) {
                 $tags[] = $tag->name;
@@ -132,9 +132,9 @@ class Mapper
     {
         $imageUrl = false;
 
-        if (current_theme_supports('post-thumbnails') && has_post_thumbnail($post->ID)) {
+        if (\current_theme_supports('post-thumbnails') && \has_post_thumbnail($post->ID)) {
             // NOTE: returns false on failure
-            $imageUrl = wp_get_attachment_url(get_post_thumbnail_id($post->ID));
+            $imageUrl = \wp_get_attachment_url(\get_post_thumbnail_id($post->ID));
         }
 
         return $imageUrl;
@@ -151,13 +151,13 @@ class Mapper
     {
         $authorMeta = [];
 
-        $nickname = trim(get_the_author_meta('nickname', $post->post_author));
+        $nickname = trim(\get_the_author_meta('nickname', $post->post_author));
         if (!empty($nickname)) {
             $authorMeta[] = $nickname;
         }
 
-        $firstName = get_the_author_meta('first_name', $post->post_author);
-        $lastName = get_the_author_meta('last_name', $post->post_author);
+        $firstName = \get_the_author_meta('first_name', $post->post_author);
+        $lastName = \get_the_author_meta('last_name', $post->post_author);
         $authorName = trim($firstName . " " . $lastName);
 
         if (!empty($authorName)) {

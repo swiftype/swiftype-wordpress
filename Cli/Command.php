@@ -94,8 +94,8 @@ class Command extends \WP_CLI_Command
             \WP_CLI::halt(1);
         }
 
-        $apiKey     = sanitize_text_field($assocArgs['api-key']);
-        $engineSlug = sanitize_text_field($assocArgs['engine']);
+        $apiKey     = \sanitize_text_field($assocArgs['api-key']);
+        $engineSlug = \sanitize_text_field($assocArgs['engine']);
 
         \add_action('swiftype_client_loaded', function($client) { $this->updateClient($client); });
         \add_action('swiftype_engine_loaded', function($engine) { $this->updateEngine($engine); });
@@ -217,7 +217,7 @@ class Command extends \WP_CLI_Command
     {
         \WP_CLI::line( "Deleting trashed posts ...");
         $offset   = 0;
-        $statuses = array_diff(get_post_stati(), ['publish']);
+        $statuses = array_diff(\get_post_stati(), ['publish']);
         $deletedPosts = 0;
 
         \add_action('swiftype_batch_post_delete_result', function ($count) use (&$deletedPosts) {

@@ -23,7 +23,7 @@ class Indexer extends AbstractSwiftypeComponent
     {
         parent::__construct();
         $this->documentMapper = new Mapper();
-        add_action('swiftype_engine_loaded', [$this, 'installHooks']);
+        \add_action('swiftype_engine_loaded', [$this, 'installHooks']);
     }
 
     /**
@@ -31,16 +31,16 @@ class Indexer extends AbstractSwiftypeComponent
      */
     public function installHooks()
     {
-        add_action('future_to_publish', [$this, 'handleFutureToPublish']);
+        \add_action('future_to_publish', [$this, 'handleFutureToPublish']);
 
         foreach ($this->getConfig()->allowedPostTypes() as $postType) {
-            add_action("rest_after_insert_{$postType}", [$this, 'handleRestUpdatePost']);
+            \add_action("rest_after_insert_{$postType}", [$this, 'handleRestUpdatePost']);
         }
 
-        add_action('save_post', [$this, 'handleSavePost'], 99, 1);
+        \add_action('save_post', [$this, 'handleSavePost'], 99, 1);
 
-        add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
-        add_action('trashed_post', [$this, 'handleTrashedPost']);
+        \add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
+        \add_action('trashed_post', [$this, 'handleTrashedPost']);
 
 
         add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
@@ -55,7 +55,7 @@ class Indexer extends AbstractSwiftypeComponent
     public function handleSavePost($postId)
     {
         if (!defined('REST_REQUEST') || REST_REQUEST != true) {
-            $post = get_post($postId);
+            $post = \get_post($postId);
             $this->handleRestUpdatePost($post);
         }
     }

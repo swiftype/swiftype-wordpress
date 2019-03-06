@@ -85,11 +85,11 @@ class Theme
             if (!empty($_GET['st-filter-' . $filterField])) {
                 $filterValue = $_GET['st-filter-' . $filterField];
                 $removeParams = array_filter(array_merge($_GET, ["st-filter-$filterField" => '']));
-                $removeUrl = add_query_arg($removeParams, get_search_link());
+                $removeUrl = \add_query_arg($removeParams, get_search_link());
                 $filters[] = [
                     'title'       => $currentFacet['title'],
                     'remove_url' => $removeUrl,
-                    'value'      => $filterField == 'category' ? get_cat_name($filterValue) : trim($filterValue),
+                    'value'      => $filterField == 'category' ? \get_cat_name($filterValue) : trim($filterValue),
                 ];
             }
         }
@@ -124,7 +124,7 @@ class Theme
                 foreach ($rawValues as $value => $count) {
 
                     $facetValue = [
-                        'value'    => $facetField == 'category' ? get_cat_name($value) : trim($value),
+                        'value'    => $facetField == 'category' ? \get_cat_name($value) : trim($value),
                         'rawValue' => $value,
                         'count'    => $count,
                         'url'      => $this->getFilterUrl($facetField, $value),
@@ -146,7 +146,7 @@ class Theme
 
     private function getFilterUrl($field, $value)
     {
-        return add_query_arg(array_merge($_GET, ["st-filter-$field" => $value]), get_search_link());
+        return \add_query_arg(array_merge($_GET, ["st-filter-$field" => $value]), \get_search_link());
     }
 
 

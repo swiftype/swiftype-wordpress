@@ -16,24 +16,24 @@ class Widget extends \WP_Widget
     {
         $widget_ops = ['classname' => 'swiftype_search_widget', 'description' => __('Search content in a specific category')];
         parent::__construct('swiftype_search_widget', __('Category Filtered Search'), $widget_ops);
-        add_action('widgets_init', function() { register_widget($this); });
+        add_action('widgets_init', function() { \register_widget($this); });
     }
 
     function widget($args, $instance)
     {
         extract($args);
-        $title = apply_filters('widget_title', $instance['title']);
+        $title = \apply_filters('widget_title', $instance['title']);
         $category = $instance['category'];
 
         echo $before_widget;
         if (! empty($title))
             echo $before_title . $title . $after_title;
 
-        $form = '<form role="search" method="get" id="searchform" action="' . esc_url(home_url('/')) . '" >
+        $form = '<form role="search" method="get" id="searchform" action="' . \esc_url(\home_url('/')) . '" >
             <div><label class="screen-reader-text" for="s">' . __('Search for:') . '</label>
-            <input type="text" value="' . get_search_query() . '" name="s" id="s" />
+            <input type="text" value="' . \get_search_query() . '" name="s" id="s" />
             <input type="hidden" value="' . $category . '" name="st-cat" id="st-cat" />
-            <input type="submit" id="searchsubmit" value="'. esc_attr__('Search') .'" />
+            <input type="submit" id="searchsubmit" value="'. \esc_attr__('Search') .'" />
             </div>
             </form>';
 

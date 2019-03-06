@@ -20,7 +20,7 @@ class SearchTest extends AbstractTestCase
     public function testIndexingHooksNotInstalled()
     {
         foreach($this->hooks as $filter) {
-            remove_all_actions($filter);
+            \remove_all_actions($filter);
         }
 
         \do_action('swiftype_config_loaded', new Config());
@@ -36,7 +36,7 @@ class SearchTest extends AbstractTestCase
     public function testIndexingHooksInstalled()
     {
         foreach($this->hooks as $filter) {
-            remove_all_actions($filter);
+            \remove_all_actions($filter);
         }
 
         $this->loadDefaultConfig();
