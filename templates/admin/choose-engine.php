@@ -67,6 +67,14 @@
                 </form>
             </div>
         </div>
+
+        <div class="sidebar">
+            <dl>
+              <dt><?= __("What is an engine ?");?></dt>
+              <dd><?= __("Engine is short for Search Engine."); ?></dd>
+              <dd><?= __("Once all your posts will be pushed into the engine, the plugin will be able to use Swiftype Site Search powerful search feature."); ?></dd>
+            </dl>
+        </div>
     </div>
 
     <form name="swiftype_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
