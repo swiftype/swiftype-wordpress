@@ -3,7 +3,7 @@ Contributors: matthewtyriley, qhoxie, afoucret
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
-Tested up to: 4.9.8
+Tested up to: 5.1.0
 Stable tag: 1.2.0
 License: Apache 2.0
 License URI: https://github.com/swiftype/swiftype-wordpress/blob/master/LICENSE
