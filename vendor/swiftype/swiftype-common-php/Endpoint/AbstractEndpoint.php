@@ -165,7 +165,7 @@ abstract class AbstractEndpoint implements EndpointInterface
                     $params[$keyPath[0]] = [];
                 }
 
-                $params[$keyPath[0]] = array_merge($params[$keyPath[0]], $value);
+                $params[$keyPath[0]] = array_merge_recursive($params[$keyPath[0]], $value);
 
                 unset($params[$key]);
             }

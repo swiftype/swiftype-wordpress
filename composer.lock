@@ -202,16 +202,16 @@
         },
         {
             "name": "swiftype/swiftype-common-php",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftype/swiftype-common-php.git",
-                "reference": "a16ff7020ac66133cfa0fa4759872375e3c130e9"
+                "reference": "2866a72d5bb792f528a9ea1ee789d13f045498c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/a16ff7020ac66133cfa0fa4759872375e3c130e9",
-                "reference": "a16ff7020ac66133cfa0fa4759872375e3c130e9",
+                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/2866a72d5bb792f528a9ea1ee789d13f045498c2",
+                "reference": "2866a72d5bb792f528a9ea1ee789d13f045498c2",
                 "shasum": ""
             },
             "require": {
@@ -255,7 +255,7 @@
                 "search",
                 "swiftype"
             ],
-            "time": "2019-03-12T09:51:20+00:00"
+            "time": "2019-03-12T10:55:49+00:00"
         },
         {
             "name": "swiftype/swiftype-site-search-php",
