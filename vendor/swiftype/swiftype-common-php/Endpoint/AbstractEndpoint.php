@@ -116,6 +116,13 @@ abstract class AbstractEndpoint implements EndpointInterface
         return $this;
     }
 
+    /**
+     * Loop over the param to check all params are into the whitelist.
+     *
+     * @param array|NULL $params
+     *
+     * @throws UnexpectedValueException
+     */
     private function checkParams($params)
     {
         if (null == $params) {
@@ -141,6 +148,13 @@ abstract class AbstractEndpoint implements EndpointInterface
 
     private function processParams($params)
     {
+        $params = array_filter(
+            $params,
+            function ($param) {
+                return $param !== null;
+            }
+        );
+
         foreach ($params as $key => $value) {
             $keyPath = explode('.', $key);
             if (count($keyPath) > 1) {

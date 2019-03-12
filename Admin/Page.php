@@ -38,6 +38,11 @@ class Page extends AbstractSwiftypeComponent
     private $error;
 
     /**
+     * @var
+     */
+    private $engine;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -46,6 +51,10 @@ class Page extends AbstractSwiftypeComponent
         \add_action('admin_menu', [$this, 'addMenu']);
         \add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         \add_action('swiftype_admin_error', [$this, 'setError']);
+
+        \add_action('swiftype_engine_loaded', function($engine) {
+            $this->engine = $engine;
+        });
     }
 
     /**
@@ -59,7 +68,7 @@ class Page extends AbstractSwiftypeComponent
             $this->renderTemplate('error.php');
         } else if (!$isAuth) {
             $this->renderTemplate('authorize.php');
-        } else if (!$this->getConfig()->getEngineSlug()) {
+        } else if (!$this->getConfig()->getEngineSlug() || null === $this->engine) {
             $this->renderTemplate('choose-engine.php');
         } else {
             $this->renderTemplate('controls.php');

@@ -132,9 +132,9 @@ abstract class AbstractClientBuilder
         $handler = new \GuzzleHttp\Ring\Client\CurlHandler();
 
         $handler = new Connection\Handler\RequestSerializationHandler($handler, $this->serializer);
+        $handler = new Connection\Handler\RequestHostHandler($handler, $this->host);
         $handler = new Connection\Handler\ConnectionErrorHandler($handler);
         $handler = new Connection\Handler\ResponseSerializationHandler($handler, $this->serializer);
-        $handler = new Connection\Handler\RequestHostHandler($handler, $this->host);
 
         return $handler;
     }

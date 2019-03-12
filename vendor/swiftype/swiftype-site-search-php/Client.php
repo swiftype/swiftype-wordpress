@@ -11,7 +11,7 @@ namespace Swiftype\SiteSearch;
 /**
  * Client implementation.
  *
- * @package Swiftype
+ * @package Swiftype\SiteSearch
  */
 class Client extends \Swiftype\AbstractClient
 {
@@ -123,7 +123,7 @@ class Client extends \Swiftype\AbstractClient
      * Documentation: https://swiftype.com/documentation/site-search/engines#create
      *
      * @param string $engineName     Engine name.
-     * @param string $engineLanguage Engine languager (null for universal).
+     * @param string $engineLanguage Engine language (null for universal).
      *
      * @return array
      */

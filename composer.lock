@@ -202,16 +202,16 @@
         },
         {
             "name": "swiftype/swiftype-common-php",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftype/swiftype-common-php.git",
-                "reference": "9b6a7c8d2af49da85638f57ad4dc52b8263dcdf6"
+                "reference": "a16ff7020ac66133cfa0fa4759872375e3c130e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/9b6a7c8d2af49da85638f57ad4dc52b8263dcdf6",
-                "reference": "9b6a7c8d2af49da85638f57ad4dc52b8263dcdf6",
+                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/a16ff7020ac66133cfa0fa4759872375e3c130e9",
+                "reference": "a16ff7020ac66133cfa0fa4759872375e3c130e9",
                 "shasum": ""
             },
             "require": {
@@ -255,26 +255,26 @@
                 "search",
                 "swiftype"
             ],
-            "time": "2019-02-15T15:34:30+00:00"
+            "time": "2019-03-12T09:51:20+00:00"
         },
         {
             "name": "swiftype/swiftype-site-search-php",
-            "version": "1.0.0-beta2",
+            "version": "1.0.0-beta3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftype/swiftype-site-search-php.git",
-                "reference": "40866db6089581af64bf6eb2aae46e56dc2a5029"
+                "reference": "6f2e88b5d7aab5a6032d8a331d8f1b80c518181b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftype/swiftype-site-search-php/zipball/40866db6089581af64bf6eb2aae46e56dc2a5029",
-                "reference": "40866db6089581af64bf6eb2aae46e56dc2a5029",
+                "url": "https://api.github.com/repos/swiftype/swiftype-site-search-php/zipball/6f2e88b5d7aab5a6032d8a331d8f1b80c518181b",
+                "reference": "6f2e88b5d7aab5a6032d8a331d8f1b80c518181b",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6|^7.0",
                 "psr/log": "^1.0.",
-                "swiftype/swiftype-common-php": "^1.0.0"
+                "swiftype/swiftype-common-php": "^1.1.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.14",
@@ -303,14 +303,14 @@
                 }
             ],
             "description": "Swiftype Site Search Official PHP Client",
-            "homepage": "https://github.com/swiftype/swiftype-app-search-php",
+            "homepage": "https://github.com/swiftype/swiftype-site-search-php",
             "keywords": [
                 "client",
                 "php",
                 "search",
                 "swiftype"
             ],
-            "time": "2019-02-18T07:43:39+00:00"
+            "time": "2019-03-12T09:37:48+00:00"
         }
     ],
     "packages-dev": [],

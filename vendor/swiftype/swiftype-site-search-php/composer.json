@@ -1,7 +1,7 @@
 {
   "name" : "swiftype/swiftype-site-search-php",
   "description" : "Swiftype Site Search Official PHP Client",
-  "homepage": "https://github.com/swiftype/swiftype-app-search-php",
+  "homepage": "https://github.com/swiftype/swiftype-site-search-php",
   "keywords" : [
     "search",
     "client",
@@ -15,7 +15,7 @@
   ],
   "require" : {
     "php" : "^5.6|^7.0",
-    "swiftype/swiftype-common-php" : "^1.0.0",
+    "swiftype/swiftype-common-php" : "^1.1.0",
     "psr/log" : "^1.0."
   },
   "require-dev" : {

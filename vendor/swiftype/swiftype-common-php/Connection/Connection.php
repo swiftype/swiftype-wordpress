@@ -69,6 +69,15 @@ class Connection
             'query_params' => $params,
         ];
 
-        return $handler(array_filter($request));
+        try {
+            $this->tracer->info("Request:", $request);
+            $response = $handler(array_filter($request))->wait();
+            $this->tracer->info("Response:", array_intersect_key($response, array_flip(['status', 'body'])));
+        } catch (\Exception $e) {
+            $this->logger->warning("Request failure:", ['request' => $request, 'error' => $e->getMessage()]);
+            throw $e;
+        }
+
+        return $response;
     }
 }

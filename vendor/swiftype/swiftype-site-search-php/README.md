@@ -89,7 +89,7 @@ In order to index documents you need to create at least one DocumentType in your
 
 #### Index some documents
 
-In order to index some documents in the Engine you can use the `Client::bulkCreateOrUpdateDocuments` method:
+In order to index some documents in the Engine you can use the `Client::createOrUpdateDocuments` method:
 
 ```php
     $documents = [
@@ -109,7 +109,7 @@ In order to index some documents in the Engine you can use the `Client::bulkCrea
       ],
     ];
 
-    $indexingResults = $client->bulkCreateOrUpdateDocuments('my-engine', 'my-document-type', $documents);
+    $indexingResults = $client->createOrUpdateDocuments('my-engine', 'my-document-type', $documents);
 ```
 
 **Notes:**

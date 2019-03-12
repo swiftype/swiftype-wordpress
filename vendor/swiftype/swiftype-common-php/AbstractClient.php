@@ -54,7 +54,7 @@ abstract class AbstractClient
         $params = $endpoint->getParams();
         $body = $endpoint->getBody();
 
-        $response = $this->connection->performRequest($method, $uri, $params, $body)->wait();
+        $response = $this->connection->performRequest($method, $uri, $params, $body);
 
         return isset($response['body']) ? $response['body'] : $response;
     }
