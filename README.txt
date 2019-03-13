@@ -4,7 +4,7 @@ Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
 Tested up to: 5.1.0
-Stable tag: 1.2.0
+Stable tag: 2.0.0
 License: Apache 2.0
 License URI: https://github.com/swiftype/swiftype-wordpress/blob/master/LICENSE
 
@@ -74,12 +74,12 @@ You can install the plugin for each site with its own search engine, but we don'
 
 == Changelog ==
 
-= 1.2.0 =
+= 2.0.0 =
 * Using the new official Swiftype Site Search PHP client.
 * Complete refactoring of the module.
 * New admin user interface
 * Facet management from the admin
-* New rendering of the facet filters in search results. 
+* New rendering of the facet filters in search results.
 
 = 1.1.50 =
 * Bugfix for Issue #34: Removed undefined variable `$retries`.
