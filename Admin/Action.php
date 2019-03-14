@@ -4,6 +4,8 @@ namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 use Swiftype\Exception\SwiftypeException;
+use GuzzleHttp\Ring\Exception\ConnectException;
+use Swiftype\Exception\ApiException;
 
 /**
  * Implementation of the admin async actions for the Site Search Wordpress plugin:
@@ -109,7 +111,7 @@ class Action extends AbstractSwiftypeComponent
 
         $redirectParams = [];
 
-        \do_action('loadConfig', $this->getConfig());
+        \do_action('swiftype_config_loaded', $this->getConfig());
 
         if (null === $this->getClient()) {
             $redirectParams['error'] = true;
