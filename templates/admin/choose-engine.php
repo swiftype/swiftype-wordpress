@@ -4,7 +4,11 @@
 
     <div class="swiftype-admin">
         <div class="main-content">
-            <h3><?= __('Let\'s create an engine !'); ?></h3>
+            <ul class="progressbar">
+                <li class="valid"><?php echo __("Authentication"); ?></li>
+                <li class="active"><?php echo __("Engine creation"); ?></li>
+                <li><?php echo __("Initial sync."); ?></li>
+            </ul>
             <div class="card">
                 <form name="swiftype_settings" id="engine-chooser-form" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
                     <?php wp_nonce_field('swiftype-nonce'); ?>

@@ -12,7 +12,13 @@
 
     <div class="swiftype-admin">
         <div class="main-content">
-            <h3><?= __('Thanks for installing the Site Search Plugin for Wordpress !'); ?></h3>
+
+            <ul class="progressbar">
+                <li class="active"><?php echo __("Authentication"); ?></li>
+                <li><?php echo __("Engine creation"); ?></li>
+                <li><?php echo __("Initial sync."); ?></li>
+            </ul>
+
             <div class="card">
                 <p><?= __("Please enter your Site Search API key in the field below and click 'Authorize' to get started."); ?></p>
                 <form name="swiftype_settings" method="post" action="<?php echo \esc_url(\admin_url()); ?>">

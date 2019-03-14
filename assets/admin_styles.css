@@ -286,3 +286,82 @@ a.gray-button:hover {
   background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
   background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
 }
+
+.swiftype-admin .progressbar {
+  counter-reset: step;
+  margin: 0 0 30px;
+  height: 60px;
+}
+.swiftype-admin .progressbar li {
+  list-style-type: none;
+  width: 33%;
+  float: left;
+  font-size: 12px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+.swiftype-admin .progressbar li:before {
+  width: 30px;
+  height: 30px;
+  content: "";
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  left: calc(50% - 20px);
+  top: 20px;
+}
+
+.swiftype-admin .progressbar li.valid {
+  color: #0085ba;
+  font-weight: bold;
+}
+
+.swiftype-admin .progressbar li.valid:before {
+  background-color: #0085ba;
+  border-color: #0085ba;
+  content: "\f147";
+  font-family: dashicons;
+  color: #FFF;
+  font-size: 20px;
+}
+
+.swiftype-admin .progressbar li:after {
+ width: 100%;
+ height: 2px;
+ content: '';
+ position: absolute;
+ background-color: #7d7d7d;
+ top: 37px;
+ left: -50%;
+ z-index: -1;
+}
+
+.swiftype-admin .progressbar li:first-child:after {
+  content: none;
+}
+.swiftype-admin .progressbar li.active {
+  color: #0085ba;
+  font-weight: bold;
+}
+
+.swiftype-admin .progressbar li.active:before { 
+  border-color: #0085ba;
+  border-width: 4px;
+  width: 28px;
+  height: 28px;
+}
+.swiftype-admin .progressbar li.valid + li:after {
+  background-color: #0085ba;
+}
+
+.swiftype-admin .progressbar li.active + li:after {
+  background-image: linear-gradient(to right, #0085ba, #7d7d7d);
+}
