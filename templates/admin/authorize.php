@@ -13,11 +13,19 @@
     <div class="swiftype-admin">
         <div class="main-content">
 
-            <ul class="progressbar">
-                <li class="active"><?php echo __("Authentication"); ?></li>
-                <li><?php echo __("Engine creation"); ?></li>
-                <li><?php echo __("Initial sync."); ?></li>
-            </ul>
+            <?php if ($this->getConfig()->getApiKey() && $this->getConfig()->getEngineSlug()): ?>
+                <div class="errors">
+                   <p>
+                       <strong><?= __('The configured API is invalid.') ?></strong> <br/>
+                   </p>
+                </div>
+            <?php else: ?>
+                <ul class="progressbar">
+                    <li class="active"><?php echo __("Authentication"); ?></li>
+                    <li><?php echo __("Engine creation"); ?></li>
+                    <li><?php echo __("Initial sync."); ?></li>
+                </ul>
+            <?php endif; ?>
 
             <div class="card">
                 <p><?= __("Please enter your Site Search API key in the field below and click 'Authorize' to get started."); ?></p>

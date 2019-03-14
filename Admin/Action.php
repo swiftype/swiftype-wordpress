@@ -132,6 +132,7 @@ class Action extends AbstractSwiftypeComponent
             \do_action('swiftype_create_engine');
             $this->redirect();
         } catch (SwiftypeException $e) {
+            $this->getConfig()->setEngineSlug(null);
             $this->redirect(['error' => true]);
         }
     }

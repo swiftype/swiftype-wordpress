@@ -98,6 +98,9 @@ foreach( $allowedPostTypes as $type ) {
             jQuery('#progress_bar').fadeOut();
             jQuery('#index_posts_button').unbind();
             jQuery('#index_posts_button').click(function(ev) {ev.preventDefault(); });
+            <?php if ($this->hasBeenIndexed() == false) : ?>
+            setTimeout(function(){ location.reload(); }, 3000);
+            <?php endif; ?>
         } else {
             jQuery('#index_posts_button').html('<?php echo __("Indexing progress..."); ?>' + Math.round(progress / totalOps * 100) + '%');
         }
