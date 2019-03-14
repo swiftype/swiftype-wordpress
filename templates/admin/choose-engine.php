@@ -16,7 +16,7 @@
                     <?php if (isset($_REQUEST['error'])): ?>
                     <div class="errors">
                        <p>
-                           <strong><?= __('An error occcured while creating the engine') ?></strong> <br/>
+                           <strong><?= __('An error occcured while creating the Engine. Try again!') ?></strong> <br/>
                            <em><?= __('If this problem persists, please email support@swiftype.com') ?></em>
                        </p>
                     </div>
@@ -29,10 +29,10 @@
                                 <td>
                                     <input type="text" name="engine_name" class="regular-text" placeholder="e.g. Wordpress Site Search" />
                                     <p class="existing-engine" style="no-display">
-                                        <em><?= __('An engine already exists with the name "<strong class="engine-name"></strong>".') ?></em>
+                                        <em><?= __('An Engine already exists with the name "<strong class="engine-name"></strong>".') ?></em>
                                     </p>
                                     <p class="existing-engine" style="no-display">
-                                        <em><?= __('The existing engine will be deleted and all data it contains will be lost.') ?></em>
+                                        <em><?= __('The existing Engine will be deleted and all data it contains will be lost.') ?></em>
                                     </p>
                                 </td>
                             </tr>
@@ -74,9 +74,9 @@
 
         <div class="sidebar">
             <dl>
-              <dt><?= __("What is an engine ?");?></dt>
-              <dd><?= __("Engine is short for Search Engine."); ?></dd>
-              <dd><?= __("Once all your posts will be pushed into the engine, the plugin will be able to use Swiftype Site Search powerful search feature."); ?></dd>
+              <dt><?= __("What is an Engine ?");?></dt>
+              <dd><?= __("Engine is short for <em>search engine</em>."); ?></dd>
+              <dd><?= __("Once your posts are pushed into your Engine, they will become searchable documents."); ?></dd>
             </dl>
         </div>
     </div>
@@ -114,7 +114,7 @@
         }
 
         jQuery('#engine-chooser-form').on("submit", function (ev) {
-            if (engineExists && !confirm('<?=__('All data in the existing engine will be lost. Are you sure you want to continue?'); ?>')) {
+            if (engineExists && !confirm('<?=__('All data in the existing Engine will be lost. Are you sure you want to continue?'); ?>')) {
                 ev.preventDefault();
             }
         });

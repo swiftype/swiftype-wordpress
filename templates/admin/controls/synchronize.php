@@ -30,8 +30,8 @@ foreach( $allowedPostTypes as $type ) {
     <?php else : ?>
         <p>
             <i>
-            <?php echo __("Synchronizing your posts with Swiftype ensures that your search engine has indexed all the content you have published."); ?> <br/>
-            <?php echo __("It shouldn't be necessary to synchronize posts regularly (the update process is automated after your initial setup), but you may use this feature any time you suspect your search index is out of date."); ?>
+            <?php echo __("Your posts are automatically synchronized after the initial setup."); ?> <br/>
+            <?php echo __("Click 'Synchronize' to manually run the process if you suspect that your Engine is out of date."); ?>
             </i>
         </p>
     <?php endif; ?>

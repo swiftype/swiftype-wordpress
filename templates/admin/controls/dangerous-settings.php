@@ -4,7 +4,7 @@
     <tbody>
         <tr>
             <td>
-                <?php echo __("If you're having trouble with the Swiftype plugin, or would like to reconfigure your search engine, you may clear your Swiftype Configuration by clicking the button below. This will allow you to enter a new API key and create a new search engine."); ?>
+                <?php echo __("If you're having trouble with the Site Search plugin, or would like to reconfigure your Engine, you may clear the configuration by clicking the button below. This will allow you to enter a new API Key and create a new Engine."); ?>
             </td>
             <td>
             <form name="swiftype_settings_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
@@ -20,7 +20,7 @@
 
 <script type="text/javascript">
      jQuery("form[name=swiftype_settings_reset] input").click(function(ev) {
-         if (!confirm('<?php echo __("Are you sure you want to reset the module configuration."); ?>')) {
+         if (!confirm('<?php echo __("Are you sure you want to reset your configuration?"); ?>')) {
              ev.preventDefault();
          }
      });

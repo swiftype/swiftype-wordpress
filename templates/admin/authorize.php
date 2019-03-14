@@ -28,7 +28,17 @@
             <?php endif; ?>
 
             <div class="card">
-                <p><?= __("Please enter your Site Search API key in the field below and click 'Authorize' to get started."); ?></p>
+                <p>
+                  <strong><?= __('New to Site Search?') ?></strong> <br/>
+                  <?= __('Sign up for a free trial account and get your Site Search API Key: <b><a href="https://swiftype.com/users/sign-up" target="_new">Start 14 Day Trial</b></a>'); ?>
+                </p>
+                <p>
+                  <strong><?= __('Existing Site Search user?') ?></strong> <br/>
+                  <?= __('Find your API Key at the top of the Site Search <b><a href="https://app.swiftype.com/settings/account" target="_new">Account Settings</b></a> screen.'); ?>
+                </p>
+                <hr>
+                <p><?= __("The initial setup creates a search engine. It will then synchronize with your Wordpress installation."); ?></p>
+                <p><?= __("Enter your API key in the field below and click 'Authorize' to get started."); ?></p>
                 <form name="swiftype_settings" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
                     <?php wp_nonce_field('swiftype-nonce'); ?>
                     <input type="hidden" name="action" value="swiftype_set_api_key">
@@ -52,15 +62,6 @@
                     </div>
                 <?php endif; ?>
             </div>
-        </div>
-
-        <div class="sidebar">
-            <dl>
-              <dt><?= __("New to Site Search ?");?></dt>
-              <dd><?= __("If you don't have an API Key, you can get one by signing up for a free account at"); ?> <a href="http://swiftype.com/users/sign_up" target="_new">swiftype.com</a>.</dd>
-              <dt><?= __("Existing Site Search user ?");?></dt>
-              <dd><?= __('You will find your API Key at the top of the Site Search <b><a href="https://app.swiftype.com/settings/account" target="_new">Account Settings</b></a> screen.'); ?></dd>
-            </dl>
         </div>
     </div>
 </div>
