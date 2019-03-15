@@ -14,7 +14,7 @@
         <tr id="api-key-row">
             <td><?= __('API Key:'); ?></td>
             <td class="toggle-password">
-                <input type="password" class="value" value="<?= $this->getConfig()->getApiKey(); ?>"/>
+                <input type="password" class="value" value="<?= $this->getConfig()->getApiKey(); ?>" readonly/>
                 <div class="toggle-button"></div>
             </td>
         </tr>
