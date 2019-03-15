@@ -8,7 +8,7 @@
     <div class="tooltip-title">
       <div class="content">
           <h4><?php echo __("What are facets ?"); ?></h4>
-          <p><?php echo __("Facets allow users to narrow down search results by applying filters based on the post fields."); ?></p>
+          <p><?php echo __('Facets allow users to narrow down search results by applying filters based on the post fields. Read the <b><a href="https://swiftype.com/documentation/site-search/searching/faceting" target="_new">Site Search Facets Documentation</b></a>.' ); ?></p>
 
           <h4><?php echo __("How to display facets ?"); ?></h4>
           <p><?php echo __("If facets are configured but not displayed in your search results make sure you have called the swiftype_render_facets theme function in the search.php file of your theme."); ?></p>

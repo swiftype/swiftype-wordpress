@@ -15,7 +15,7 @@ $searchSettingsRows = [
   ],
   [
     'title'        => __('Result rankings'),
-    'description'  => __("Search your engine and re-order the results to your liking."),
+    'description'  => __("Search your Engine and re-order search results to your liking."),
     'url'          => sprintf("https://app.swiftype.com/engines/%s/document_types/%s/search/", $engineSlug, $documentType),
     'button_title' => __("Manage Rankings"),
   ],

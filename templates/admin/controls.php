@@ -12,7 +12,7 @@
     <div class="swiftype-admin">
         <div class="main-content">
             <?php if ($this->hasBeenIndexed()): ?>
-                <p><b>To administer your Swiftype Search Engine, visit the <a href="http://swiftype.com/users/sign_in" target="_new">Swiftype Dashboard</a></b>.</p>
+                <p><b>To administer your Elastic Site Search Engine, visit the <a href="http://swiftype.com/users/sign_in" target="_new">Site Search Dashboard</a></b>.</p>
             <?php else: ?>
                 <ul class="progressbar">
                     <li class="valid"><?php echo __("Authentication"); ?></li>
