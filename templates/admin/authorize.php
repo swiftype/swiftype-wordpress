@@ -30,7 +30,7 @@
             <div class="card">
                 <p>
                   <strong><?= __('New to Site Search?') ?></strong> <br/>
-                  <?= __('Sign up for a free trial account and get your Site Search API Key: <b><a href="https://swiftype.com/users/sign-up" target="_new">Start 14 Day Trial</b></a>'); ?>
+                  <?= __('Sign up for a free trial account and get your Site Search API Key: <b><a href="https://app.swiftype.com/signup?utm_channel=setup-admin&utm_source=wordpress-web" target="_new">Start 14 Day Trial</b></a>'); ?>
                 </p>
                 <p>
                   <strong><?= __('Existing Site Search user?') ?></strong> <br/>
