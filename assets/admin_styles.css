@@ -6,6 +6,7 @@
 
 .swiftype-admin {
   height: 100%;
+  min-width: 980px;
 }
 
 .swiftype-admin .main-content {
@@ -364,4 +365,34 @@ a.gray-button:hover {
 
 .swiftype-admin .progressbar li.active + li:after {
   background-image: linear-gradient(to right, #0085ba, #7d7d7d);
+}
+
+.toggle-password .toggle-button {
+  display: inline-block;
+  position: absolute;
+  margin: 1px 0;
+  color: #444444;
+}
+
+.toggle-password .toggle-button:hover {
+  color: #0085ba;
+}
+
+.toggle-password .toggle-button:after {
+  content: "\f177";
+  font-family: dashicons;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.toggle-password input.value {
+  border: none;
+  box-shadow: none;
+  font-size: 12px;
+  padding: 0;
+}
+
+.toggle-password.visible .toggle-button:after {
+  content: "\f530";
 }

@@ -11,9 +11,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr id="api-key-row">
             <td><?= __('API Key:'); ?></td>
-            <td><?= $this->getConfig()->getApiKey(); ?></td>
+            <td class="toggle-password">
+                <input type="password" class="value" value="<?= $this->getConfig()->getApiKey(); ?>"/>
+                <div class="toggle-button"></div>
+            </td>
         </tr>
         <tr>
             <td><?= __('Search Engine:'); ?></td>
@@ -21,3 +24,13 @@
         </tr>
     </tbody>
 </table>
+
+<script type="text/javascript">
+    jQuery('document').ready(function() {
+        jQuery(".toggle-password .toggle-button").click(function() {
+         jQuery(this.parentNode).toggleClass('visible');
+         var inputType = jQuery(this.parentNode).hasClass('visible') ? 'text' : 'password';
+         jQuery(this.parentNode).find('.value').prop('type', inputType);
+        });
+    });
+</script>
