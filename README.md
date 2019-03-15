@@ -19,11 +19,11 @@ It is recommended that you install the plugin from the Wordpress Plugin Manageme
 Once the plugin is installed and enabled, you will see a new **Site Search** entry in the admin menu. Go to this entry to configure the Site Search plugins :
 
   1. Enter your Swiftype API key on the first screen.
-  3. Name your search engine and optionnaly choose a language.
+  3. Name your search engine and optionally choose a language.
   3. Build your search index by clicking the "Synchronize" button.
 
 **Note :**
-  * Using this plugin assumes that you have already created a Site Search account on https://swiftype.com/.
+  * Using this plugin assumes that you have already created a Site Search account. If you do not have one, [signup for a free 14 day trial](https://app.swiftype.com/signup?utm_channel=readme-web&utm_source=wordpress-web).
   * If you already have an account, you will need your API Key in order to configure the plugin. You can find it in on top of the Site Search [Account Settings](https://app.swiftype.com/settings/account) screen on the Site Search site.
 
 ## Usage
