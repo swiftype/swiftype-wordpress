@@ -1,0 +1,20 @@
+{
+  "name" : "swiftype/swiftype-wordpress",
+  "description" : "Elastic Site Search Wordpress extension.",
+  "homepage": "https://github.com/swiftype/swiftype-wordpress",
+  "keywords" : [
+    "search",
+    "client",
+    "swiftype",
+    "php"
+  ],
+  "license" : "Apache-2.0",
+  "type" : "library",
+  "require" : {
+    "swiftype/swiftype-site-search-php" :"^1.0.0@beta",
+    "react/promise": "^2.7"
+  },
+  "autoload": {
+    "psr-4": {"Swiftype\\SiteSearch\\Wordpress\\": "./"} 
+  }
+}

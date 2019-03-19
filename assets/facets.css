@@ -1,0 +1,18 @@
+.st-current-filters ul li, .st-facets h5, .st-facets ul {
+  margin: 10px;
+}
+
+.st-current-filters ul li strong, .st-current-filters ul li span {
+  display: inline-block;
+  padding: 0 10px 0 0;
+}
+
+.st-current-filters ul li a {
+	display: inline-block;
+  font-size: 0.7em;
+  padding: 0 0 0.3em 5px;
+}
+
+.st-current-filters ul li a:before {
+  content: "[X] "
+}

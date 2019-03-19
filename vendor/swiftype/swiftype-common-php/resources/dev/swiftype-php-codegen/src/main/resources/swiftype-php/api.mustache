@@ -1,0 +1,41 @@
+<?php
+/**
+ * This file is part of the Swiftype PHP Client package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace {{package}};
+
+/**
+ * Implementation of the {{className}} endpoint.
+ *
+ * @package {{package}}
+ */
+class {{classname}} extends \Swiftype\Endpoint\AbstractEndpoint
+{
+// phpcs:disable
+{{#operations}}
+{{#operation}}
+    /**
+     * @var string
+     */
+    protected $method = '{{httpMethod}}';
+
+    /**
+     * @var string
+     */
+    protected $uri = '{{path}}';
+{{#pathParams.0}}
+
+    protected $routeParams = [{{#pathParams}}'{{baseName}}'{{#hasMore}}, {{/hasMore}}{{/pathParams}}];
+{{/pathParams.0}}
+{{#queryParams.0}}
+
+    protected $paramWhitelist = [{{#queryParams}}'{{baseName}}'{{#hasMore}}, {{/hasMore}}{{/queryParams}}];
+{{/queryParams.0}}
+{{/operation}}
+{{/operations}}
+// phpcs:enable
+}

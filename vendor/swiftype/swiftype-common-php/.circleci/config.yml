@@ -1,0 +1,123 @@
+version: 2.1
+
+unit_tests: &unit_tests
+  steps:
+  - install_deps
+  - run_unit_tests
+
+php73: &php73
+  docker:
+  - image: circleci/php:7.3-browsers
+
+php72: &php72
+  docker:
+  - image: circleci/php:7.2-browsers
+
+php71: &php71
+  docker:
+  - image: circleci/php:7.1-browsers
+
+php70: &php70
+  docker:
+  - image: circleci/php:7.0-browsers
+
+php56: &php56
+  docker:
+  - image: circleci/php:5.6-browsers
+
+commands:
+
+  install_deps:
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "composer.json" }}
+    - attach_workspace:
+        at: .
+    - run:
+        name: Install composer dependencies
+        command: composer install -n --prefer-dist
+    - save_cache:
+        paths:
+        - ~/.composer/cache/
+        key: v1-dependencies-{{ checksum "composer.json" }}
+    - persist_to_workspace:
+        root: .
+        paths:
+        - .
+
+  run_unit_tests:
+    steps:
+    - run:
+        name: Unit testing
+        command: vendor/bin/phpunit -c phpunit.xml.dist --testsuite unit
+
+jobs:
+
+  php-73-unit-tests:
+    <<: *unit_tests
+    <<: *php73
+
+  php-72-unit-tests:
+    <<: *unit_tests
+    <<: *php72
+
+  php-71-unit-tests:
+    <<: *unit_tests
+    <<: *php71
+
+  php-70-unit-tests:
+    <<: *unit_tests
+    <<: *php70
+
+  php-56-unit-tests:
+    <<: *unit_tests
+    <<: *php56
+
+  qa-phplint:
+    <<: *php73
+    steps:
+    - install_deps
+    - run:
+        name: PHPLINT
+        command: vendor/bin/phplint . --exclude=vendor
+
+  qa-phpcs:
+    <<: *php73
+    steps:
+    - install_deps
+    - run:
+        name: PHPCS
+        command: vendor/bin/phpcs --ignore=vendor,resources --standard=PSR12 .
+
+  qa-phpmd:
+    <<: *php73
+    steps:
+    - install_deps
+    - run:
+        name: PHPMD
+        command: vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode --exclude vendor,resources,.git
+
+workflows:
+  version: 2
+  qa:
+    jobs:
+    - qa-phplint
+    - qa-phpcs
+    - qa-phpmd
+  php-73-tests:
+    jobs:
+    - php-73-unit-tests
+  php-72-tests:
+    jobs:
+    - php-72-unit-tests
+  php-71-tests:
+    jobs:
+    - php-71-unit-tests
+  php-70-tests:
+    jobs:
+    - php-70-unit-tests
+  php-56-tests:
+    jobs:
+    - php-56-unit-tests

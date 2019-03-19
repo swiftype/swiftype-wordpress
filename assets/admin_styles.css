@@ -1,69 +1,399 @@
-h2.swiftype-header {
-	background: transparent url(swiftype_logo.jpg) no-repeat 0 7px;
-	padding-left: 35px;
+.wrap>h2.swiftype-header:first-child {
+  padding : 1px 0 6px 40px;
+  background: transparent url(swiftype_logo.png) no-repeat;
+  margin: 25px 16px 20px;
+}
+
+.swiftype-admin {
+  height: 100%;
+  min-width: 980px;
+}
+
+.swiftype-admin .main-content {
+  margin: 0 8px 16px;
+  width: 63.5%;
+  width: calc(66% - 16px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.swiftype-admin .sidebar {
+  margin: 0 8px 16px;
+  width: 31.5%;
+  width: calc(33% - 16px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.swiftype-admin .sidebar dt {
+  font-weight: bold;
+  border-bottom: 1px solid #999;
+  color: #666;
+}
+
+.swiftype-admin .sidebar dd {
+  color: #666;
+  margin: 5px 10px 20px;
+}
+
+.swiftype-admin .card {
+  float: left;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0 0 20px;
+}
+
+.swiftype-admin .main-content .card h3 {
+  margin: 1em 0;
+}
+
+.swiftype-admin .main-content .card .widget-title h3 {
+  margin: 0;
+}
+
+.swiftype-admin .card .tooltip-title:before {
+  content: "\f223";
+  font-family: dashicons;
+  float: right;
+  color: #0073aa;
+  font-size: 2em;
+  margin: 0.6em 0.5em;
+}
+
+.swiftype-admin .card .tooltip-title .content {
+  display: none;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content {
+  display: block;
+  position: absolute;
+  right: 30px;
+  width: 50%;
+  min-width: 300px; 
+  background: #FFF;
+  top: 3.5em;
+  padding: 15px;
+  border: 1px solid #AAA;
+  box-shadow: 0 3px 3px rgba(0,0,0,.04);
+  z-index: 100;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content p {
+  padding: 0px 10px;
+  border-left: 3px solid #DDD;
+  margin: 7px 2px;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content h4 {
+  margin: 30px 0 0;
+}
+
+.swiftype-admin .card .tooltip-title:hover .content h4:first-child {
+  margin: 0;
+}
+
+.swiftype-admin .connection-error {
+    min-width: 400px;
+    max-width: 700px;
+    width: 60%;
+    margin: 100px auto;
+    
+}
+
+.swiftype-admin .connection-error:before {
+  content: "\f117";
+  font-family: dashicons;
+  color: #CCC;
+  font-size: 60px;
+  float: left;
+  padding: 20px; 
+}
+
+.swiftype-admin .connection-error p, h3 {
+  margin: 0 0 0 100px;
+}
+
+.swiftype-admin .connection-error p {
+  margin-top: 10px;
+  color: #777;
+  font-weight: normal;
+}
+
+.swiftype-admin .connection-error .controls {
+  margin: 20px;
+}
+
+#facets-config .handle:before {
+  content: "\f545";
+  font-family: dashicons;
+  cursor: move;
+  color: #AAA;
+} 
+
+#facets-config td.actions {
+  font-size: 150%;
+}
+
+#facets-config .inline-edit-link:before {
+  content: "\f464";
+  font-family: dashicons;
+  color: #006799;
+}
+
+#facets-config .inline-delete-link:before {
+  content: "\f182";
+  font-family: dashicons;
+  color: #DD3333;
+}
+
+#facets-config .facet-config.view-mode .view-mode {
+  display: block;
+}
+
+#facets-config .facet-config.view-mode .edit-mode {
+  display: none;
+}
+
+#facets-config .facet-config.edit-mode .view-mode {
+  display: none;
+}
+
+#facets-config .facet-config.edit-mode .edit-mode {
+  display:block;
+}
+
+#facets-config .facet-config input:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
+.swiftype-admin .card.danger {
+  border-color: #FFAAAA;
+}
+
+.swiftype-admin .card.danger .button-primary {
+  background-color: #DD3333;
+  border-color: #DD3333;
+  text-shadow: none;
+  box-shadow: 0 1px 0 #DD3333;
+}
+
+.swiftype-admin .card .widefat td {
+  vertical-align: middle;
+}
+
+.swiftype-admin .card.danger h3 {
+  color: #DD3333;
+}
+
+.swiftype-admin form span.no-display {
+  display: none;
+}
+
+.swiftype-admin form span.title {
+  line-height: 20px;
+}
+
+.swiftype-admin .errors {
+  background: #fff;
+  border-left: 4px solid #dc3232;
+  margin: 5px 25px 20px;
+  padding: 1px 12px;
+}
+
+.swiftype-admin .main-content h3 {
+  margin: 1em 7px;
+}
+
+.swiftype-admin .controls {
+  display: flex;
+  height: 30px;
+}
+
+.swiftype-admin .controls .controls-right, 
+.swiftype-admin .controls .controls-left {
+  width: 100%;
+  height: 100%;
+  vertical-align: bottom;
+}
+
+.swiftype-admin .controls .controls-right {
+   text-align: right;
 }
 
 .swiftype .progress .bar {
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	cursor: pointer;
-	display: block;
-	width: 245px;
-	height: 10px;
-	background-color: blue;
-	background: -moz-linear-gradient(top, #00BBF8 0%, #0089F4);
-	background: -webkit-gradient(linear, left top, left bottom, from(#00BBF8), to(#0089F4));
-	border: 1px solid #3F6F99;
-	-moz-box-shadow: inset 0px 1px 0px #00dbfc;
-	-webkit-box-shadow: inset 0px 1px 0px #00dbfc;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 10px;
+  background-color: blue;
+  background: -moz-linear-gradient(top, #00BBF8 0%, #0089F4);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00BBF8), to(#0089F4));
+  border: 1px solid #3F6F99;
+  -moz-box-shadow: inset 0px 1px 0px #00dbfc;
+  -webkit-box-shadow: inset 0px 1px 0px #00dbfc;
 }
 
 .swiftype .progress {
-	margin-top: 10px;
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	cursor: pointer;
-	display: block;
-	width: 245px;
-	height: 12px;
-	background-color: #e1e1e1;
-	-moz-box-shadow: inset 0px 1px 1px #666;
-	-webkit-box-shadow: inset 0px 1px 1px #666;
+  margin-top: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: block;
+  width: 245px;
+  height: 12px;
+  background-color: #e1e1e1;
+  -moz-box-shadow: inset 0px 1px 1px #666;
+  -webkit-box-shadow: inset 0px 1px 1px #666;
 }
 
 a.gray-button {
-	font-weight: normal;
-	white-space: nowrap;
-	text-transform: uppercase;
-	text-decoration: none;
-	font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	vertical-align: top;
-	color: #fff;
-	padding: 9px 22px 5px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	cursor: pointer;
-	display: inline-block;
-	height: 20px;
-	text-align: center;
-	background-color: blue;
-	margin-top: 3px;
-	background: -moz-linear-gradient(top, #99a9b1 0%, #647084);
-	background: -webkit-gradient(linear, left top, left bottom, from(#99a9b1), to(#647084));
-	border: 1px solid #5b6474;
-	-moz-box-shadow: inset 0px 1px 0px #c2d3dc;
-	-webkit-box-shadow: inset 0px 1px 0px #c2d3dc;
-	text-shadow: 0px -1px 0px rgba(0,0,0,0.4);
+  font-weight: normal;
+  white-space: nowrap;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Myriad Pro', Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  vertical-align: top;
+  color: #fff;
+  padding: 9px 22px 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  text-align: center;
+  background-color: blue;
+  margin-top: 3px;
+  background: -moz-linear-gradient(top, #99a9b1 0%, #647084);
+  background: -webkit-gradient(linear, left top, left bottom, from(#99a9b1), to(#647084));
+  border: 1px solid #5b6474;
+  -moz-box-shadow: inset 0px 1px 0px #c2d3dc;
+  -webkit-box-shadow: inset 0px 1px 0px #c2d3dc;
+  text-shadow: 0px -1px 0px rgba(0,0,0,0.4);
 }
 
 a.gray-button:hover {
-		color: #fff;
-		-moz-box-shadow: inset 0px 1px 0px #96a4ac;
-		-webkit-box-shadow: inset 0px 1px 0px #96a4ac;
-		background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
-		background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
+  color: #fff;
+  -moz-box-shadow: inset 0px 1px 0px #96a4ac;
+  -webkit-box-shadow: inset 0px 1px 0px #96a4ac;
+  background: -moz-linear-gradient(top, #7a878d 0%, #505a69);
+  background: -webkit-gradient(linear, left top, left bottom, from(#7a878d), to(#505a69));
+}
+
+.swiftype-admin .progressbar {
+  counter-reset: step;
+  margin: 0 0 30px;
+  height: 60px;
+}
+.swiftype-admin .progressbar li {
+  list-style-type: none;
+  width: 33%;
+  float: left;
+  font-size: 12px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+.swiftype-admin .progressbar li:before {
+  width: 30px;
+  height: 30px;
+  content: "";
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  left: calc(50% - 20px);
+  top: 20px;
+}
+
+.swiftype-admin .progressbar li.valid {
+  color: #0085ba;
+  font-weight: bold;
+}
+
+.swiftype-admin .progressbar li.valid:before {
+  background-color: #0085ba;
+  border-color: #0085ba;
+  content: "\f147";
+  font-family: dashicons;
+  color: #FFF;
+  font-size: 20px;
+}
+
+.swiftype-admin .progressbar li:after {
+ width: 100%;
+ height: 2px;
+ content: '';
+ position: absolute;
+ background-color: #7d7d7d;
+ top: 37px;
+ left: -50%;
+ z-index: -1;
+}
+
+.swiftype-admin .progressbar li:first-child:after {
+  content: none;
+}
+.swiftype-admin .progressbar li.active {
+  color: #0085ba;
+  font-weight: bold;
+}
+
+.swiftype-admin .progressbar li.active:before { 
+  border-color: #0085ba;
+  border-width: 4px;
+  width: 28px;
+  height: 28px;
+}
+.swiftype-admin .progressbar li.valid + li:after {
+  background-color: #0085ba;
+}
+
+.swiftype-admin .progressbar li.active + li:after {
+  background-image: linear-gradient(to right, #0085ba, #7d7d7d);
+}
+
+.toggle-password .toggle-button {
+  display: inline-block;
+  position: absolute;
+  margin: 1px 0;
+  color: #444444;
+}
+
+.toggle-password .toggle-button:hover {
+  color: #0085ba;
+}
+
+.toggle-password .toggle-button:after {
+  content: "\f177";
+  font-family: dashicons;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.toggle-password input.value {
+  border: none;
+  box-shadow: none;
+  font-size: 12px;
+  padding: 0;
+  background: none;
+}
+
+.toggle-password.visible .toggle-button:after {
+  content: "\f530";
 }
