@@ -37,24 +37,6 @@ class AnalyticsApiTest extends AbstractClientTestCase
     }
 
     /**
-     * Test top queries method for Engine Analytics API.
-     *
-     * @param string $method
-     *
-     * @testWith ["getTopQueriesAnalyticsEngine"]
-     *           ["getTopNoResultQueriesAnalyticsEngine"]
-     */
-    public function testEngineAnalyticsTopQueriesMethod($method)
-    {
-        $topQueries = self::getDefaultClient()->$method(self::getDefaultEngineName());
-
-        foreach ($topQueries as list($queryText, $count)) {
-            $this->assertInternalType('string', $queryText);
-            $this->assertInternalType('int', $count);
-        }
-    }
-
-    /**
      * Test count method for Document Types Analytics API.
      *
      * @param string $method
@@ -69,24 +51,6 @@ class AnalyticsApiTest extends AbstractClientTestCase
 
         foreach ($counts as list($date, $count)) {
             $this->assertNotFalse(\DateTime::createFromFormat('Y-m-d', $date));
-            $this->assertInternalType('int', $count);
-        }
-    }
-
-    /**
-     * Test top queries method for Document Types Analytics API.
-     *
-     * @param string $method
-     *
-     * @testWith ["getTopQueriesAnalyticsDocumentType"]
-     *           ["getTopNoResultQueriesAnalyticsDocumentType"]
-     */
-    public function testDocumentTypeAnalyticsTopQueriesMethod($method)
-    {
-        $topQueries = self::getDefaultClient()->$method(self::getDefaultEngineName(), 'page');
-
-        foreach ($topQueries as list($queryText, $count)) {
-            $this->assertInternalType('string', $queryText);
             $this->assertInternalType('int', $count);
         }
     }
@@ -110,6 +74,6 @@ class AnalyticsApiTest extends AbstractClientTestCase
      */
     protected static function getDefaultEngineName()
     {
-        return 'kb-demo';
+        return 'publisher-demo';
     }
 }

@@ -3,8 +3,6 @@
 <p align="center"><a href="https://circleci.com/gh/swiftype/swiftype-site-search-php"><img src="https://circleci.com/gh/swiftype/swiftype-site-search-php.svg?style=svg&circle-token=9a11fb27c1d6961bb8887b684b0c7707b3b4eb6e" alt="CircleCI build"></a></p>
 
 > A first-party PHP client for the [Elastic Site Search API](https://swiftype.com/documentation/site-search/overview).
->
-> **:warning: This is a beta version of the client. Stable version will be released soon.**
 
 ## Contents
 
@@ -192,7 +190,7 @@ Method      | Description | Documentation
 
 Code for the endpoints is generated automatically using a custom version of [OpenAPI Generator](https://github.com/openapitools/openapi-generator).
 
-The easier way to regenerate endpoints is to use the docker laucher packaged in `vendor/bin`:
+To regenerate endpoints, use the docker laucher packaged in `vendor/bin`:
 
 ```bash
 ./vendor/bin/swiftype-codegen.sh
@@ -200,9 +198,9 @@ The easier way to regenerate endpoints is to use the docker laucher packaged in 
 
 The custom generator will be built and launched using the following Open API spec file : `resources/api/api-spec.yml`.
 
-You can then commit and PR your endpoint code and modified the api-spec files.
+You can then commit and PR the modified api-spec file and your endpoints code files.
 
-The client class may be changed in some case. Do not forget to include it in your commit!
+The client class and readme may be changed in some cases. Do not forget to include them in your commit!
 
 ## FAQ 🔮
 
