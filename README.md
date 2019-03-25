@@ -1,5 +1,7 @@
 <p align="center"><img src="https://github.com/swiftype/swiftype-wordpress/blob/master/logo-site-search.png?raw=true" alt="Elastic Site Search Logo"></p>
 
+<p align="center"><a href="https://circleci.com/gh/swiftype/swiftype-wordpress"><img src="https://circleci.com/gh/swiftype/swiftype-wordpress.svg?style=svg" alt="CircleCI build"></a></p>
+
 > The [Site Search WordPress Plugin](https://swiftype.com/wordpress) replaces WordPress's default search with a better search engine that is fully customizable via the Site Search dashboard.
 
 ## Contents
