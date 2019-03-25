@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9847a61ae4d5271b6d40267322916bcc",
+    "content-hash": "396a9bca2576f9eeb52257fd49646022",
     "packages": [
         {
             "name": "guzzlehttp/ringphp",
@@ -202,16 +202,16 @@
         },
         {
             "name": "swiftype/swiftype-common-php",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftype/swiftype-common-php.git",
-                "reference": "2866a72d5bb792f528a9ea1ee789d13f045498c2"
+                "reference": "592b35a95e9b036677ec2429cca4f29fd9985429"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/2866a72d5bb792f528a9ea1ee789d13f045498c2",
-                "reference": "2866a72d5bb792f528a9ea1ee789d13f045498c2",
+                "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/592b35a95e9b036677ec2429cca4f29fd9985429",
+                "reference": "592b35a95e9b036677ec2429cca4f29fd9985429",
                 "shasum": ""
             },
             "require": {
@@ -255,26 +255,26 @@
                 "search",
                 "swiftype"
             ],
-            "time": "2019-03-12T10:55:49+00:00"
+            "time": "2019-03-13T08:15:36+00:00"
         },
         {
             "name": "swiftype/swiftype-site-search-php",
-            "version": "1.0.0-beta3",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftype/swiftype-site-search-php.git",
-                "reference": "6f2e88b5d7aab5a6032d8a331d8f1b80c518181b"
+                "reference": "55f834163033df7affaed311392cb830d824e386"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftype/swiftype-site-search-php/zipball/6f2e88b5d7aab5a6032d8a331d8f1b80c518181b",
-                "reference": "6f2e88b5d7aab5a6032d8a331d8f1b80c518181b",
+                "url": "https://api.github.com/repos/swiftype/swiftype-site-search-php/zipball/55f834163033df7affaed311392cb830d824e386",
+                "reference": "55f834163033df7affaed311392cb830d824e386",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6|^7.0",
                 "psr/log": "^1.0.",
-                "swiftype/swiftype-common-php": "^1.1.0"
+                "swiftype/swiftype-common-php": "^1.1.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.14",
@@ -310,15 +310,13 @@
                 "search",
                 "swiftype"
             ],
-            "time": "2019-03-12T09:37:48+00:00"
+            "time": "2019-03-20T14:37:05+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "swiftype/swiftype-site-search-php": 10
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
