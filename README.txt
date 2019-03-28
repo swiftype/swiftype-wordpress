@@ -30,7 +30,7 @@ Read the [Site Search WordPress guide](https://swiftype.com/documentation/site-s
 
 == Installation ==
 
-1. Go to [swiftype.com](https://swiftype.com/free-trial?utm_channel=clients&utm_source=wordpress-org) and sign up for an account.
+1. Go to [swiftype.com](https://swiftype.com/free-trial?utm_channel=readme-web&utm_source=wordpress-org) and sign up for an account.
 2. After logging in to Site Search, get your API Key from the dashboard.
 3. Install the Site Search Wordpress plugin from the Wordpress dashboard.
 4. Activate the plugin through the 'Plugins' menu in WordPress.
