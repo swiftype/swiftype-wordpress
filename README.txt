@@ -1,5 +1,5 @@
 === Swiftype Site Search Plugin for Wordpress===
-Contributors: matthewtyriley, qhoxie, afoucret
+Contributors: matthewtyriley, qhoxie, afoucret, jasonstoltz, goodroot
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
