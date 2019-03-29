@@ -1,5 +1,5 @@
 === Swiftype Site Search Plugin for Wordpress===
-Contributors: matthewtyriley, qhoxie, afoucret
+Contributors: matthewtyriley, qhoxie, afoucret, jasonstoltz, goodroot
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
@@ -8,64 +8,56 @@ Stable tag: 2.0.0
 License: Apache 2.0
 License URI: https://github.com/swiftype/swiftype-wordpress/blob/master/LICENSE
 
-Fast, intelligent, and fully customizable search for your site. Comes with detailed analytics and controls in the Swiftype Dashboard.
+Fast, intelligent, and fully customizable search for your site.
 
 == Description ==
 
-The Swiftype Site Search plugin replaces the standard WordPress search with a better, more relevant search engine. It also gives you detailed insight into what your users are searching for, so you know which keywords to target when customizing your search engine results. The Swiftype Site Search plugin is WordPress VIP-approved and already used on huge sites. The search plugin is complemented by our dashboard, [full-featured developer API](https://swiftype.com/search-api), and [powerful analytics](https://swiftype.com/search-analytics).  Manage search results with drag and drop and see the changes reflected instantly.
+The Site Search Wordpress plugin replaces the standard WordPress search with a polished, customizable, and more relevant search engine. Gain access to deep search insights and all the tools you need to customize and perfect your search experience. Join thousands of growing customers and bring world class search to your website, all backed under the hood by Elasticsearch.
 
-The base ranking algorithm is based on industry best-practices for search and provides more relevant results by default, but we also allow for any result set to be fully customized via our drag-and-drop interface for result reordering. To make customizations you simply create a Swiftype Site Search account and install the Swiftype Site Search plugin. You can then login to our dashboard to customize results and read through detailed search analytics. See the short demo video below for more details.
-
-Do you have a mobile app displaying content from your WordPress site? Swiftype Site Search’s [mobile SDKs](https://swiftype.com/mobile) make it simple to add powerful search to your mobile apps.  Combine our WordPress plugin with our mobile SDKs to create the same search experience on your site and in your app.
+[What is Site Search?](https://swiftype.com/site-search)
 
 ## Features
 
-* Search runs on our powerful servers - it doesn't bog down your site, even if you have **hundreds of thousands of posts**.
-* Works with your theme's search.php template - drop in the Swiftype search plugin and it **just works**.
-* Fast typeahead autocomplete search suggestions based on titles, tags, and author names.
-* Search results **automatically update** when you save, delete, or change search content.
-* **Re-order search results** with drag-and-drop from your Swiftype Site Search Dashboard.
-* Impactful search analytics help you understand your users.
+* **Fully managed**: We secure, store, and search all of your documents in the cloud. Your site stays fast.
+* **No programming required**: Works with your theme's existing search.php template. Drop in the Site Search plugin and it _just works_.
+* **Out of the box relevance**: Pre-optimized typo tolerance, bigram matching, stemming, synonyms, phrase matching, and more.
+* **Automatic Updating**: Search results _automatically synchronize_ when you save, delete, or change Wordpress content.
+* **Intuitive Dashboard**: Use slick and powerful dashboard tools to customize your search relevance.
+* **Deep Insights**: Impactful search analytics help you understand your users and guide you to productive actions.
+* **Choose Your Language**: Supports 13 languages, including: English, French, German, Russian, Chinese, Japanese, Universal, and more.
 
-## Advanced Customization
-
-* Modify what types of posts and categories are searched or weight fields like title more heavily by adding a filter.
-* Change the autocomplete behavior with JavaScript.
-
-Read our [WordPress search customization tutorial](https://swiftype.com/documentation/tutorials/customizing_wordpress_search) for details.
+Read the [Site Search WordPress guide](https://swiftype.com/documentation/site-search/guides/wordpress) for more details.
 
 == Installation ==
 
-1. Go to [http://swiftype.com](http://swiftype.com) and sign up for an account. (Be sure to validate your account via the confirmation email we send.)
-2. After logging in to Swiftype, go to the Account Settings screen and get your API key.
-3. Install the Swiftype Site Search Wordpress plugin in your Wordpress dashboard.
+1. Go to [swiftype.com](https://swiftype.com/free-trial?utm_channel=readme-web&utm_source=wordpress-org) and sign up for an account.
+2. After logging in to Site Search, get your API Key from the dashboard.
+3. Install the Site Search Wordpress plugin from the Wordpress dashboard.
 4. Activate the plugin through the 'Plugins' menu in WordPress.
-5. Go to the Site Search plugin page and enter your Swiftype Site Search API key on the first screen.
-6. Name your search engine, following the instructions on the screen.
+5. Go to the Site Search plugin page and enter your Site Search API Key on the first screen.
+6. Name your search engine, choose from one of 13 languages, then create it.
 7. Build your search index by clicking the "Synchronize" button.
+8. Search!
 
 Email support@swiftype.com if you are having trouble.
 
 == Screenshots ==
 
-1. Detailed, real-time analytics show you what your users are searching for, click on, and even what they are having trouble finding.
-2. Result controls let you customize everything – reorder results, remove bad results, and add custom results.
+1. Adjust Weights to fine tune search relevance for different post values.
+2. View advanced, real time analytics. Gain insights that will help you perfect your search experience.
+3. Promote or hide documents from your search results, so that searchers always find just the right thing.
 
 == Frequently asked questions ==
 
-_If your questions are not answered here, check our [Q&A forum](https://swiftype.com/questions), or email [support@swiftype.com](mailto:support@swiftype.com) for help._
+_If your questions are not answered here, check out the [Site Search Community forum](https://discuss.elastic.co/c/site-search), or email [support@swiftype.com](mailto:support@swiftype.com) for help._
 
 = Where do I sign up for a Swiftype Site Search account? =
 
-Sign up for an account at [http://swiftype.com](http://swiftype.com).  Plans start at $299.
+Sign up for an account at [https://swiftype.com](http://swiftype.com).  Plans start at $79.
 
-= Why don't search results in the Swiftype Site Search Dashboard match what's displayed on my site? =
+= Why don't search results in the Site Search Dashboard match what's displayed on my site? =
 
-This is usually caused by your theme not using `query_posts` properly and affecting search as a result. Fortunately, [it is easy to fix](https://swiftype.com/questions/why-dont-the-search-results-in-my-swiftype-dashboard-match-what-is-displayed-on-my-wordpress-site) the search results.
-
-= Does Swiftype search support WordPress Multisite? =
-
-You can install the plugin for each site with its own search engine, but we don't have a way yet to index an entire Multisite network yet. But stay tuned!
+Your posts may have fallen out of sync. Click 'Synchronize' from within the plugin to correct this.
 
 == Screenshots ==
 
@@ -185,63 +177,3 @@ Initial release.
 
 = 1.1.26 =
 This fixes an important issue for many users that prevented synchronization of new posts and first time authentication.  Please upgrade immediately and resynchronize your posts.
-
-== WP-CLI Support ==
-
-Swiftype Site Search plugin supports [WP-CLI](http://wp-cli.org/).
-
-To see the available commands type `wp swiftype` in your WordPress install directory.
-
-The CLI is particularly useful if you have a large number of posts (more than 10,000) because it can synchronize posts with Swiftype more quickly by controlling the indexing batch size. Also, the CLI provides an option to destructively reindex the contents of your WordPress site which will be faster if you have a large number of deleted posts or simply want to start fresh.
-
-To index your WordPress site with the CLI, make sure you have WP-CLI installed and configure the plugin with your API key and search engine. Then run:
-
-`wp swiftype sync`
-
-To index more content at once, increase the batch size:
-
-`wp swiftype sync --index-batch-size=100`
-
-In general, using a larger batch size will be faster. However, the size of the batch you can use is determined by how large your posts are on average.
-
-== Modifying search parameters ==
-
-The Swiftype Search plugin provides a filter called `swiftype_search_params` that allows you to modify the search parameters before they are sent to Swiftype.
-
-For example, to add a filter so only pages are returned by the search results, you can add the following to your functions.php file:
-
-    function swiftype_search_params_filter( $params ) {
-        $params['filters[posts][object_type]'] = array( 'page' );
-
-        return $params;
-    }
-
-    add_filter( 'swiftype_search_params', 'swiftype_search_params_filter', 8, 1 );
-
-For more details, check out our [WordPress customization tutorial](https://swiftype.com/documentation/tutorials/customizing_wordpress_search) and the Swiftype [Search API documentation](https://swiftype.com/documentation/searching).
-
-== Modifying the query string ==
-
-The Swiftype Search plugin provides a filter called `swiftype_search_query_string` that makes it easier to modify the query string before it is sent to Swiftype.
-
-For example, to add a term to every query string, you can add the following to your functions.php file:
-
-    function swiftype_search_query_filter( $query ) {
-        return $query . ' ThisWillAlwaysBeInEveryQuery';
-    }
-
-    add_filter( 'swiftype_search_query_string', 'swiftype_search_query_filter', 8, 1 );
-
-You can use this filter to pre-process queries before they are executed.
-
-== Adding Faceted Search Results ==
-
-The Swiftype Search plugin provides the `swiftype_render_facets` theme function to allow you to easily add faceting to your search results page. To use it, follow these steps:
-
-1.  Configure facets to be displayed from the Swiftype Site Search plugin page in the admin.
-
-2.  Add a `swiftype_render_facets()` call to your `search.php` template. This is what actually renders the facets. You should place it where you want the facets to be rendered:
-
-        <?php swiftype_render_facets(); ?>
-
-3.  (Optional) Style the facets using CSS. You can target `div.st-facets` for your CSS rules to only affect the content inside the facets container.
