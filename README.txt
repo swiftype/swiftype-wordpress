@@ -49,7 +49,7 @@ Email support@swiftype.com if you are having trouble.
 
 == Frequently asked questions ==
 
-_If your questions are not answered here, check out pSite Search Community forum](https://discuss.elastic.co/c/site-search), or email [support@swiftype.com](mailto:support@swiftype.com) for help._
+_If your questions are not answered here, check out the [Site Search Community forum](https://discuss.elastic.co/c/site-search), or email [support@swiftype.com](mailto:support@swiftype.com) for help._
 
 = Where do I sign up for a Swiftype Site Search account? =
 
