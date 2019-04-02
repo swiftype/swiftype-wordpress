@@ -43,7 +43,7 @@
                                         <option value=""><?= __('Universal'); ?></option>
                                         <option value="pt-br">Brazilian Portuguese</option>
                                         <option value="zh">Chinese</option>
-                                        <option value="da">Danish"</option>
+                                        <option value="da">Danish</option>
                                         <option value="nl">Dutch</option>
                                         <option value="en">English</option>
                                         <option value="fr">French</option>
