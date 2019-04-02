@@ -66,6 +66,10 @@ Your posts may have fallen out of sync. Click 'Synchronize' from within the plug
 
 == Changelog ==
 
+= 2.0.1 =
+* Polishes README.txt
+* Remove trailing quote in language list
+
 = 2.0.0 =
 * Using the new official Swiftype Site Search PHP client.
 * Complete refactoring of the module.
