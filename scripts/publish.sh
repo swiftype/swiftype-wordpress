@@ -31,8 +31,9 @@ echo -n "Checking out $repository plugin from WordPress svn..."
 svn co -q http://plugins.svn.wordpress.org/swiftype-search $svn_directory
 echo " done"
 
-echo -n "Copying current git state to svn trunk..."
+echo -n "Copying current git state to svn assets & trunk..."
 find $svn_directory/trunk -type lf ! -path '*.svn*' -exec rm {} \;
+cp $git_directory/assets/banner-* $git_directory/assets/screenshot-* $svn_directory/assets
 cp -R $git_directory/* $svn_directory/trunk/
 cd $svn_directory
 svn st | grep ^! | awk '{print " --force "$2}' | xargs svn rm
