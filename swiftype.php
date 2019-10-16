@@ -9,7 +9,7 @@ Version: 2.0.1
 Author URI: http://swiftype.com
 */
 
-define('SWIFTYPE_VERSION', '2.0.1');
+define('SWIFTYPE_VERSION', '2.0.2');
 
 require_once('vendor/autoload.php');
 

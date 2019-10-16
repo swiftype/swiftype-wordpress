@@ -40,7 +40,7 @@
                 <p><?= __("The initial setup creates a search engine. It will then synchronize with your Wordpress installation."); ?></p>
                 <p><?= __("Enter your API key in the field below and click 'Authorize' to get started."); ?></p>
                 <form name="swiftype_settings" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
-                    <?php wp_nonce_field('swiftype-nonce'); ?>
+                    <?php wp_nonce_field('swiftype-ajax-nonce'); ?>
                     <input type="hidden" name="action" value="swiftype_set_api_key">
                     <ul>
                         <li>

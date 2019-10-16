@@ -3,8 +3,8 @@ Contributors: matthewtyriley, qhoxie, afoucret, jasonstoltz, goodroot
 Donate link:
 Tags: search, better search, custom search, relevant search, search by category, autocomplete, suggest, typeahead
 Requires at least: 3.3
-Tested up to: 5.1.0
-Stable tag: 2.0.1
+Tested up to: 5.2.4
+Stable tag: 2.0.2
 License: Apache 2.0
 License URI: https://github.com/swiftype/swiftype-wordpress/blob/master/LICENSE
 
@@ -65,6 +65,9 @@ Your posts may have fallen out of sync. Click 'Synchronize' from within the plug
 2. The Swiftype Site Search result controls dashboard.  Here you can customize any aspect of your results.  You can drag and drop to reoder search results, remove results you don't want to show up in the search, and even add results that don't show up automatically.
 
 == Changelog ==
+
+= 2.0.2 =
+* WP-CLI fixes and action refactoring
 
 = 2.0.1 =
 * Polishes README.txt

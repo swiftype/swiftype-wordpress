@@ -8,7 +8,7 @@
             </td>
             <td>
             <form name="swiftype_settings_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
-                <?php wp_nonce_field('swiftype-nonce'); ?>
+                <?php wp_nonce_field('swiftype-ajax-nonce'); ?>
                 <input type="hidden" name="action" value="swiftype_clear_config">
                 <input type="submit" name="Submit" value="Reset Configuration"  class="button-primary" />
             </form>

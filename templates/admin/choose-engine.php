@@ -11,7 +11,7 @@
             </ul>
             <div class="card">
                 <form name="swiftype_settings" id="engine-chooser-form" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
-                    <?php wp_nonce_field('swiftype-nonce'); ?>
+                    <?php wp_nonce_field('swiftype-ajax-nonce'); ?>
                     <input type="hidden" name="action" value="swiftype_create_engine">
                     <?php if (isset($_REQUEST['error'])): ?>
                     <div class="errors">
@@ -82,7 +82,7 @@
     </div>
 
     <form name="swiftype_reset" method="post" action="<?php echo \esc_url(\admin_url()); ?>">
-        <?php wp_nonce_field('swiftype-nonce'); ?>
+        <?php wp_nonce_field('swiftype-ajax-nonce'); ?>
         <input type="hidden" name="action" value="swiftype_clear_config">
     </form>
 
