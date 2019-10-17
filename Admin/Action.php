@@ -3,9 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
-use Swiftype\Exception\SwiftypeException;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
 use GuzzleHttp\Ring\Exception\ConnectException;
-use Swiftype\Exception\ApiException;
+use Elastic\OpenApi\Codegen\Exception\ApiException;
 
 /**
  * Implementation of the admin async actions for the Site Search Wordpress plugin:
@@ -150,7 +150,7 @@ class Action extends AbstractSwiftypeComponent
         try {
             \do_action('swiftype_create_engine');
             $this->redirect();
-        } catch (SwiftypeException $e) {
+        } catch (ClientException $e) {
             $this->getConfig()->setEngineSlug(null);
             $this->redirect(['error' => true]);
         }

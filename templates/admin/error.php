@@ -17,7 +17,7 @@
            </h3>
            <p class="error-message">
                <strong>
-               <?php if ($this->error instanceof \Swiftype\Exception\ConnectionException) : ?>
+               <?php if ($this->error instanceof \Elastic\OpenApi\Codegen\Exception\ConnectionException) : ?>
                    <?php echo __("Connection error:"); ?>
                <?php else : ?>
                    <?php echo __("Unexepected error:"); ?>

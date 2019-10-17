@@ -3,7 +3,7 @@
 namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
-use Swiftype\Exception\SwiftypeException;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
 
 /**
  * Implementation of the admin page for the Site Search Wordpress plugin.
@@ -81,9 +81,9 @@ class Page extends AbstractSwiftypeComponent
     /**
      * Hook called when a connection error is thrown during client init.
      *
-     * @param SwiftypeException $e
+     * @param ClientException $e
      */
-    public function setError(SwiftypeException $e) {
+    public function setError(ClientException $e) {
         $this->error = $e;
     }
 

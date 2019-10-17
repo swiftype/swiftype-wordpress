@@ -2,7 +2,7 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Engine;
 
-use Swiftype\Exception\NotFoundException;
+use Elastic\OpenApi\Codegen\Exception\NotFoundException;
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 
 /**

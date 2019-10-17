@@ -183,7 +183,7 @@ class Indexer extends AbstractSwiftypeComponent
 
             try {
                 $client->createOrUpdateDocument($engine, $documentType, $document['external_id'], $document['fields']);
-            } catch(\Swiftype\Exception\SwiftypeException $e) {
+            } catch(\Elastic\OpenApi\Codegen\Exception\ClientException $e) {
                 # TODO : report error.
                 return;
             }
@@ -203,7 +203,7 @@ class Indexer extends AbstractSwiftypeComponent
             $documentType = $this->getConfig()->getDocumentType();
 
             $client->deleteDocument($engine, $documentType, $postId);
-        } catch(\Swiftype\Exception\SwiftypeException $e) {
+        } catch(\Elastic\OpenApi\Codegen\Exception\ClientException $e) {
             # TODO : report error.
             return;
         }

@@ -3,9 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config as PluginConfig;
-use Swiftype\SiteSearch\ClientBuilder;
-use Swiftype\Exception\SwiftypeException;
-use Swiftype\Exception\AuthenticationException;
+use Elastic\SiteSearch\Client\ClientBuilder;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
+use Elastic\OpenApi\Codegen\Exception\AuthenticationException;
 
 /**
  * The Site Search Wordpress Plugin
@@ -76,7 +76,7 @@ class SwiftypePlugin
                 \do_action('swiftype_client_loaded', $client);
             } catch (AuthenticationException $e) {
                 $client = null;
-            } catch (SwiftypeException $e) {
+            } catch (ClientException $e) {
                 $client = null;
                 \do_action('swiftype_admin_error', $e);
             }
