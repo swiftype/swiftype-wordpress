@@ -70,7 +70,7 @@ class SwiftypePlugin
         $apiKey = $config->getApiKey();
 
         if ($apiKey && strlen($apiKey) > 0) {
-            $client = ClientBuilder::create($apiKey)->build();
+            $client = $this->getClient($apiKey);
             try {
                 $client->listEngines();
                 \do_action('swiftype_client_loaded', $client);
@@ -81,5 +81,20 @@ class SwiftypePlugin
                 \do_action('swiftype_admin_error', $e);
             }
         }
+    }
+
+    /**
+     * Get client by API key.
+     *
+     * @param string $apiKey API Key.
+     *
+     * @return Client
+     *
+     */
+    private function getClient($apiKey)
+    {
+        $integrationName = sprintf("%s:%s", "wordpress-site-search", SWIFTYPE_VERSION);
+
+        return ClientBuilder::create($apiKey)->setIntegration($integrationName)->build();
     }
 }
