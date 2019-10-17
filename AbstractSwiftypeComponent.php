@@ -78,6 +78,6 @@ class AbstractSwiftypeComponent
      */
     public function isWpCLI()
     {
-        return defined( 'WP_CLI' ) && WP_CLI == true;
+        return (defined('WP_CLI') && WP_CLI == true) || php_sapi_name () == 'cli';
     }
 }
