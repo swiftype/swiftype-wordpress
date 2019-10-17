@@ -70,4 +70,14 @@ class AbstractSwiftypeComponent
     {
         return $this->client;
     }
+
+    /**
+     * Check if currently executing WP_CLI.
+     *
+     * @return boolean
+     */
+    public function isWpCLI()
+    {
+        return (defined('WP_CLI') && WP_CLI == true) || php_sapi_name () == 'cli';
+    }
 }

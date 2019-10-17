@@ -31,20 +31,22 @@ class Indexer extends AbstractSwiftypeComponent
      */
     public function installHooks()
     {
-        \add_action('future_to_publish', [$this, 'handleFutureToPublish']);
+        if (\current_user_can('edit_posts') || $this->isWpCLI()) {
+          \add_action('future_to_publish', [$this, 'handleFutureToPublish']);
 
-        foreach ($this->getConfig()->allowedPostTypes() as $postType) {
-            \add_action("rest_after_insert_{$postType}", [$this, 'handleRestUpdatePost']);
+          foreach ($this->getConfig()->allowedPostTypes() as $postType) {
+              \add_action("rest_after_insert_{$postType}", [$this, 'handleRestUpdatePost']);
+          }
+
+          \add_action('save_post', [$this, 'handleSavePost'], 99, 1);
+
+          \add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
+          \add_action('trashed_post', [$this, 'handleTrashedPost']);
+
+
+          add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
+          add_action('swiftype_batch_post_delete', [$this, 'handlePostBatchDelete']);
         }
-
-        \add_action('save_post', [$this, 'handleSavePost'], 99, 1);
-
-        \add_action('transition_post_status', [$this, 'handleTransitionPostStatus'], 99, 3);
-        \add_action('trashed_post', [$this, 'handleTrashedPost']);
-
-
-        add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
-        add_action('swiftype_batch_post_delete', [$this, 'handlePostBatchDelete']);
     }
 
     /**

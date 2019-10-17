@@ -110,6 +110,10 @@ class Command extends \WP_CLI_Command
         }
 
         if ($this->engine == null) {
+            \do_action('swiftype_create_engine');
+        }
+
+        if ($this->engine == null) {
             \WP_CLI::error("Unable to create engine with the name \"${engineSlug}\"");
         }
 

@@ -23,6 +23,21 @@ class Action extends AbstractSwiftypeComponent
     {
         parent::__construct();
 
+        if ($this->isWpCLI()) {
+            $this->installHooks();
+        }
+
+        \add_action('admin_init', function() {
+          if (\current_user_can('manage_options')) {
+              $this->installHooks();
+          }
+        });
+    }
+
+    /**
+     * Install hooks for the admin actions.
+     */
+    public function installHooks() {
         \add_action('wp_ajax_index_batch_of_posts', [$this, 'asyncIndexBatchOfPosts']);
         \add_action('wp_ajax_delete_batch_of_trashed_posts', [$this, 'asyncDeleteBatchOfTrashedPosts']);
         \add_action('wp_ajax_update_facet_config', [$this, 'asyncUpdateFacetConfig']);
@@ -106,6 +121,8 @@ class Action extends AbstractSwiftypeComponent
      */
     public function setApiKey()
     {
+        \check_ajax_referer('swiftype-ajax-nonce');
+
         $this->getConfig()->reset();
         $this->getConfig()->setApiKey(trim($_POST['api_key']));
 
@@ -125,6 +142,8 @@ class Action extends AbstractSwiftypeComponent
      */
     public function createEngine()
     {
+        \check_ajax_referer('swiftype-ajax-nonce');
+
         $this->getConfig()->setLanguage(isset($_POST['language']) ? $_POST['language'] : null);
         $this->getConfig()->setEngineSlug(trim($_POST['engine_name']));
 
@@ -142,6 +161,8 @@ class Action extends AbstractSwiftypeComponent
      */
     public function clearConfig()
     {
+        \check_ajax_referer('swiftype-ajax-nonce');
+
         $this->getConfig()->reset();
         $this->redirect();
     }

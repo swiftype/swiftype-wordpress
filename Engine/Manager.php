@@ -19,8 +19,24 @@ class Manager extends AbstractSwiftypeComponent
     {
         parent::__construct();
 
-        \add_action('swiftype_create_engine', [$this, 'createEngine']);
+        if ($this->isWpCLI()) {
+            $this->installHooks();
+        }
+
+        \add_action('admin_init', function() {
+          if (\current_user_can('manage_options')) {
+              $this->installHooks();
+          }
+        });
+
         \add_action('swiftype_client_loaded', [$this, 'loadEngine']);
+    }
+
+    /**
+     * Install hooks for the admin actions.
+     */
+    public function installHooks() {
+        \add_action('swiftype_create_engine', [$this, 'createEngine']);
         \add_action('wp_ajax_check_engine_exists', [$this, 'asyncCheckEngineExists']);
     }
 
@@ -41,6 +57,7 @@ class Manager extends AbstractSwiftypeComponent
         }
 
         $language = $this->getConfig()->getLanguage();
+
         $engine = $this->getClient()->createEngine($engineSlug, $language);
         $this->getConfig()->setEngineSlug($engine['slug']);
         $this->getClient()->createDocumentType($engine['slug'], $docType);

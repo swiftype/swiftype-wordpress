@@ -25,8 +25,8 @@ require_once $testsDir . '/includes/functions.php';
 function _manually_load_plugin() {
     require_once dirname(dirname(__FILE__)) . '/swiftype.php';
 }
+
 tests_add_filter('muplugins_loaded', '_manually_load_plugin');
 
 // Start up the WP testing environment.
 require $testsDir . '/includes/bootstrap.php';
-

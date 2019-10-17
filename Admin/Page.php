@@ -48,6 +48,7 @@ class Page extends AbstractSwiftypeComponent
     public function __construct()
     {
         parent::__construct();
+
         \add_action('admin_menu', [$this, 'addMenu']);
         \add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         \add_action('swiftype_admin_error', [$this, 'setError']);
@@ -62,16 +63,18 @@ class Page extends AbstractSwiftypeComponent
      */
     public function getContent()
     {
-        $isAuth = $this->getConfig()->getApiKey() && $this->getClient() !== null;
+        if (\current_user_can('manage_options')) {
+            $isAuth = $this->getConfig()->getApiKey() && $this->getClient() !== null;
 
-        if($this->error) {
-            $this->renderTemplate('error.php');
-        } else if (!$isAuth) {
-            $this->renderTemplate('authorize.php');
-        } else if (!$this->getConfig()->getEngineSlug() || null === $this->engine) {
-            $this->renderTemplate('choose-engine.php');
-        } else {
-            $this->renderTemplate('controls.php');
+            if($this->error) {
+                $this->renderTemplate('error.php');
+            } else if (!$isAuth) {
+                $this->renderTemplate('authorize.php');
+            } else if (!$this->getConfig()->getEngineSlug() || null === $this->engine) {
+                $this->renderTemplate('choose-engine.php');
+            } else {
+                $this->renderTemplate('controls.php');
+            }
         }
     }
 
@@ -89,7 +92,9 @@ class Page extends AbstractSwiftypeComponent
      */
     public function addMenu()
     {
-        \add_menu_page(self::MENU_TITLE, SELF::MENU_TITLE, 'manage_options', SELF::MENU_SLUG, [$this, 'getContent'], $this->getIconUrl());
+        if (\current_user_can('manage_options')) {
+          \add_menu_page(self::MENU_TITLE, SELF::MENU_TITLE, 'manage_options', SELF::MENU_SLUG, [$this, 'getContent'], $this->getIconUrl());
+        }
     }
 
     /**
