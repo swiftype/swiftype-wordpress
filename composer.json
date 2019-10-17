@@ -12,7 +12,7 @@
   "type" : "library",
   "require" : {
     "react/promise": "^2.7",
-    "elastic/site-search": "dev-master@dev"
+    "elastic/site-search": "1.0.2"
   },
   "autoload": {
     "psr-4": {"Swiftype\\SiteSearch\\Wordpress\\": "./"} 

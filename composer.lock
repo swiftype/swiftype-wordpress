@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d818d21d07663dd776bfd4e5bf169da",
+    "content-hash": "eed8a10ddf49bfbcd032c2b277b87c88",
     "packages": [
         {
             "name": "elastic/openapi-codegen",
@@ -66,7 +66,7 @@
         },
         {
             "name": "elastic/site-search",
-            "version": "dev-master",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/site-search-php.git",
@@ -317,9 +317,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "elastic/site-search": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

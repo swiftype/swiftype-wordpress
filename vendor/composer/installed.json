@@ -61,8 +61,8 @@
     },
     {
         "name": "elastic/site-search",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/elastic/site-search-php.git",
