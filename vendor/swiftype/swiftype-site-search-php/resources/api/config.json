@@ -1,8 +1,0 @@
-{
-  "gitUserId": "swiftype",
-  "gitRepoId": "swiftype-site-search-php",
-  "artifactVersion": "1.0.0",
-  "invokerPackage": "Swiftype\\SiteSearch",
-  "helpUrl": "https://discuss.elastic.co/c/site-search",
-  "copyright": "© [Elastic](https://github.com/elastic)"
-}

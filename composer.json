@@ -11,8 +11,8 @@
   "license" : "Apache-2.0",
   "type" : "library",
   "require" : {
-    "swiftype/swiftype-site-search-php" :"^1.0.0",
-    "react/promise": "^2.7"
+    "react/promise": "^2.7",
+    "elastic/site-search": "dev-master@dev"
   },
   "autoload": {
     "psr-4": {"Swiftype\\SiteSearch\\Wordpress\\": "./"} 

@@ -7,10 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Swiftype\\SiteSearch\\Wordpress\\' => array($baseDir . '/'),
-    'Swiftype\\SiteSearch\\' => array($vendorDir . '/swiftype/swiftype-site-search-php'),
-    'Swiftype\\' => array($vendorDir . '/swiftype/swiftype-common-php'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),
     'GuzzleHttp\\Ring\\' => array($vendorDir . '/guzzlehttp/ringphp/src'),
+    'Elastic\\SiteSearch\\Client\\' => array($vendorDir . '/elastic/site-search'),
+    'Elastic\\OpenApi\\Codegen\\' => array($vendorDir . '/elastic/openapi-codegen'),
 );
