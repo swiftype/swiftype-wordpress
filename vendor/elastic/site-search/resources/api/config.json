@@ -1,0 +1,8 @@
+{
+  "gitUserId": "elastic",
+  "gitRepoId": "site-search-php",
+  "artifactVersion": "1.0.0",
+  "invokerPackage": "Elastic\\SiteSearch\\Client",
+  "helpUrl": "https://discuss.elastic.co/c/site-search",
+  "copyright": "© [Elastic](https://github.com/elastic)"
+}

@@ -1,0 +1,937 @@
+openapi: 3.0.2
+
+info:
+  title: Elastic Site Search API
+  description: A first-party PHP client for the Elastic Site Search API.
+  version: "1.0"
+
+externalDocs:
+  url: https://swiftype.com/documentation/site-search
+
+components:
+  # Reusable schemas definitions -----------------------------------------------
+  schemas:
+    simpleObject:
+      type: object
+
+    documentExternalId:
+      type: string
+
+    documentExternalIdList:
+      type: array
+      items:
+        $ref: "#/components/schemas/documentExternalId"
+
+    documentFieldSimpleValue:
+      anyOf:
+      - type: string
+      - type: number
+
+    documentFieldValue:
+      anyOf:
+      - $ref: "#/components/schemas/documentFieldSimpleValue"
+      - type: array
+        items:
+          $ref: "#/components/schemas/documentFieldSimpleValue"
+
+    documentField:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - value
+      - type
+      properties:
+        name:
+          type: string
+        value:
+          $ref: "#/components/schemas/documentFieldValue"
+        type:
+          type: string
+
+    documentFieldList:
+      type: array
+      items:
+        $ref: "#/components/schemas/documentField"
+
+    documentFieldsUpdate:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/documentFieldValue"
+
+    documentIndexBulk:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          external_id:
+            $ref: "#/components/schemas/documentExternalId"
+          fields:
+            $ref: "#/components/schemas/documentFieldList"
+
+    documentUpdateBulk:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          external_id:
+            $ref: "#/components/schemas/documentExternalId"
+          fields:
+            $ref: "#/components/schemas/documentFieldsUpdate"
+
+    documentTypeList:
+      type: array
+      items:
+        type: string
+
+    functionalBoost:
+      type: object
+      additionalProperties:
+        type: string
+
+    functionalBoosts:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/functionalBoost"
+
+    fieldList:
+      type: array
+      items:
+        type: string
+
+    documentTypeFieldList:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/fieldList"
+
+    sortField:
+      type: object
+      additionalProperties:
+        type: string
+
+    sortDirection:
+      type: object
+      additionalProperties:
+        type: string
+        enum: [asc, desc]
+
+    simpleFilterValue:
+      anyOf:
+      - type: string
+      - type: number
+
+    arrayFilterValue:
+      type: array
+      items:
+        $ref: "#/components/schemas/simpleFilterValue"
+
+    andFilterDefinition:
+      type: object
+      required:
+      - type
+      - values
+      properties:
+        type:
+          type: string
+          enum: [and]
+        values:
+          $ref: "#/components/schemas/arrayFilterValue"
+      additionalProperties: false
+
+    rangeFilterDefinition:
+      type: object
+      required:
+      - type
+      minProperties: 2
+      properties:
+        type:
+          type: string
+          enum: [range]
+        from:
+          type: number
+        to:
+          type: number
+      additionalProperties: false
+
+    geoFilterDefinition:
+      type: object
+      required:
+      - type
+      - max
+      - lat
+      - lon
+      minProperties: 2
+      properties:
+        type:
+          type: string
+          enum: [distance]
+        lat:
+          type: number
+        lon:
+          type: number
+        max:
+          type: number
+      additionalProperties: false
+
+    filterDefinition:
+      anyOf:
+      - $ref: "#/components/schemas/simpleFilterValue"
+      - $ref: "#/components/schemas/arrayFilterValue"
+      - $ref: "#/components/schemas/andFilterDefinition"
+      - $ref: "#/components/schemas/rangeFilterDefinition"
+      - $ref: "#/components/schemas/geoFilterDefinition"
+
+    documentTypeFilterList:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/filterDefinition"
+
+    filterList:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/documentTypeFilterList"
+
+    highlightFieldDefinition:
+      type: object
+      additionalProperties: false
+      required:
+      - size
+      properties:
+        size:
+          type: integer
+        fallback:
+          type: boolean
+
+    documentTypeHighlightFields:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/highlightFieldDefinition"
+
+    highlightList:
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/documentTypeHighlightFields"
+
+    searchRequestParams:
+      type: object
+      additionalProperties: false
+      properties:
+        per_page:
+          type: integer
+        page:
+          type: integer
+        functional_boosts:
+          $ref: "#/components/schemas/functionalBoosts"
+        document_types:
+          $ref: "#/components/schemas/documentTypeList"
+        filters:
+          $ref: "#/components/schemas/filterList"
+        facets:
+          $ref: "#/components/schemas/documentTypeFieldList"
+        search_fields:
+          $ref: "#/components/schemas/documentTypeFieldList"
+        fetch_fields:
+          $ref: "#/components/schemas/documentTypeFieldList"
+        sort_field:
+          $ref: "#/components/schemas/sortField"
+        sort_direction:
+          $ref: "#/components/schemas/sortDirection"
+        highlight_fields:
+          $ref: "#/components/schemas/highlightList"
+
+  # Reusable parameters definitions --------------------------------------------
+  parameters:
+    engineNameParam:
+      name: engine_name
+      in: path
+      description: Name of the engine.
+      required: true
+      schema:
+        type: string
+
+    documentTypeId:
+      name: document_type_id
+      in: path
+      description: Document type id.
+      required: true
+      schema:
+        type: string
+
+    documentExternalId:
+      name: external_id
+      in: path
+      description: Document external id.
+      required: true
+      schema:
+        $ref: "#/components/schemas/documentExternalId"
+
+    searchQueryText:
+      name: q
+      in: query
+      x-codegen-param-name: queryText
+      description: Search query text.
+      required: true
+      schema:
+        type: string
+
+    currentPage:
+      name: page
+      in: query
+      description: The page to fetch. Defaults to 1.
+      schema:
+        type: string
+      x-codegen-param-name: currentPage
+
+    pageSize:
+      name: per_page
+      in: query
+      description: The number of results per page.
+      schema:
+        type: string
+      x-codegen-param-name: pageSize
+
+    analyticsStartDate:
+      name: start_date
+      in: query
+      description: The first day from which to capture searches. Defaults to 2 weeks.
+      required: false
+      schema:
+        type: string
+
+    analyticsEndDate:
+      name: end_date
+      in: query
+      description: The last date from which to capture searches. Defaults to current date.
+      required: false
+      schema:
+        type: string
+
+  # Reusable request definitions -----------------------------------------------
+  requestBodies:
+    searchRequestParams:
+      description: Search request parameters.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/searchRequestParams"
+
+
+  # Reusable responses definitions ---------------------------------------------
+  responses:
+    jsonResponse:
+      description: A simple JSON response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/simpleObject"
+
+paths:
+  /engines.json:
+    get:
+      operationId: listEngines
+      summary: Retrieves all engines with optional pagination support.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/engines#list
+      tags:
+      - Engine API
+      parameters:
+      - $ref: "#/components/parameters/currentPage"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    post:
+      operationId: createEngine
+      summary: Create a new API based engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/engines#create
+      tags:
+      - Engine API
+      parameters:
+      - name: engine.name
+        in: query
+        required: true
+        description: Engine name.
+        schema:
+          type: string
+      - name: engine.language
+        in: query
+        description: Engine language (null for universal).
+        schema:
+          type: string
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    get:
+      operationId: getEngine
+      summary: Retrieves an engine by name.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/engines#one-engine
+      tags:
+      - Engine API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    delete:
+      operationId: deleteEngine
+      summary: Delete an engine by name.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/engines#destroy
+      tags:
+      - Engine API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: createDocumentType
+      summary: Create a new document type in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#add-documenttype
+      tags:
+      - Document API
+      parameters:
+      - name: document_type.name
+        in: query
+        required: true
+        description: Document type name.
+        schema:
+          type: string
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    get:
+      operationId: listDocumentTypes
+      summary: List all document types for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#documenttypes-all
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    get:
+      operationId: getDocumentType
+      summary: Get a document type by id.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#documenttypes-single
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    delete:
+      operationId: deleteDocumentType
+      summary: Delete a document type by id.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#documenttypes-delete
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: createDocument
+      summary: Create a new document in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#add-document
+      tags:
+      - Document API
+      parameters:
+      - name: document.external_id
+        in: query
+        required: true
+        description: Document external id.
+        schema:
+          $ref: "#/components/schemas/documentExternalId"
+      - name: document.fields
+        in: query
+        required: true
+        description: Document fields.
+        schema:
+          $ref: "#/components/schemas/documentFieldList"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    get:
+      operationId: listDocuments
+      summary: List all documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#document-all
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/create_or_update.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: createOrUpdateDocument
+      summary: Create or update a document in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#add-document
+      tags:
+      - Document API
+      parameters:
+      - name: document.external_id
+        in: query
+        required: true
+        description: Document external id.
+        schema:
+          $ref: "#/components/schemas/documentExternalId"
+      - name: document.fields
+        in: query
+        required: true
+        description: Document fields.
+        schema:
+          $ref: "#/components/schemas/documentFieldList"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/{external_id}.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    - $ref: "#/components/parameters/documentExternalId"
+    get:
+      operationId: getDocument
+      summary: Retrieve a document from the engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#document-single
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+    delete:
+      operationId: deleteDocument
+      summary: Delete a document from the engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#delete-external-id
+      tags:
+      - Document API
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/{external_id}/update_fields.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    - $ref: "#/components/parameters/documentExternalId"
+    put:
+      operationId: updateDocumentFields
+      summary: Update fields of a document.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#updating_fields
+      tags:
+      - Document API
+      parameters:
+      - name: fields
+        in: query
+        required: true
+        description: Updated fields.
+        schema:
+          $ref: "#/components/schemas/documentFieldsUpdate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/bulk_create_or_update_verbose:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: createOrUpdateDocuments
+      summary: Bulk creation or update of documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_create_or_update_verbose
+      tags:
+      - Bulk API
+      parameters:
+      - name: documents
+        in: query
+        required: true
+        description: List of documents to index.
+        schema:
+          $ref: "#/components/schemas/documentIndexBulk"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/bulk_create:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: createDocuments
+      summary: Bulk creation of documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_create
+      tags:
+      - Bulk API
+      parameters:
+      - name: documents
+        in: query
+        required: true
+        description: List of documents to create.
+        schema:
+          $ref: "#/components/schemas/documentIndexBulk"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/bulk_update:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    put:
+      operationId: updateDocuments
+      summary: Bulk update of documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_update
+      tags:
+      - Bulk API
+      parameters:
+      - name: documents
+        in: query
+        required: true
+        description: List of documents to update.
+        schema:
+          $ref: "#/components/schemas/documentUpdateBulk"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/bulk_destroy:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: deleteDocuments
+      summary: Bulk delete of documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_destroy
+      tags:
+      - Bulk API
+      parameters:
+      - name: documents
+        in: query
+        required: true
+        description: List of deleted documents external ids.
+        schema:
+          $ref: "#/components/schemas/documentExternalIdList"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/documents/async_bulk_create_or_update:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: asyncCreateOrUpdateDocuments
+      summary: Async bulk creation or update of documents in an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_indexing
+      tags:
+      - Bulk API
+      parameters:
+      - name: documents
+        in: query
+        required: true
+        description: List of documents to index.
+        schema:
+          $ref: "#/components/schemas/documentIndexBulk"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /document_receipts.json:
+    post:
+      operationId: getDocumentReceipts
+      summary: Check the status of document receipts issued by aync bulk indexing.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/indexing#bulk_create_or_update_verbose
+      tags:
+      - Bulk API
+      parameters:
+      - name: ids
+        in: query
+        required: true
+        description: List of ids of documents receipts to check.
+        x-codegen-param-name: receiptIds
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/search.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: search
+      summary: Run a search request accross an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/searching
+      tags:
+      - Search API
+      parameters:
+      - $ref: "#/components/parameters/searchQueryText"
+      requestBody:
+        $ref: "#/components/requestBodies/searchRequestParams"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/suggest.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: suggest
+      summary: Run an autocomplete search request accross an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/autocomplete
+      tags:
+      - Autocomplete API
+      parameters:
+      - $ref: "#/components/parameters/searchQueryText"
+      requestBody:
+        $ref: "#/components/requestBodies/searchRequestParams"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/log_clickthrough.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: logClickthrough
+      summary: Record a clickthrough for a particular result.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#recording_clickthroughs
+      tags:
+      - Analytics API
+      parameters:
+      - name: id
+        in: query
+        x-codegen-param-name: documentId
+        description: The external_id or id of the document clicked by the user.
+        required: true
+        schema:
+          $ref: "#/components/schemas/documentExternalId"
+      - $ref: "#/components/parameters/searchQueryText"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/analytics/searches.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: getSearchCountAnalyticsEngine
+      summary: Get the number of searches per day for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#searches
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/searches.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: getSearchCountAnalyticsDocumentType
+      summary: Get the number of searches per day for an document type.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#searches
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/analytics/top_queries.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: getTopQueriesAnalyticsEngine
+      summary: Retrieve top queries and usage count over a period for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#top_queries
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      - $ref: "#/components/parameters/currentPage"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/top_queries.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: getTopQueriesAnalyticsDocumentType
+      summary: Retrieve top queries and usage count over a period for a document type.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#top_queries
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      - $ref: "#/components/parameters/currentPage"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/analytics/top_no_result_queries.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: getTopNoResultQueriesAnalyticsEngine
+      summary: Retrieve top queries with no result and usage count over a period for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#top_no_result_queries
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      - $ref: "#/components/parameters/currentPage"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/top_no_result_queries.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: getTopNoResultQueriesAnalyticsDocumentType
+      summary: Retrieve top queries with no result and usage count over a period for a document type.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#top_no_result_queries
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      - $ref: "#/components/parameters/currentPage"
+      - $ref: "#/components/parameters/pageSize"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/analytics/clicks.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: getClicksCountAnalyticsEngine
+      summary: Retrieve number of clicks per day over a period for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#clicks
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/clicks.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: getClicksCountAnalyticsDocumentType
+      summary: Retrieve number of clicks per day over a period for a document type.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#clicks
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/analytics/autoselects.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    post:
+      operationId: getAutoselectsCountAnalyticsEngine
+      summary: Retrieve number of autoselects (number of clicked results in the autocomplete) per day over a period for an engine.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#autoselects
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
+
+  /engines/{engine_name}/document_types/{document_type_id}/analytics/autoselects.json:
+    parameters:
+    - $ref: "#/components/parameters/engineNameParam"
+    - $ref: "#/components/parameters/documentTypeId"
+    post:
+      operationId: getAutoselectsCountAnalyticsDocumentType
+      summary: Retrieve number of autoselects (number of clicked results in the autocomplete) per day over a period for a document type.
+      externalDocs:
+        url: https://swiftype.com/documentation/site-search/analytics#autoselects
+      tags:
+      - Analytics API
+      parameters:
+      - $ref: "#/components/parameters/analyticsStartDate"
+      - $ref: "#/components/parameters/analyticsEndDate"
+      responses:
+        default:
+          $ref: "#/components/responses/jsonResponse"
