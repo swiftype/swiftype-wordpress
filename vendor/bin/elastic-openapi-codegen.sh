@@ -1,0 +1,1 @@
+../elastic/openapi-codegen/resources/dev/elastic-openapi-codegen.sh

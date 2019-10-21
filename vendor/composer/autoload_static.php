@@ -14,8 +14,6 @@ class ComposerStaticInitddf019a0a91457d24d8ed82033030db5
         'S' => 
         array (
             'Swiftype\\SiteSearch\\Wordpress\\' => 30,
-            'Swiftype\\SiteSearch\\' => 20,
-            'Swiftype\\' => 9,
         ),
         'R' => 
         array (
@@ -30,20 +28,17 @@ class ComposerStaticInitddf019a0a91457d24d8ed82033030db5
             'GuzzleHttp\\Stream\\' => 18,
             'GuzzleHttp\\Ring\\' => 16,
         ),
+        'E' => 
+        array (
+            'Elastic\\SiteSearch\\Client\\' => 26,
+            'Elastic\\OpenApi\\Codegen\\' => 24,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Swiftype\\SiteSearch\\Wordpress\\' => 
         array (
             0 => __DIR__ . '/../..' . '/',
-        ),
-        'Swiftype\\SiteSearch\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/swiftype/swiftype-site-search-php',
-        ),
-        'Swiftype\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/swiftype/swiftype-common-php',
         ),
         'React\\Promise\\' => 
         array (
@@ -60,6 +55,14 @@ class ComposerStaticInitddf019a0a91457d24d8ed82033030db5
         'GuzzleHttp\\Ring\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/ringphp/src',
+        ),
+        'Elastic\\SiteSearch\\Client\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elastic/site-search',
+        ),
+        'Elastic\\OpenApi\\Codegen\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elastic/openapi-codegen',
         ),
     );
 

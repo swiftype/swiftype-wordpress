@@ -1,5 +1,122 @@
 [
     {
+        "name": "elastic/openapi-codegen",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/elastic/openapi-codegen-php.git",
+            "reference": "b6279e709f92ff466564c0ecefb87b82fd266cae"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/elastic/openapi-codegen-php/zipball/b6279e709f92ff466564c0ecefb87b82fd266cae",
+            "reference": "b6279e709f92ff466564c0ecefb87b82fd266cae",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/ringphp": "^1.0",
+            "php": "^5.6|^7.0",
+            "psr/log": "^1.0."
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.14",
+            "overtrue/phplint": "^1.1",
+            "phpmd/phpmd": "^2.6",
+            "phpunit/phpunit": "^5.6.0|^6.3.0",
+            "squizlabs/php_codesniffer": "^3.4.0"
+        },
+        "time": "2019-09-09T07:29:00+00:00",
+        "bin": [
+            "resources/dev/elastic-openapi-codegen.sh"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Elastic\\OpenApi\\Codegen\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Aurélien FOUCRET",
+                "email": "aurelien.foucret@elastic.co"
+            }
+        ],
+        "description": "A base library used to create Elastic PHP clients.",
+        "homepage": "https://github.com/elastic/openapi-codegen-php",
+        "keywords": [
+            "client",
+            "elastic",
+            "openapi",
+            "search"
+        ]
+    },
+    {
+        "name": "elastic/site-search",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/elastic/site-search-php.git",
+            "reference": "b1ac149f24a6de8ac8ecfd4c0a77e1c4fef326dd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/elastic/site-search-php/zipball/b1ac149f24a6de8ac8ecfd4c0a77e1c4fef326dd",
+            "reference": "b1ac149f24a6de8ac8ecfd4c0a77e1c4fef326dd",
+            "shasum": ""
+        },
+        "require": {
+            "elastic/openapi-codegen": "^1.0.2",
+            "php": "^5.6|^7.0",
+            "psr/log": "^1.0."
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.14",
+            "overtrue/phplint": "^1.1",
+            "phpunit/phpunit": "^5.6.0|^6.3.0",
+            "squizlabs/php_codesniffer": "^3.4.0",
+            "symfony/yaml": "*"
+        },
+        "time": "2019-10-17T12:17:35+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Elastic\\SiteSearch\\Client\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Aurélien FOUCRET",
+                "email": "aurelien.foucret@elastic.co"
+            }
+        ],
+        "description": "Elastic Site Search Official PHP Client",
+        "homepage": "https://github.com/elastic/site-search-php",
+        "keywords": [
+            "client",
+            "elastic",
+            "php",
+            "search"
+        ]
+    },
+    {
         "name": "guzzlehttp/ringphp",
         "version": "1.1.1",
         "version_normalized": "1.1.1.0",
@@ -199,122 +316,6 @@
         "keywords": [
             "promise",
             "promises"
-        ]
-    },
-    {
-        "name": "swiftype/swiftype-common-php",
-        "version": "1.1.2",
-        "version_normalized": "1.1.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/swiftype/swiftype-common-php.git",
-            "reference": "592b35a95e9b036677ec2429cca4f29fd9985429"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/swiftype/swiftype-common-php/zipball/592b35a95e9b036677ec2429cca4f29fd9985429",
-            "reference": "592b35a95e9b036677ec2429cca4f29fd9985429",
-            "shasum": ""
-        },
-        "require": {
-            "guzzlehttp/ringphp": "^1.0",
-            "php": "^5.6|^7.0",
-            "psr/log": "^1.0."
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^2.14",
-            "overtrue/phplint": "^1.1",
-            "phpmd/phpmd": "^2.6",
-            "phpunit/phpunit": "^5.6.0|^6.3.0",
-            "squizlabs/php_codesniffer": "^3.4.0"
-        },
-        "time": "2019-03-13T08:15:36+00:00",
-        "bin": [
-            "resources/dev/swiftype-codegen.sh"
-        ],
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Swiftype\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Aurélien FOUCRET",
-                "email": "aurelien.foucret@elastic.co"
-            }
-        ],
-        "description": "A base library used to create Swiftype PHP clients.",
-        "homepage": "https://github.com/swiftype/swiftype-common-php",
-        "keywords": [
-            "client",
-            "search",
-            "swiftype"
-        ]
-    },
-    {
-        "name": "swiftype/swiftype-site-search-php",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/swiftype/swiftype-site-search-php.git",
-            "reference": "55f834163033df7affaed311392cb830d824e386"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/swiftype/swiftype-site-search-php/zipball/55f834163033df7affaed311392cb830d824e386",
-            "reference": "55f834163033df7affaed311392cb830d824e386",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.6|^7.0",
-            "psr/log": "^1.0.",
-            "swiftype/swiftype-common-php": "^1.1.2"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^2.14",
-            "overtrue/phplint": "^1.1",
-            "phpunit/phpunit": "^5.6.0|^6.3.0",
-            "squizlabs/php_codesniffer": "^3.4.0",
-            "symfony/yaml": "*"
-        },
-        "time": "2019-03-20T14:37:05+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Swiftype\\SiteSearch\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Aurélien FOUCRET",
-                "email": "aurelien.foucret@elastic.co"
-            }
-        ],
-        "description": "Swiftype Site Search Official PHP Client",
-        "homepage": "https://github.com/swiftype/swiftype-site-search-php",
-        "keywords": [
-            "client",
-            "php",
-            "search",
-            "swiftype"
         ]
     }
 ]

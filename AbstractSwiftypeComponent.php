@@ -2,7 +2,7 @@
 
 namespace Swiftype\SiteSearch\Wordpress;
 
-use Swiftype\SiteSearch\Client;
+use Elastic\SiteSearch\Client\Client;
 use Swiftype\SiteSearch\Wordpress\Config\Config;
 
 /**

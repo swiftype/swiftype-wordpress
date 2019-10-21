@@ -2,7 +2,7 @@
 
 namespace Swiftype\SiteSearch\Wordpress\Engine;
 
-use Swiftype\Exception\NotFoundException;
+use Elastic\OpenApi\Codegen\Exception\NotFoundException;
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
 
 /**
@@ -90,7 +90,7 @@ class Manager extends AbstractSwiftypeComponent
         \check_ajax_referer('swiftype-ajax-nonce');
 
         $engine = null;
-        $engineName = isset($_POST['engine_name']) ? $_POST['engine_name'] : false;
+        $engineName = isset($_POST['engine_name']) ? sanitize_text_field($_POST['engine_name']) : false;
 
         if (!empty($engineName)) {
             try {

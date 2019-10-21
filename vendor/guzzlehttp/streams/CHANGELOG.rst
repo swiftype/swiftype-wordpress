@@ -82,7 +82,7 @@ Changelog
 
 * Added an AppendStream to stream over multiple stream one after the other.
 
-2.0.0 (2014-07-15)
+1.2.0 (2014-07-15)
 ------------------
 
 * Updated the ``detach()`` method to return the underlying stream resource or

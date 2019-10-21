@@ -45,7 +45,7 @@ class Command extends \WP_CLI_Command
     const SYNC_DELETE_BATCH_SIZE_DEFAULT = 100;
 
     /**
-     * @var \Swiftype\SiteSearch\Client
+     * @var \Elastic\SiteSearch\Client\Client
      */
     private $client = null;
 
@@ -197,14 +197,14 @@ class Command extends \WP_CLI_Command
 
         try {
             $this->client->deleteDocumentType($this->config->getEngineSlug(), $this->config->getDocumentType());
-        } catch (\Swiftype\Exception\NotFoundException $e) {
+        } catch (\Elastic\OpenApi\Codegen\Exception\NotFoundException $e) {
             $checkDocumentTypeExists = false;
         }
 
         while ($checkDocumentTypeExists == true) {
             try {
                 $this->client->getDocumentType($this->config->getEngineSlug(), $this->config->getDocumentType());
-            } catch (\Swiftype\Exception\NotFoundException $e) {
+            } catch (\Elastic\OpenApi\Codegen\Exception\NotFoundException $e) {
                 $checkDocumentTypeExists = false;
             }
         }

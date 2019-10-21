@@ -1,0 +1,59 @@
+<?php
+{{>header}}
+
+namespace {{invokerPackage}};
+
+/**
+ * Client implementation.
+ *
+ * @package {{invokerPackage}}
+ */
+class Client extends \Elastic\OpenApi\Codegen\AbstractClient
+{
+    // phpcs:disable
+{{#apiInfo}}{{#apis}}{{#operations}}{{#operation}}
+    /**
+{{#summary}}
+     * {{.}}
+     *
+{{/summary}}
+{{#notes}}
+     * {{.}}
+     *
+{{/notes}}
+{{#externalDocs}}
+     * Documentation: {{url}}
+     *
+{{/externalDocs}}
+{{#allParams}}
+     * @param {{dataType}} ${{paramName}}{{#description}} {{description}}{{/description}}
+{{/allParams}}
+     *
+     * @return array
+     */
+    public function {{operationId}}({{#allParams}}${{paramName}}{{^required}} = {{#defaultValue}}{{{.}}}{{/defaultValue}}{{^defaultValue}}null{{/defaultValue}}{{/required}}{{#hasMore}}, {{/hasMore}}{{/allParams}})
+    {
+{{#allParams.0}}
+        $params = [
+            {{#pathParams}}
+            '{{baseName}}' => ${{paramName}},
+            {{/pathParams}}
+            {{#queryParams}}
+            '{{baseName}}' => ${{paramName}},
+            {{/queryParams}}
+        ];
+{{/allParams.0}}
+
+        $endpoint = $this->getEndpoint('{{classname}}');
+{{#allParams.0}}
+        $endpoint->setParams($params);
+{{/allParams.0}}
+{{#bodyParams.0}}
+        $endpoint->setBody(${{paramName}});
+{{/bodyParams.0}}
+
+        return $this->performRequest($endpoint);
+    }
+{{/operation}}{{/operations}}{{/apis}}{{/apiInfo}}
+    // phpcs:enable
+}

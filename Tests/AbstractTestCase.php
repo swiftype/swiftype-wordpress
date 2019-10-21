@@ -3,12 +3,12 @@
 namespace Swiftype\SiteSearch\Wordpress\Tests;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config;
-use Swiftype\SiteSearch\ClientBuilder;
+use Elastic\SiteSearch\Client\ClientBuilder;
 
 class AbstractTestCase extends \WP_UnitTestCase
 {
     /**
-     * @var \Swiftype\SiteSearch\Client
+     * @var \Elastic\SiteSearch\Client\Client
      */
     protected $client;
 
@@ -37,7 +37,7 @@ class AbstractTestCase extends \WP_UnitTestCase
         try {
             $client->getEngine($this->getTestEngineName());
             $client->deleteEngine($this->getTestEngineName());
-        } catch (\Swiftype\Exception\NotFoundException $e) {
+        } catch (\Elastic\OpenApi\Codegen\Exception\NotFoundException $e) {
             ;
         }
     }

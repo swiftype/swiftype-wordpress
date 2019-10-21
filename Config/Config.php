@@ -114,7 +114,7 @@ class Config
             $facetConfig = json_encode($facetConfig);
         }
 
-        \update_option('swiftype_facet_config', $facetConfig);
+        \update_option('swiftype_facet_config', sanitize_textarea_field($facetConfig));
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress\Admin;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
-use Swiftype\Exception\SwiftypeException;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
 use GuzzleHttp\Ring\Exception\ConnectException;
-use Swiftype\Exception\ApiException;
+use Elastic\OpenApi\Codegen\Exception\ApiException;
 
 /**
  * Implementation of the admin async actions for the Site Search Wordpress plugin:
@@ -84,6 +84,7 @@ class Action extends AbstractSwiftypeComponent
     public function asyncDeleteBatchOfTrashedPosts()
     {
         \check_ajax_referer('swiftype-ajax-nonce');
+
         $offset = isset($_POST['offset']) ? intval($_POST['offset']) : 0;
         $batchSize = isset($_POST['batch_size']) ? intval($_POST['batch_size']) : 10;
 
@@ -107,9 +108,10 @@ class Action extends AbstractSwiftypeComponent
     public function asyncUpdateFacetConfig()
     {
         \check_ajax_referer('swiftype-ajax-nonce');
+
         header("Content-Type: application/json");
 
-        $facetConfig = isset($_POST['facet_config']) ? $_POST['facet_config'] : '[]';
+        $facetConfig = !empty($_POST['facet_config']) ? $_POST['facet_config'] : '[]';
         $this->getConfig()->setFacetConfig($facetConfig);
 
         echo \wp_json_encode(['success' => true]);
@@ -124,7 +126,7 @@ class Action extends AbstractSwiftypeComponent
         \check_ajax_referer('swiftype-ajax-nonce');
 
         $this->getConfig()->reset();
-        $this->getConfig()->setApiKey(trim($_POST['api_key']));
+        $this->getConfig()->setApiKey(sanitize_text_field(trim($_POST['api_key'])));
 
         $redirectParams = [];
 
@@ -144,13 +146,13 @@ class Action extends AbstractSwiftypeComponent
     {
         \check_ajax_referer('swiftype-ajax-nonce');
 
-        $this->getConfig()->setLanguage(isset($_POST['language']) ? $_POST['language'] : null);
-        $this->getConfig()->setEngineSlug(trim($_POST['engine_name']));
+        $this->getConfig()->setLanguage(!empty($_POST['language']) ? sanitize_text_field($_POST['language']) : null);
+        $this->getConfig()->setEngineSlug(sanitize_text_field(trim($_POST['engine_name'])));
 
         try {
             \do_action('swiftype_create_engine');
             $this->redirect();
-        } catch (SwiftypeException $e) {
+        } catch (ClientException $e) {
             $this->getConfig()->setEngineSlug(null);
             $this->redirect(['error' => true]);
         }

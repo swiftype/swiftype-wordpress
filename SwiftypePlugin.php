@@ -3,9 +3,9 @@
 namespace Swiftype\SiteSearch\Wordpress;
 
 use Swiftype\SiteSearch\Wordpress\Config\Config as PluginConfig;
-use Swiftype\SiteSearch\ClientBuilder;
-use Swiftype\Exception\SwiftypeException;
-use Swiftype\Exception\AuthenticationException;
+use Elastic\SiteSearch\Client\ClientBuilder;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
+use Elastic\OpenApi\Codegen\Exception\AuthenticationException;
 
 /**
  * The Site Search Wordpress Plugin
@@ -70,16 +70,31 @@ class SwiftypePlugin
         $apiKey = $config->getApiKey();
 
         if ($apiKey && strlen($apiKey) > 0) {
-            $client = ClientBuilder::create($apiKey)->build();
+            $client = $this->getClient($apiKey);
             try {
                 $client->listEngines();
                 \do_action('swiftype_client_loaded', $client);
             } catch (AuthenticationException $e) {
                 $client = null;
-            } catch (SwiftypeException $e) {
+            } catch (ClientException $e) {
                 $client = null;
                 \do_action('swiftype_admin_error', $e);
             }
         }
+    }
+
+    /**
+     * Get client by API key.
+     *
+     * @param string $apiKey API Key.
+     *
+     * @return Client
+     *
+     */
+    private function getClient($apiKey)
+    {
+        $integrationName = sprintf("%s:%s", "wordpress-site-search", SWIFTYPE_VERSION);
+
+        return ClientBuilder::create($apiKey)->setIntegration($integrationName)->build();
     }
 }

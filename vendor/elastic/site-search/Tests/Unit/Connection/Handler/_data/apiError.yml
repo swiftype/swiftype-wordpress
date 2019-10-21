@@ -1,0 +1,91 @@
+-
+  - status: 200
+    foo: bar
+  - null
+  - null
+
+-
+  - status: 400
+    foo: bar
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Unexpected error.
+
+-
+  - status: 400
+    reason: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Error msg.
+
+-
+  - status: 400
+    reason: Error msg.
+    body:
+      error: Body error msg.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Body error msg.
+
+-
+  - status: 400
+    body:
+      error: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Error msg.
+
+-
+  - status: 400
+    body:
+      errors: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Error msg.
+
+-
+  - status: 400
+    body:
+      error:
+        - Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Error msg.
+
+-
+  - status: 400
+    body:
+      errors:
+        - Error msg1.
+        - Error msg2.
+  - \Elastic\OpenApi\Codegen\Exception\BadRequestException
+  - Error msg1. Error msg2.
+
+-
+  - status: 401
+    body:
+      error: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\AuthenticationException
+  - Error msg.
+
+-
+  - status: 403
+    body:
+      error: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\AuthenticationException
+  - Error msg.
+
+-
+  - status: 404
+    body:
+      error: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\NotFoundException
+  - Error msg.
+
+-
+  - status: 429
+    body:
+      error: Error msg.
+  - \Elastic\SiteSearch\Client\Exception\ApiRateExceededException
+  - Error msg.
+
+-
+  - status: 500
+    body:
+      error: Error msg.
+  - \Elastic\OpenApi\Codegen\Exception\ApiException
+  - Error msg.

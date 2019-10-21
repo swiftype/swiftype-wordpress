@@ -3,7 +3,7 @@
 namespace Swiftype\SiteSearch\Wordpress\Search;
 
 use Swiftype\SiteSearch\Wordpress\AbstractSwiftypeComponent;
-use Swiftype\Exception\SwiftypeException;
+use Elastic\OpenApi\Codegen\Exception\ClientException;
 
 /**
  * Use Site Search as the main search engine of WP.
@@ -82,7 +82,7 @@ class PostSearch extends AbstractSwiftypeComponent
 
                 \do_action('swiftype_search_result', $this->searchResult);
 
-            } catch (SwiftypeException $e) {
+            } catch (ClientException $e) {
                 $this->searchResult = null;
             }
         }
