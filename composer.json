@@ -9,7 +9,7 @@
     "php"
   ],
   "license" : "Apache-2.0",
-  "type" : "library",
+  "type": "wordpress-plugin",
   "require" : {
     "react/promise": "^2.7",
     "elastic/site-search": "1.0.2"
