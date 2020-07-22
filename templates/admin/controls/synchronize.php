@@ -115,12 +115,13 @@ foreach( $allowedPostTypes as $type ) {
     };
 
     function onError(jqXHR, textStatus, errorThrown) {
+        var errorMsg;
         try {
             errorMsg = JSON.parse(jqXHR.responseText).message;
         } catch (e) {
             errorMsg = jqXHR.responseText;
-            showErrors(errorMsg);
         }
+        showErrors(errorMsg);
     };
 
     function onIndexBatchSuccess(response) {
