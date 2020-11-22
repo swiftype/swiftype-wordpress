@@ -11,9 +11,9 @@ Author URI: http://swiftype.com
 
 define('SWIFTYPE_VERSION', '2.0.4');
 
-require_once('vendor/autoload.php');
+require_once __DIR__ . '/vendor/autoload.php';
 
-require_once 'swiftype-theme-functions.php';
+require_once __DIR__ . '/swiftype-theme-functions.php';
 
 if (defined('WP_CLI') && WP_CLI) {
     WP_CLI::add_command('swiftype', 'Swiftype\SiteSearch\Wordpress\Cli\Command');
