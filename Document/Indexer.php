@@ -33,9 +33,11 @@ class Indexer extends AbstractSwiftypeComponent
     }
 
     /**
+     * Filter out forbiden post types fron indexing.
      *
+     * @param string[] $allowedPostTypes
      *
-     * @return void
+     * @return string[]
      */
     public function filterAllowedPostType($allowedPostTypes)
     {
