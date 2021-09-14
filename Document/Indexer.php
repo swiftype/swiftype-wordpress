@@ -17,13 +17,31 @@ class Indexer extends AbstractSwiftypeComponent
     private $documentMapper;
 
     /**
+     * @var string[]
+     */
+    private static $FORBIDDEN_POST_TYPES = ['attachment'];
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         parent::__construct();
         $this->documentMapper = new Mapper();
+        \add_filter('swiftype_allowed_post_types', [$this, 'filterAllowedPostType']);
         \add_action('swiftype_engine_loaded', [$this, 'installHooks']);
+    }
+
+    /**
+     * Filter out forbiden post types fron indexing.
+     *
+     * @param string[] $allowedPostTypes
+     *
+     * @return string[]
+     */
+    public function filterAllowedPostType($allowedPostTypes)
+    {
+        return \array_diff($allowedPostTypes, self::$FORBIDDEN_POST_TYPES);
     }
 
     /**
@@ -44,8 +62,8 @@ class Indexer extends AbstractSwiftypeComponent
           \add_action('trashed_post', [$this, 'handleTrashedPost']);
 
 
-          add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
-          add_action('swiftype_batch_post_delete', [$this, 'handlePostBatchDelete']);
+          \add_action('swiftype_batch_post_index', [$this, 'handlePostBatchIndex']);
+          \add_action('swiftype_batch_post_delete', [$this, 'handlePostBatchDelete']);
         }
     }
 
