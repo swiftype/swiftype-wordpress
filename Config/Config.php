@@ -144,6 +144,6 @@ class Config
             );
         }
 
-        return $allowedPostTypes;
+        return \apply_filters('swiftype_allowed_post_types', $allowedPostTypes);
     }
 }
