@@ -46,6 +46,31 @@ You can checkout the [Site Search Plugin discuss forum](https://wordpress.org/su
 
 You can contact our support by sending an email to support@swiftype.com.
 
+### How to start the development environment
+
+#### Create the Docker stack
+
+You can create a docker stack using:
+
+```bash
+docker stack deploy -c stack.yml wordpress-dev
+```
+
+Alternatively, you can use docker-compose instead of stack:
+
+```bash
+docker-compose -f stack.yml up
+```
+
+Your wordpress dev instance will boot up and be available at http://localhost:8080.
+
+To enter the wordpress container, you can use the followin command:
+
+```bash
+docker exec -it $(docker ps -a -f label=com.docker.stack.namespace=wordpress-dev -f expose=80/tcp --format "{{.ID}}") /bin/bash
+```
+
+
 ## Contribute 🚀
 
 We welcome contributors to the project. Before you begin, a couple notes...
