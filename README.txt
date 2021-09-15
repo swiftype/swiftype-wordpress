@@ -67,7 +67,7 @@ Your posts may have fallen out of sync. Click 'Synchronize' from within the plug
 == Changelog ==
 
 = 2.0.5 =
-* Do index post with type attachment anymore by default
+* Do not index posts with type attachment anymore by default
 * Added a new filter to allow to customize indexed post types swiftype_allowed_post_types
 
 = 2.0.4 =
